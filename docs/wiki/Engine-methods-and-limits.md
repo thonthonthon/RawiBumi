@@ -1,11 +1,10 @@
 # Engine methods and limits
 
 ## What the evidence supports
-- The standard hourly path implements its cited methods correctly (independent engine audit, 2026).
-- Against PVsyst 8.x on two real shaded projects, annual grid energy agrees within −0.06 % and −0.30 %, and the worst
-  month within −0.12 % and −0.46 %. PVsyst is a benchmark, not the truth: agreement shows the same conventions, not
-  field accuracy.
-- The module model reproduces datasheet STC power within ±0.7 % on 63 real PAN files (median +0.03 %).
+- The standard hourly path implements its cited methods correctly (a whole-engine physics review by a separate AI reviewer that recomputed each stage (internal, 2026; details not published)).
+- Results were checked internally against PVsyst 8 on two real shaded projects, with close agreement on annual and monthly energy (details not published: they are client projects). PVsyst is a benchmark, not the truth: agreement shows the same conventions, not field
+  accuracy.
+- The module model was checked internally against datasheet STC power on a set of real PAN files (details not published).
 - The energy ledger reconciles in every interval of every run, or the run fails.
 - Two identical runs give identical numbers; only per-run identifiers differ in the saved package.
 

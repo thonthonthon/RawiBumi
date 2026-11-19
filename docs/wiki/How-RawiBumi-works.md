@@ -39,13 +39,15 @@ Each step records which model it used, so the run's audit shows exactly what was
   model electrical mismatch under uneven shade.
 
 ## How it was checked
-- An independent audit of the standard hourly path against the cited methods.
-- PVsyst 8 on two real shaded projects: annual grid energy within −0.06 % and −0.30 %; the worst month within −0.12 %
-  and −0.46 %. PVsyst is a benchmark, not the truth.
-- Module model: datasheet STC power reproduced within ±0.7 % on 63 real PAN files (median +0.03 %).
+- The standard hourly path: a whole-engine physics review by a separate AI reviewer that recomputed each stage (internal, 2026; details not published).
+- Results checked internally against PVsyst 8 on two real shaded projects, with close agreement on annual and monthly energy (details not published: they are client projects). PVsyst is a benchmark, not the truth.
+- The module model was checked internally against datasheet STC power on a set of real PAN files (details not published).
 - Reproducibility: two identical runs give identical numbers.
 - About 8,300 Python tests and 1,600 browser unit tests, plus browser end-to-end tests against the real engine.
 - Not yet: comparison with measured plant data.
+
+The design notes, decision records and validation reports behind the engine are indexed in
+[the engineering documentation](https://github.com/thonthonthon/RawiBumi/blob/main/docs/README.md).
 
 ## What RawiBumi stands on
 **Engine (Python 3.12):**

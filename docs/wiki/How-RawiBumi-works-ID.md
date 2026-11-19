@@ -39,13 +39,15 @@ Setiap langkah mencatat model yang dipakai, sehingga audit hasil menunjukkan per
   disematkan; jalur standar tidak memodelkan ketidakcocokan elektris akibat bayangan tak merata.
 
 ## Cara pengujiannya
-- Audit independen jalur standar per jam terhadap metode yang dikutip.
-- PVsyst 8 pada dua proyek nyata yang terbayangi: energi jaringan tahunan dalam −0,06 % dan −0,30 %; bulan terburuk
-  dalam −0,12 % dan −0,46 %. PVsyst adalah pembanding, bukan kebenaran.
-- Model modul: daya STC datasheet terulang dalam ±0,7 % pada 63 berkas PAN nyata (median +0,03 %).
+- Jalur standar per jam: tinjauan fisika seluruh mesin oleh peninjau AI terpisah yang menghitung ulang setiap tahap (internal, 2026; rinciannya tidak dipublikasikan).
+- Hasil diperiksa secara internal terhadap PVsyst 8 pada dua proyek nyata yang terbayangi, dengan kesesuaian dekat pada energi tahunan dan bulanan (rinciannya tidak dipublikasikan: proyek klien). PVsyst adalah pembanding, bukan kebenaran.
+- Model modul diperiksa secara internal terhadap daya STC lembar data pada sekumpulan berkas PAN nyata (rinciannya tidak dipublikasikan).
 - Keterulangan: dua simulasi identik memberi angka identik.
 - Sekitar 8.300 uji Python dan 1.600 uji unit peramban, ditambah uji ujung-ke-ujung peramban terhadap mesin sungguhan.
 - Belum: pembandingan dengan data pembangkit terukur.
+
+Catatan desain, catatan keputusan dan laporan validasi di balik mesin terdaftar di
+[dokumentasi teknik](https://github.com/thonthonthon/RawiBumi/blob/main/docs/README.md) (berbahasa Inggris).
 
 ## Pustaka yang dipakai
 **Mesin (Python 3.12):** pvlib (posisi matahari, dekomposisi, transposisi, IAM, termal), NumPy, pandas dan SciPy

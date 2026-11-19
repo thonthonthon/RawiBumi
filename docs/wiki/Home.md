@@ -15,8 +15,8 @@ report. *Bahasa Indonesia: [Beranda](Home-ID).*
 
 ## Status
 Beta: usable end to end, from an empty project to a report; the interface is still being reworked (see the README's
-"Known work in progress"). The engine passed an independent audit; results agree with PVsyst within a
-fraction of a percent on two real shaded projects. RawiBumi has not yet been compared with measured plant data.
+"Known work in progress"). The engine passed an internal physics review and was checked internally against PVsyst
+on two real shaded projects (details not published). RawiBumi has not yet been compared with measured plant data.
 
 ## Licence
 Copyright © 2026 Sulthon. GNU Affero General Public License v3.0; see `LICENSE` in the repository.

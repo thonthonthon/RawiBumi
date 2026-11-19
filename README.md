@@ -7,7 +7,7 @@ and a report. Every model choice and loss is visible and editable; nothing is a 
 *Bahasa Indonesia: lihat [wiki](docs/wiki/Home-ID.md) dan panduan di dalam aplikasi (`/manual/id.html`).*
 
 > **Status: beta.** RawiBumi works end to end, from an empty project to a report, and its engine has been checked
-> against an independent audit and against PVsyst on real projects. The user interface is still being reworked; see
+> by an internal physics review and against PVsyst on real projects (details not published). The user interface is still being reworked; see
 > [Known work in progress](#known-work-in-progress). Review every result before you rely on it.
 
 ## What it does
@@ -31,9 +31,9 @@ The full manual, in English and Indonesian, is built into the app (the **Manual*
 ### What the results are based on
 
 - The standard hourly path implements its cited methods (Perez transposition, single-diode module model from PAN
-  data, PVsyst-style Uc/Uv thermal model, IAM, inverter efficiency curves from OND data); an independent audit checked it.
-- Against PVsyst 8 on two real shaded projects, annual grid energy agrees within −0.06 % and −0.30 %. PVsyst is a
-  benchmark, not the truth: agreement shows the same conventions, not field accuracy.
+  data, PVsyst-style Uc/Uv thermal model, IAM, inverter efficiency curves from OND data); a whole-engine physics review by a separate AI reviewer that recomputed each stage (internal, 2026; details not published) found no error.
+- The results were checked internally against PVsyst 8 on two real shaded projects, with close agreement on annual and monthly energy (details not published: they are client projects). PVsyst is a benchmark, not the truth: agreement shows the same conventions, not
+  field accuracy.
 - The energy ledger must reconcile in every hour of every run, or the run fails. Two identical runs give identical
   numbers.
 - What the engine does **not** claim (no comparison with measured plants yet, no far-horizon shading, hourly only,

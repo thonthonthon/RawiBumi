@@ -1,11 +1,10 @@
 # Metode dan batasan mesin
 
 ## Yang didukung bukti
-- Jalur standar per jam menerapkan metode yang dirujuk dengan benar (audit mesin independen, 2026).
-- Dibandingkan PVsyst 8.x pada dua proyek nyata yang terbayangi, energi tahunan ke jaringan sesuai dalam −0,06 % dan
-  −0,30 %, dan bulan terburuk dalam −0,12 % dan −0,46 %. PVsyst adalah pembanding, bukan kebenaran mutlak: kesesuaian
-  menunjukkan konvensi yang sama, bukan ketepatan lapangan.
-- Model modul mereproduksi daya STC lembar data dalam ±0,7 % pada 63 berkas PAN nyata (median +0,03 %).
+- Jalur standar per jam menerapkan metode yang dirujuk dengan benar (tinjauan fisika seluruh mesin oleh peninjau AI terpisah yang menghitung ulang setiap tahap (internal, 2026; rinciannya tidak dipublikasikan)).
+- Hasil diperiksa secara internal terhadap PVsyst 8 pada dua proyek nyata yang terbayangi, dengan kesesuaian dekat pada energi tahunan dan bulanan (rinciannya tidak dipublikasikan: proyek klien). PVsyst adalah pembanding, bukan kebenaran mutlak: kesesuaian menunjukkan konvensi yang sama,
+  bukan ketepatan lapangan.
+- Model modul diperiksa secara internal terhadap daya STC lembar data pada sekumpulan berkas PAN nyata (rinciannya tidak dipublikasikan).
 - Neraca energi seimbang di setiap interval setiap simulasi, atau simulasi gagal.
 - Dua simulasi identik memberi angka identik; hanya pengenal per simulasi yang berbeda dalam paket tersimpan.
 

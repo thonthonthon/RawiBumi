@@ -15,8 +15,8 @@ selama setahun dengan bayangan dekat, hasil dan laporan. *English: [Home](Home).
 
 ## Status
 Beta: dapat dipakai dari awal sampai akhir, dari proyek kosong hingga laporan; antarmuka masih dikerjakan ulang
-(lihat "Known work in progress" di README). Mesin lulus audit independen; hasilnya sesuai dengan PVsyst
-dalam pecahan persen pada dua proyek nyata yang terbayangi. RawiBumi belum dibandingkan dengan data pembangkit terukur.
+(lihat "Known work in progress" di README). Mesin lulus tinjauan fisika internal dan diperiksa secara internal
+terhadap PVsyst pada dua proyek nyata yang terbayangi (rinciannya tidak dipublikasikan). RawiBumi belum dibandingkan dengan data pembangkit terukur.
 
 ## Lisensi
 Hak cipta © 2026 Sulthon. GNU Affero General Public License v3.0; lihat `LICENSE` di repositori.

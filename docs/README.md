@@ -1,37 +1,23 @@
-﻿# RawiBumi Documentation
+# RawiBumi documentation
 
+**Using RawiBumi:** start with the wiki pages in [`wiki/`](wiki/Home.md) (also in Indonesian): installation,
+using the ten-plus steps, weather files, [how RawiBumi works](wiki/How-RawiBumi-works.md) and
+[engine methods and limits](wiki/Engine-methods-and-limits.md). The app has a full manual built in (the **Manual**
+link at the top).
 
-This directory is the documentation root for RawiBumi.
+**Engineering documentation** (this folder) records how the engine was designed and checked:
 
+| Where | What |
+|---|---|
+| [`decisions/`](decisions/) | Decision records: one file per engineering decision, with the reasoning, alternatives and consequences (units, time conventions, transposition, thermal and electrical models, losses, shading, validation hierarchy, …) |
+| Design notes in this folder | One note per subsystem: [weather data](weather-data-foundation.md), [PAN/OND mapping](panond-semantic-mapping.md), [OND inverter semantics](ond-inverter-semantics.md), [component validation](component-candidates-validation.md), [PVsyst single-diode validation](pvsyst-sdm-validation.md), [independent I-V reference](iv-reference-validation.md), [model resolution](simulation-model-resolution.md), [site and coordinates](site-map-coordinate-foundation.md), [scene editor](2d-constrained-scene-editor.md), [PV field packing](pv-field-packing-engine.md), [height model and 3-D](height-model-3d-verification.md), [component-aware design](component-aware-design-integration.md), [electrical topology editor](electrical-topology-editor.md), [engineering validation](engineering-validation-engine.md), [design environment](engineering-design-environment.md) |
+| `phase*.md` | The build history of the shading engine, electrical shading and browser integration, phase by phase, with their acceptance evidence (for example the [unshaded](phase49a-unshaded-reference-matrix.md) and [shaded](phase49b-shaded-reference-geometry.md) reference matrices and the [analytical/external validation matrix](phase510-analytical-external-validation.md)) |
+| [`validation/`](validation/), [`audits/`](audits/), [`evidence/`](evidence/) | Validation runs, audits of specific engine areas (real-weather execution, inverter losses, design readiness, detailed-shading provenance) and component evidence |
+| [`proposals/`](proposals/) | Draft contracts for features under design |
 
-The v0.1 architecture is governed by six specification families:
-
-
-1. **System Architecture & Engineering Specification** — product boundary, engineering philosophy, subsystem architecture, deployment model, roadmap, and acceptance criteria.
-2. **Canonical Data Model Specification** — authoritative internal engineering entities, revisions, units, provenance, geometry, electrical topology, weather, simulation configuration, results, and validation objects.
-3. **Open Component Library Specification** — module/inverter data, provenance, revisions, PAN/OND import, validation, verification, and redistribution boundaries.
-4. **Simulation Engine Specification** — timestep semantics, weather processing, solar/irradiance models, shading interfaces, thermal/electrical models, inverter behavior, loss accounting, reproducibility, and validation.
-5. **PV Scene Editor & Near-Shading Specification** — constrained parametric PV layout, exact dimensions, scene geometry, editing behavior, and shading workflow.
-6. **Validation Benchmark & Reference Cases Specification** — benchmark authority hierarchy, tolerance classes, analytical/numerical reference cases, end-to-end validation, regression policy, and release gates.
-
-
-The repository structure and implementation should follow these engineering anchors rather than allowing implementation details to redefine the engineering model.
-
-
-## Machine-readable implementation
-
-
-The first executable translation of the anchors lives in:
-
-
-- `schemas/` for cross-domain canonical JSON Schemas;
-- `components/schema/` for module and inverter schemas;
-- `weather/schema/` for weather schemas;
-- `tests/benchmarks/` for benchmark and tolerance registries;
-- `tests/reference/` for independent analytical references;
-- `tests/fixtures/` for synthetic redistributable inputs;
-- `tests/unit/` for executable validation tests.
-
+Some internal working notes (development tooling, performance diagnostics, handovers) are kept in the private
+development repository and are not part of this public copy. The PVsyst comparisons on client projects and the
+whole-engine physics review are summarised on the wiki without their details.
 
 ## Documentation policy
 
