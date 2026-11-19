@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/site-workspace-bootstrap.schema.json",
+  "title": "OpenSIMPV SiteWorkspaceBootstrap v0.1",
+  "description": "Browser bootstrap contract for one coordinate-anchored engineering workspace. Map overlay and blank plane are renderer contexts over the same canonical Site and LocalCoordinateSystem.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "project_id",
+    "site",
+    "workspace_context"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "SiteWorkspaceBootstrap"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "site": {
+      "type": "object",
+      "required": [
+        "site_id",
+        "latitude_deg",
+        "longitude_deg",
+        "timezone",
+        "north_reference",
+        "local_coordinate_system_id"
+      ],
+      "properties": {
+        "site_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "latitude_deg": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude_deg": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "elevation_m": {
+          "type": ["number", "null"]
+        },
+        "timezone": {
+          "type": "string",
+          "minLength": 1
+        },
+        "north_reference": {
+          "const": "geodetic_true_north"
+        },
+        "local_coordinate_system_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "workspace_context": {
+      "type": "object",
+      "required": ["mode"],
+      "properties": {
+        "mode": {
+          "enum": ["map_overlay", "blank_engineering_plane"]
+        },
+        "map_layer_configuration_id": {
+          "type": ["string", "null"]
+        },
+        "show_true_north": {
+          "type": "boolean"
+        },
+        "show_metric_grid": {
+          "type": "boolean"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "blank_engineering_plane"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "map_layer_configuration_id": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

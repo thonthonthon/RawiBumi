@@ -1,0 +1,150 @@
+schema_version: "0.1"
+evidence_id: P39H-VC0-ATTR-20260923
+case_id: VC0
+oracle_id: P39-HR1-PVSYST816-20260923
+source_sha256: 68e1f281d48500585a8f35da90a23e08db354a7b4468b95e0e8f79ff2d40439b
+status: acceptance_candidate_pass_pending_exact_canonical_spa_execution
+reason: >
+  All frozen Phase-3.9 annual/monthly acceptance thresholds pass under the
+  PVsyst-geometry stage-isolation chain and under an independent high-accuracy
+  solar-geometry proxy. The local analysis environment did not contain pvlib,
+  so this evidence is not relabelled as an exact execution of the canonical
+  NREL-SPA adapter. The repository now contains the external-oracle runner
+  required for the exact execution in an environment with project dependencies.
+
+reference:
+  glob_hor_kwh_m2: 1749.8706369
+  diff_hor_kwh_m2: 860.1768670
+  ambient_temp_c: 28.04189452054794
+  glob_inc_kwh_m2: 1758.0986391
+  glob_eff_kwh_m2: 1752.0930667
+  array_nominal_energy_kwh: 208270.8820
+  irradiance_level_loss_pct: -0.029308561722041215
+  temperature_loss_pct: -9.407194695861843
+  module_quality_effect_pct: 0.7500008918577272
+  mismatch_loss_pct: -2.00000104295035
+  dc_wiring_loss_pct: -1.0086776894101646
+  array_virtual_mpp_kwh: 184358.5211
+  inverter_conversion_loss_pct: -1.3585907421341359
+  inverter_clipping_loss_pct: 0.0
+  e_grid_kwh: 181795.8099
+  ilpmxsh_kwh: 49.3015
+  specific_yield_kwh_kwp: 1530.26776010101
+  pr: 0.8704106391233994
+
+stage_isolation:
+  poa_with_pvsyst_geometry:
+    glob_inc_kwh_m2: 1757.8413167029582
+    relative_error_pct: -0.01463640272048039
+    beam_relative_error_pct: 0.0000154
+    circumsolar_relative_error_pct: 0.0551
+    note: >
+      Hourly Perez-1990 transposition is essentially aligned when solar geometry
+      is supplied by the oracle.
+  iam_with_pvsyst_geometry_and_opensimpv_poa:
+    glob_eff_kwh_m2: 1749.901267272776
+    relative_error_pct: -0.1250960618976671
+    note: >
+      Small named difference consistent with the existing PAN TCubic/diffuse-IAM
+      execution boundary; exact PVsyst TCubic equivalence is not claimed.
+  thermal_with_pvsyst_optical_inputs:
+    mean_bias_c: 0.06281
+    mae_c: 0.06292
+    rmse_c: 0.08616
+    max_abs_c: 0.61079
+    note: >
+      Current PVsyst-8.1 adapted-Prilliman implementation is closely aligned and
+      is not a material VC0 divergence.
+  module_sdm_with_pvsyst_glob_eff_and_tarray:
+    opensimpv_raw_pre_quality_kwh: 188415.7027
+    pvsyst_raw_pre_quality_kwh: 188623.1357
+    relative_error_pct: -0.109972
+    model_stc_pmp_w: 546.3108337388079
+    note: >
+      The PAN-derived single-diode model is closely aligned. The modeled STC Pmp
+      differs from the PAN nominal 550 W because the detailed source parameter
+      set is solved self-consistently.
+
+acceptance_candidate_pvsyst_geometry:
+  method: >
+    Same horizontal weather; PVsyst solar geometry injected only to isolate
+    downstream canonical equations. OpenSIMPV Perez/IAM/thermal/module/loss/
+    inverter equations are then executed in stage order.
+  metrics:
+    glob_hor_kwh_m2: 1749.8706369
+    diff_hor_kwh_m2: 860.1768670
+    ambient_temp_c: 28.04189452054794
+    glob_inc_kwh_m2: 1757.8413167029582
+    glob_eff_kwh_m2: 1749.901267272776
+    array_nominal_energy_kwh: 206493.84438142754
+    irradiance_level_loss_pct: 0.2981323019955795
+    temperature_loss_pct: -9.159873643693162
+    module_quality_effect_pct: 0.7500000000000062
+    mismatch_loss_pct: -1.9999999999999907
+    dc_wiring_loss_pct: -0.9921055397774436
+    array_virtual_mpp_kwh: 183915.6305975892
+    inverter_conversion_loss_pct: -1.360230073291424
+    inverter_clipping_loss_pct: 0.0
+    e_grid_kwh: 181401.0759343974
+    specific_yield_kwh_kwp: 1526.9450836228739
+    pr: 0.8686478518361611
+  monthly_grid:
+    rms_relative_error_pct: 0.21570886622652732
+    maximum_absolute_relative_error_pct: 0.26727653691207187
+  frozen_threshold_result: pass
+  first_nonpassing_stage: null
+
+independent_solar_geometry_proxy:
+  method: high_accuracy_meeus_noaa_equation_mirror_not_canonical_nrel_spa
+  geometry_on_irradiated_intervals:
+    ghi_weighted_abs_elevation_difference_deg: 0.0594
+    ghi_weighted_abs_azimuth_difference_deg: 0.1677
+    elevation_mae_above_10deg_deg: 0.0474
+    elevation_max_above_10deg_deg: 0.1204
+  metrics:
+    glob_inc_kwh_m2: 1756.8280460345777
+    glob_eff_kwh_m2: 1748.9385889342693
+    array_nominal_energy_kwh: 206380.24531458944
+    irradiance_level_loss_pct: 0.3004372418095258
+    temperature_loss_pct: -9.16384033123009
+    module_quality_effect_pct: 0.7500000000000062
+    mismatch_loss_pct: -2.0000000000000018
+    dc_wiring_loss_pct: -0.9927331411672458
+    array_virtual_mpp_kwh: 183809.4848579833
+    inverter_conversion_loss_pct: -1.3635519650746608
+    inverter_clipping_loss_pct: 0.0
+    e_grid_kwh: 181290.26635726643
+    specific_yield_kwh_kwp: 1526.0123430746332
+    pr: 0.8686179313445446
+  monthly_grid:
+    rms_relative_error_pct: 0.3163289659177131
+    maximum_absolute_relative_error_pct: 0.6015350451813175
+  frozen_threshold_result: pass
+  first_nonpassing_stage: null
+
+largest_residuals_within_acceptance:
+  array_nominal_energy_relative_error_pct: -0.8532338277476792
+  irradiance_level_effect_delta_percentage_point: 0.3274408637176207
+  temperature_effect_delta_percentage_point: 0.24732105216868128
+  array_virtual_mpp_relative_error_pct: -0.2402332692670013
+  e_grid_relative_error_pct: -0.2171303980106678
+
+named_model_boundaries:
+  - id: PAN_TCUBIC_IAM_EXECUTION
+    status: visible_small_difference
+  - id: PVSYST81_TRANSIENT_HISTORY_EDGE
+    status: visible_small_difference
+  - id: PVSYST_ILPMXSH
+    status: not_implemented_named_difference
+    reference_kwh: 49.3015
+    ordinary_hourly_clipping_il_pmax_kwh: 0.0
+  - id: PVSYST_EARRAY_DC_OPERATING_POINT_FEEDBACK
+    status: intentionally_not_mapped
+
+governing_interpretation:
+  - No frozen acceptance metric fails in the current VC0 evidence envelope.
+  - Therefore there is no first nonpassing physics stage to attribute.
+  - The result is not a claim of bit-for-bit PVsyst equivalence.
+  - Exact canonical acceptance is completed only by running the new detailed-hourly
+    attribution runner with the external VC0 CSV in an environment containing the
+    project dependencies, including pvlib NREL SPA.

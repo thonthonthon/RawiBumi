@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/pv-field-command.schema.json",
+  "title": "OpenSIMPV PVFieldCommand v0.1",
+  "description": "Explicit PV-field generation and manual module-edit command envelope. Commands are interaction state; accepted output is canonical Scene/PVField/ModuleInstance data.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "command_id",
+    "command_type",
+    "pv_field_id",
+    "parameters"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "PVFieldCommand"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "command_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "command_type": {
+      "enum": [
+        "fill_area",
+        "find_maximum_modules",
+        "orient_to_edge",
+        "align_rows",
+        "equalize_spacing",
+        "change_orientation",
+        "rebuild_field",
+        "move_module",
+        "rotate_module"
+      ]
+    },
+    "pv_field_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parameters": {
+      "type": "object"
+    },
+    "issued_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

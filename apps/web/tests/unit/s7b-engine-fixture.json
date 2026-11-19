@@ -1,0 +1,1811 @@
+{
+  "id": "surface-9600fca430",
+  "views": {
+    "before": {
+      "bundle": {
+        "electrical_design": {
+          "change_summary": "Initial empty browser electrical design.",
+          "connections": [],
+          "created_at": "2026-10-30T09:16:08.553972Z",
+          "created_by": "browser-api",
+          "electrical_revision_id": "project-618f96afd3-electrical-r1",
+          "inverter_instances": [],
+          "mppt_instances": [],
+          "pcc_definition": {
+            "name": "PCC",
+            "pcc_id": "project-618f96afd3-pcc"
+          },
+          "project_id": "project-618f96afd3",
+          "project_revision_id": "project-618f96afd3-r1",
+          "revision_number": 1,
+          "schema_name": "ElectricalDesignRevision",
+          "schema_version": "0.1",
+          "status": "active",
+          "strings": [],
+          "supersedes_revision_id": null
+        },
+        "electrical_shading_selections": {},
+        "pinned_components": {
+          "inverters": {},
+          "modules": {}
+        },
+        "pinned_electrical_shading_assets": {
+          "electrical_parameterization_definitions": {},
+          "electrical_parameterization_evidence": {},
+          "module_topologies": {},
+          "sources": {}
+        },
+        "project": {
+          "description": null,
+          "name": "S7b parity fixture",
+          "project_id": "project-618f96afd3",
+          "project_revision": {
+            "change_summary": "Added surface surface-9600fca430.",
+            "electrical_revision_id": "project-618f96afd3-electrical-r1",
+            "project_revision_id": "project-618f96afd3-r2",
+            "revision_number": 2,
+            "scene_revision_id": "project-618f96afd3-scene-r2",
+            "simulation_defaults_revision_id": null,
+            "supersedes_revision_id": "project-618f96afd3-r1",
+            "weather_dataset_revision_id": null
+          },
+          "schema_name": "Project",
+          "schema_version": "0.1",
+          "site": {
+            "elevation_m": 0.0,
+            "latitude_deg": -6.9,
+            "local_coordinate_system": {
+              "coordinate_system_id": "project-618f96afd3-lcs",
+              "geographic_crs": "EPSG:4326",
+              "local_frame": "rotated_enu",
+              "map_projection": {
+                "crs": "EPSG:3857",
+                "role": "context_only"
+              },
+              "origin_elevation_m": 0.0,
+              "origin_latitude_deg": -6.9,
+              "origin_longitude_deg": 107.6,
+              "rotation_convention": "positive_clockwise_local_y_from_true_north",
+              "rotation_from_true_north_deg": 0.0,
+              "schema_name": "LocalCoordinateSystem",
+              "schema_version": "0.1",
+              "site_id": "project-618f96afd3-site",
+              "x_axis_definition": "East",
+              "y_axis_definition": "North",
+              "z_axis_definition": "Up"
+            },
+            "longitude_deg": 107.6,
+            "name": "S7b parity fixture",
+            "north_reference": "geodetic_true_north",
+            "site_id": "project-618f96afd3-site",
+            "timezone": "Asia/Jakarta"
+          },
+          "status": "design"
+        },
+        "scene": {
+          "change_summary": "Added surface surface-9600fca430.",
+          "coordinate_system_id": "project-618f96afd3-lcs",
+          "created_at": "2026-10-30T09:16:08.688872Z",
+          "created_by": "browser-api",
+          "map_layer_configuration": null,
+          "module_instances": [],
+          "notes": "Phase-6.0C browser workspace scene.",
+          "obstacles": [],
+          "project_id": "project-618f96afd3",
+          "pv_fields": [],
+          "reference_lines": [],
+          "revision_id": "project-618f96afd3-scene-r2",
+          "revision_number": 2,
+          "scene_id": "project-618f96afd3-scene",
+          "schema_name": "Scene",
+          "schema_version": "0.1",
+          "status": "active",
+          "supersedes_revision_id": "project-618f96afd3-scene-r1",
+          "surfaces": [
+            {
+              "albedo": null,
+              "azimuth_deg": 0.0,
+              "base_elevation_m": 6.1,
+              "boundary_2d": {
+                "closed": true,
+                "holes": [],
+                "vertices": [
+                  [
+                    20.0,
+                    0.0
+                  ],
+                  [
+                    24.0,
+                    0.0
+                  ],
+                  [
+                    24.0,
+                    3.0
+                  ],
+                  [
+                    20.0,
+                    3.0
+                  ]
+                ],
+                "winding": "counterclockwise"
+              },
+              "edge_dimension_sources": [
+                {
+                  "edge_index": 0,
+                  "original_value_m": null,
+                  "source": "user_override",
+                  "source_reference_id": null,
+                  "value_m": 4.0
+                },
+                {
+                  "edge_index": 1,
+                  "original_value_m": null,
+                  "source": "user_override",
+                  "source_reference_id": null,
+                  "value_m": 3.0
+                },
+                {
+                  "edge_index": 2,
+                  "original_value_m": null,
+                  "source": "user_override",
+                  "source_reference_id": null,
+                  "value_m": 4.0
+                },
+                {
+                  "edge_index": 3,
+                  "original_value_m": null,
+                  "source": "user_override",
+                  "source_reference_id": null,
+                  "value_m": 3.0
+                }
+              ],
+              "geometry_source": "user_override",
+              "group_id": null,
+              "locked": false,
+              "material": null,
+              "metadata": {
+                "scene_id": "project-618f96afd3-scene"
+              },
+              "name": "Free roof",
+              "notes": null,
+              "parent_surface_id": null,
+              "scene_object_id": "obj-surface-9600fca430",
+              "selectable": true,
+              "shading_receiver": false,
+              "slope_deg": 0.0,
+              "surface_id": "surface-9600fca430",
+              "surface_type": "flat_roof",
+              "usable_for_pv": true,
+              "visible": true
+            }
+          ]
+        },
+        "schema_name": "ProjectWorkspaceBundle",
+        "schema_version": "0.1",
+        "simulation_runs": [],
+        "site_workspace_bootstrap": {
+          "project_id": "project-618f96afd3",
+          "schema_name": "SiteWorkspaceBootstrap",
+          "schema_version": "0.1",
+          "site": {
+            "elevation_m": 0.0,
+            "latitude_deg": -6.9,
+            "local_coordinate_system_id": "project-618f96afd3-lcs",
+            "longitude_deg": 107.6,
+            "north_reference": "geodetic_true_north",
+            "site_id": "project-618f96afd3-site",
+            "timezone": "Asia/Jakarta"
+          },
+          "workspace_context": {
+            "map_layer_configuration_id": null,
+            "mode": "blank_engineering_plane",
+            "show_metric_grid": true,
+            "show_true_north": true
+          }
+        },
+        "updated_at": "2026-10-30T09:16:08.688996Z",
+        "weather_selection": null,
+        "workspace_state": {
+          "active_project_revision_id": "project-618f96afd3-r2",
+          "active_tool": null,
+          "layer_visibility": {
+            "map": false,
+            "modules": true,
+            "obstacles": true,
+            "surfaces": true
+          },
+          "mode": "plan",
+          "panel_state": {
+            "site_workspace_mode": "blank_engineering_plane"
+          },
+          "plan_viewport": {
+            "center_x_m": 0.0,
+            "center_y_m": 0.0,
+            "pixels_per_m": 20.0,
+            "rotation_deg": 0.0
+          },
+          "project_id": "project-618f96afd3",
+          "schema_name": "DesignWorkspaceState",
+          "schema_version": "0.1",
+          "selection": {
+            "primary_entity_id": null,
+            "selected_entity_ids": []
+          },
+          "snap_preferences": {
+            "edge": true,
+            "enabled": true,
+            "grid_spacing_m": 0.5,
+            "midpoint": true,
+            "override_active": false,
+            "snap_tolerance_m": 0.1,
+            "vertex": true
+          },
+          "updated_at": "2026-10-30T09:16:08.553976Z",
+          "workspace_state_id": "project-618f96afd3-workspace"
+        }
+      },
+      "scene_view": {
+        "local_features": [
+          {
+            "id": "surface-9600fca430",
+            "category": "surface",
+            "subtype": "flat_roof",
+            "name": "Free roof",
+            "polygon": [
+              [
+                20.0,
+                0.0
+              ],
+              [
+                24.0,
+                0.0
+              ],
+              [
+                24.0,
+                3.0
+              ],
+              [
+                20.0,
+                3.0
+              ]
+            ]
+          }
+        ],
+        "geojson": {
+          "type": "FeatureCollection",
+          "features": [
+            {
+              "type": "Feature",
+              "id": "surface-9600fca430",
+              "properties": {
+                "id": "surface-9600fca430",
+                "category": "surface",
+                "subtype": "flat_roof",
+                "name": "Free roof"
+              },
+              "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                  [
+                    [
+                      107.60018096504513,
+                      -6.89999999996569
+                    ],
+                    [
+                      107.60021715805414,
+                      -6.899999999950593
+                    ],
+                    [
+                      107.6002171580418,
+                      -6.899972872798242
+                    ],
+                    [
+                      107.60018096503484,
+                      -6.899972872813337
+                    ],
+                    [
+                      107.60018096504513,
+                      -6.89999999996569
+                    ]
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "site": {
+          "latitude_deg": -6.9,
+          "longitude_deg": 107.6,
+          "elevation_m": 0.0,
+          "timezone": "Asia/Jakarta",
+          "north_reference": "geodetic_true_north"
+        }
+      },
+      "topology_view": {
+        "schema_name": "ElectricalTopologyView",
+        "schema_version": "0.1",
+        "electrical_revision_id": "project-618f96afd3-electrical-r1",
+        "pcc_definition": {
+          "name": "PCC",
+          "pcc_id": "project-618f96afd3-pcc"
+        },
+        "inverters": [],
+        "unassigned_strings": []
+      },
+      "topology_consistency": {
+        "schema_name": "ElectricalTopologyConsistencyReport",
+        "schema_version": "0.1",
+        "electrical_revision_id": "project-618f96afd3-electrical-r1",
+        "blocking_count": 0,
+        "draft_count": 0,
+        "findings": []
+      },
+      "identity": {
+        "scene_hash": "58dc063bfc779644ba2a02e123fec128428d94fbe5053345e16e0d1c5cbf51f2",
+        "electrical_hash": "1d4d8691834057f191cecb676449fd309009055091a90f302f43127f77819482"
+      },
+      "catalog": {
+        "modules": [
+          {
+            "revision_id": "mod-rawibumi-ref-650-r1",
+            "manufacturer": "RawiBumi Reference",
+            "model": "REF-MOD-650",
+            "pmp_w": 650.0,
+            "width_m": 1.134,
+            "height_m": 2.382,
+            "synthetic_reference": true,
+            "simulation_ready": false,
+            "electrical_shading": {
+              "module_revision_id": "mod-rawibumi-ref-650-r1",
+              "topology_revision_ids": [],
+              "topology_selection_required": false,
+              "maximum_fidelity_without_topology_selection": "level_0_geometric_only",
+              "available_fidelity_without_topology_selection": [
+                "level_0_geometric_only"
+              ],
+              "findings": [
+                {
+                  "code": "ELECTRICAL_SHADING_MODULE_CAPABILITY_EVIDENCE_INVALID",
+                  "severity": "warning",
+                  "message": "detailed electrical shading requires resolved model module.pvsyst_singlediode.v6"
+                }
+              ]
+            }
+          },
+          {
+            "revision_id": "mod-rawibumi-uat-550-r1",
+            "manufacturer": "OpenSIMPV Synthetic",
+            "model": "SYN-MOD-550-UAT",
+            "pmp_w": 550.0956,
+            "width_m": 1.134,
+            "height_m": 2.278,
+            "synthetic_reference": true,
+            "simulation_ready": true,
+            "electrical_shading": {
+              "module_revision_id": "mod-rawibumi-uat-550-r1",
+              "topology_revision_ids": [
+                "topology-rawibumi-uat-550-r1"
+              ],
+              "topology_selection_required": true,
+              "maximum_fidelity_without_topology_selection": "level_1_module_approximation",
+              "available_fidelity_without_topology_selection": [
+                "level_0_geometric_only",
+                "level_1_module_approximation"
+              ],
+              "findings": []
+            }
+          }
+        ],
+        "inverters": [
+          {
+            "revision_id": "inv-rawibumi-ref-150k-r1",
+            "manufacturer": "RawiBumi Reference",
+            "model": "REF-INV-150K",
+            "nominal_ac_power_w": 150000,
+            "mppt_count": 2,
+            "synthetic_reference": true,
+            "simulation_ready": false,
+            "execution_readiness_findings": [
+              {
+                "rule_id": "EXECUTION_INVERTER_EXPLICIT_MPPTS_UNSUPPORTED",
+                "severity": "blocking_error",
+                "category": "execution_readiness",
+                "entity_id": "inv-rawibumi-ref-150k-r1",
+                "message": "The current Phase-5 worker executes the homogeneous mppt_template contract only. Explicit mppts[] definitions are valid canonical design data but require a topology-specific electrical runtime.",
+                "context": {}
+              },
+              {
+                "rule_id": "EXECUTION_INVERTER_MPPT_TEMPLATE_REQUIRED",
+                "severity": "blocking_error",
+                "category": "execution_readiness",
+                "entity_id": "inv-rawibumi-ref-150k-r1",
+                "message": "The current Phase-5 worker requires inverter mppt_template.",
+                "context": {}
+              }
+            ]
+          },
+          {
+            "revision_id": "inv-rawibumi-uat-150k-r1",
+            "manufacturer": "RawiBumi Reference",
+            "model": "UAT-INV-150K-HOM",
+            "nominal_ac_power_w": 150000,
+            "mppt_count": 2,
+            "synthetic_reference": true,
+            "simulation_ready": true,
+            "execution_readiness_findings": []
+          }
+        ],
+        "module_topologies": [
+          {
+            "revision_id": "topology-rawibumi-uat-550-r1",
+            "module_definition_revision_id": "mod-rawibumi-uat-550-r1",
+            "region_resolution": "grouped_cells",
+            "verification_state": "reviewed",
+            "topology_provenance": "manual_verified",
+            "source_ids": [
+              "src-rawibumi-uat-topology-fixture"
+            ],
+            "bypass_coverage_complete": true,
+            "synthetic_reference": true
+          }
+        ]
+      }
+    },
+    "rotated": {
+      "bundle": {
+        "electrical_design": {
+          "change_summary": "Initial empty browser electrical design.",
+          "connections": [],
+          "created_at": "2026-10-30T09:16:08.553972Z",
+          "created_by": "browser-api",
+          "electrical_revision_id": "project-618f96afd3-electrical-r1",
+          "inverter_instances": [],
+          "mppt_instances": [],
+          "pcc_definition": {
+            "name": "PCC",
+            "pcc_id": "project-618f96afd3-pcc"
+          },
+          "project_id": "project-618f96afd3",
+          "project_revision_id": "project-618f96afd3-r1",
+          "revision_number": 1,
+          "schema_name": "ElectricalDesignRevision",
+          "schema_version": "0.1",
+          "status": "active",
+          "strings": [],
+          "supersedes_revision_id": null
+        },
+        "electrical_shading_selections": {},
+        "pinned_components": {
+          "inverters": {},
+          "modules": {}
+        },
+        "pinned_electrical_shading_assets": {
+          "electrical_parameterization_definitions": {},
+          "electrical_parameterization_evidence": {},
+          "module_topologies": {},
+          "sources": {}
+        },
+        "project": {
+          "description": null,
+          "name": "S7b parity fixture",
+          "project_id": "project-618f96afd3",
+          "project_revision": {
+            "change_summary": "Scene command rotate on ['surface-9600fca430'] (rotated).",
+            "electrical_revision_id": "project-618f96afd3-electrical-r1",
+            "project_revision_id": "project-618f96afd3-r3",
+            "revision_number": 3,
+            "scene_revision_id": "project-618f96afd3-scene-r3",
+            "simulation_defaults_revision_id": null,
+            "supersedes_revision_id": "project-618f96afd3-r2",
+            "weather_dataset_revision_id": null
+          },
+          "schema_name": "Project",
+          "schema_version": "0.1",
+          "site": {
+            "elevation_m": 0.0,
+            "latitude_deg": -6.9,
+            "local_coordinate_system": {
+              "coordinate_system_id": "project-618f96afd3-lcs",
+              "geographic_crs": "EPSG:4326",
+              "local_frame": "rotated_enu",
+              "map_projection": {
+                "crs": "EPSG:3857",
+                "role": "context_only"
+              },
+              "origin_elevation_m": 0.0,
+              "origin_latitude_deg": -6.9,
+              "origin_longitude_deg": 107.6,
+              "rotation_convention": "positive_clockwise_local_y_from_true_north",
+              "rotation_from_true_north_deg": 0.0,
+              "schema_name": "LocalCoordinateSystem",
+              "schema_version": "0.1",
+              "site_id": "project-618f96afd3-site",
+              "x_axis_definition": "East",
+              "y_axis_definition": "North",
+              "z_axis_definition": "Up"
+            },
+            "longitude_deg": 107.6,
+            "name": "S7b parity fixture",
+            "north_reference": "geodetic_true_north",
+            "site_id": "project-618f96afd3-site",
+            "timezone": "Asia/Jakarta"
+          },
+          "status": "design"
+        },
+        "scene": {
+          "change_summary": "Scene command rotate on ['surface-9600fca430'] (rotated).",
+          "coordinate_system_id": "project-618f96afd3-lcs",
+          "created_at": "2026-10-30T09:16:08.778119Z",
+          "created_by": "browser-api",
+          "map_layer_configuration": null,
+          "module_instances": [],
+          "notes": "Phase-6.0C browser workspace scene.",
+          "obstacles": [],
+          "project_id": "project-618f96afd3",
+          "pv_fields": [],
+          "reference_lines": [],
+          "revision_id": "project-618f96afd3-scene-r3",
+          "revision_number": 3,
+          "scene_id": "project-618f96afd3-scene",
+          "schema_name": "Scene",
+          "schema_version": "0.1",
+          "status": "active",
+          "supersedes_revision_id": "project-618f96afd3-scene-r2",
+          "surfaces": [
+            {
+              "albedo": null,
+              "azimuth_deg": 0.0,
+              "base_elevation_m": 6.1,
+              "boundary_2d": {
+                "closed": true,
+                "holes": [],
+                "vertices": [
+                  [
+                    19.51794919243112,
+                    1.200961894323342
+                  ],
+                  [
+                    22.98205080756888,
+                    -0.7990381056766579
+                  ],
+                  [
+                    24.48205080756888,
+                    1.799038105676658
+                  ],
+                  [
+                    21.01794919243112,
+                    3.799038105676658
+                  ]
+                ],
+                "winding": "counterclockwise"
+              },
+              "edge_dimension_sources": [
+                {
+                  "edge_index": 0,
+                  "original_value_m": null,
+                  "source": "user_override",
+                  "source_reference_id": null,
+                  "value_m": 4.0
+                },
+                {
+                  "edge_index": 1,
+                  "original_value_m": null,
+                  "source": "user_override",
+                  "source_reference_id": null,
+                  "value_m": 3.0
+                },
+                {
+                  "edge_index": 2,
+                  "original_value_m": null,
+                  "source": "user_override",
+                  "source_reference_id": null,
+                  "value_m": 4.0
+                },
+                {
+                  "edge_index": 3,
+                  "original_value_m": null,
+                  "source": "user_override",
+                  "source_reference_id": null,
+                  "value_m": 3.0
+                }
+              ],
+              "geometry_source": "user_override",
+              "group_id": null,
+              "locked": false,
+              "material": null,
+              "metadata": {
+                "scene_id": "project-618f96afd3-scene"
+              },
+              "name": "Free roof",
+              "notes": null,
+              "parent_surface_id": null,
+              "scene_object_id": "obj-surface-9600fca430",
+              "selectable": true,
+              "shading_receiver": false,
+              "slope_deg": 0.0,
+              "surface_id": "surface-9600fca430",
+              "surface_type": "flat_roof",
+              "usable_for_pv": true,
+              "visible": true
+            }
+          ]
+        },
+        "schema_name": "ProjectWorkspaceBundle",
+        "schema_version": "0.1",
+        "simulation_runs": [],
+        "site_workspace_bootstrap": {
+          "project_id": "project-618f96afd3",
+          "schema_name": "SiteWorkspaceBootstrap",
+          "schema_version": "0.1",
+          "site": {
+            "elevation_m": 0.0,
+            "latitude_deg": -6.9,
+            "local_coordinate_system_id": "project-618f96afd3-lcs",
+            "longitude_deg": 107.6,
+            "north_reference": "geodetic_true_north",
+            "site_id": "project-618f96afd3-site",
+            "timezone": "Asia/Jakarta"
+          },
+          "workspace_context": {
+            "map_layer_configuration_id": null,
+            "mode": "blank_engineering_plane",
+            "show_metric_grid": true,
+            "show_true_north": true
+          }
+        },
+        "updated_at": "2026-10-30T09:16:08.778235Z",
+        "weather_selection": null,
+        "workspace_state": {
+          "active_project_revision_id": "project-618f96afd3-r3",
+          "active_tool": null,
+          "layer_visibility": {
+            "map": false,
+            "modules": true,
+            "obstacles": true,
+            "surfaces": true
+          },
+          "mode": "plan",
+          "panel_state": {
+            "site_workspace_mode": "blank_engineering_plane"
+          },
+          "plan_viewport": {
+            "center_x_m": 0.0,
+            "center_y_m": 0.0,
+            "pixels_per_m": 20.0,
+            "rotation_deg": 0.0
+          },
+          "project_id": "project-618f96afd3",
+          "schema_name": "DesignWorkspaceState",
+          "schema_version": "0.1",
+          "selection": {
+            "primary_entity_id": null,
+            "selected_entity_ids": []
+          },
+          "snap_preferences": {
+            "edge": true,
+            "enabled": true,
+            "grid_spacing_m": 0.5,
+            "midpoint": true,
+            "override_active": false,
+            "snap_tolerance_m": 0.1,
+            "vertex": true
+          },
+          "updated_at": "2026-10-30T09:16:08.553976Z",
+          "workspace_state_id": "project-618f96afd3-workspace"
+        }
+      },
+      "scene_view": {
+        "local_features": [
+          {
+            "id": "surface-9600fca430",
+            "category": "surface",
+            "subtype": "flat_roof",
+            "name": "Free roof",
+            "polygon": [
+              [
+                19.51794919243112,
+                1.200961894323342
+              ],
+              [
+                22.98205080756888,
+                -0.7990381056766579
+              ],
+              [
+                24.48205080756888,
+                1.799038105676658
+              ],
+              [
+                21.01794919243112,
+                3.799038105676658
+              ]
+            ]
+          }
+        ],
+        "geojson": {
+          "type": "FeatureCollection",
+          "features": [
+            {
+              "type": "Feature",
+              "id": "surface-9600fca430",
+              "properties": {
+                "id": "surface-9600fca430",
+                "category": "surface",
+                "subtype": "flat_roof",
+                "name": "Free roof"
+              },
+              "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                  [
+                    [
+                      107.6001766033238,
+                      -6.899989140408568
+                    ],
+                    [
+                      107.6002079473962,
+                      -6.900007225164166
+                    ],
+                    [
+                      107.60022151976386,
+                      -6.8999837323549995
+                    ],
+                    [
+                      107.60019017569249,
+                      -6.8999656476002755
+                    ],
+                    [
+                      107.6001766033238,
+                      -6.899989140408568
+                    ]
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "site": {
+          "latitude_deg": -6.9,
+          "longitude_deg": 107.6,
+          "elevation_m": 0.0,
+          "timezone": "Asia/Jakarta",
+          "north_reference": "geodetic_true_north"
+        }
+      },
+      "topology_view": {
+        "schema_name": "ElectricalTopologyView",
+        "schema_version": "0.1",
+        "electrical_revision_id": "project-618f96afd3-electrical-r1",
+        "pcc_definition": {
+          "name": "PCC",
+          "pcc_id": "project-618f96afd3-pcc"
+        },
+        "inverters": [],
+        "unassigned_strings": []
+      },
+      "topology_consistency": {
+        "schema_name": "ElectricalTopologyConsistencyReport",
+        "schema_version": "0.1",
+        "electrical_revision_id": "project-618f96afd3-electrical-r1",
+        "blocking_count": 0,
+        "draft_count": 0,
+        "findings": []
+      },
+      "identity": {
+        "scene_hash": "12c1aa297c4713cf96f7b1c84b4cb144be46dc955ea31131600f62a843dff3fe",
+        "electrical_hash": "1d4d8691834057f191cecb676449fd309009055091a90f302f43127f77819482"
+      },
+      "catalog": {
+        "modules": [
+          {
+            "revision_id": "mod-rawibumi-ref-650-r1",
+            "manufacturer": "RawiBumi Reference",
+            "model": "REF-MOD-650",
+            "pmp_w": 650.0,
+            "width_m": 1.134,
+            "height_m": 2.382,
+            "synthetic_reference": true,
+            "simulation_ready": false,
+            "electrical_shading": {
+              "module_revision_id": "mod-rawibumi-ref-650-r1",
+              "topology_revision_ids": [],
+              "topology_selection_required": false,
+              "maximum_fidelity_without_topology_selection": "level_0_geometric_only",
+              "available_fidelity_without_topology_selection": [
+                "level_0_geometric_only"
+              ],
+              "findings": [
+                {
+                  "code": "ELECTRICAL_SHADING_MODULE_CAPABILITY_EVIDENCE_INVALID",
+                  "severity": "warning",
+                  "message": "detailed electrical shading requires resolved model module.pvsyst_singlediode.v6"
+                }
+              ]
+            }
+          },
+          {
+            "revision_id": "mod-rawibumi-uat-550-r1",
+            "manufacturer": "OpenSIMPV Synthetic",
+            "model": "SYN-MOD-550-UAT",
+            "pmp_w": 550.0956,
+            "width_m": 1.134,
+            "height_m": 2.278,
+            "synthetic_reference": true,
+            "simulation_ready": true,
+            "electrical_shading": {
+              "module_revision_id": "mod-rawibumi-uat-550-r1",
+              "topology_revision_ids": [
+                "topology-rawibumi-uat-550-r1"
+              ],
+              "topology_selection_required": true,
+              "maximum_fidelity_without_topology_selection": "level_1_module_approximation",
+              "available_fidelity_without_topology_selection": [
+                "level_0_geometric_only",
+                "level_1_module_approximation"
+              ],
+              "findings": []
+            }
+          }
+        ],
+        "inverters": [
+          {
+            "revision_id": "inv-rawibumi-ref-150k-r1",
+            "manufacturer": "RawiBumi Reference",
+            "model": "REF-INV-150K",
+            "nominal_ac_power_w": 150000,
+            "mppt_count": 2,
+            "synthetic_reference": true,
+            "simulation_ready": false,
+            "execution_readiness_findings": [
+              {
+                "rule_id": "EXECUTION_INVERTER_EXPLICIT_MPPTS_UNSUPPORTED",
+                "severity": "blocking_error",
+                "category": "execution_readiness",
+                "entity_id": "inv-rawibumi-ref-150k-r1",
+                "message": "The current Phase-5 worker executes the homogeneous mppt_template contract only. Explicit mppts[] definitions are valid canonical design data but require a topology-specific electrical runtime.",
+                "context": {}
+              },
+              {
+                "rule_id": "EXECUTION_INVERTER_MPPT_TEMPLATE_REQUIRED",
+                "severity": "blocking_error",
+                "category": "execution_readiness",
+                "entity_id": "inv-rawibumi-ref-150k-r1",
+                "message": "The current Phase-5 worker requires inverter mppt_template.",
+                "context": {}
+              }
+            ]
+          },
+          {
+            "revision_id": "inv-rawibumi-uat-150k-r1",
+            "manufacturer": "RawiBumi Reference",
+            "model": "UAT-INV-150K-HOM",
+            "nominal_ac_power_w": 150000,
+            "mppt_count": 2,
+            "synthetic_reference": true,
+            "simulation_ready": true,
+            "execution_readiness_findings": []
+          }
+        ],
+        "module_topologies": [
+          {
+            "revision_id": "topology-rawibumi-uat-550-r1",
+            "module_definition_revision_id": "mod-rawibumi-uat-550-r1",
+            "region_resolution": "grouped_cells",
+            "verification_state": "reviewed",
+            "topology_provenance": "manual_verified",
+            "source_ids": [
+              "src-rawibumi-uat-topology-fixture"
+            ],
+            "bypass_coverage_complete": true,
+            "synthetic_reference": true
+          }
+        ]
+      }
+    },
+    "dimensioned": {
+      "bundle": {
+        "electrical_design": {
+          "change_summary": "Initial empty browser electrical design.",
+          "connections": [],
+          "created_at": "2026-10-30T09:16:08.553972Z",
+          "created_by": "browser-api",
+          "electrical_revision_id": "project-618f96afd3-electrical-r1",
+          "inverter_instances": [],
+          "mppt_instances": [],
+          "pcc_definition": {
+            "name": "PCC",
+            "pcc_id": "project-618f96afd3-pcc"
+          },
+          "project_id": "project-618f96afd3",
+          "project_revision_id": "project-618f96afd3-r1",
+          "revision_number": 1,
+          "schema_name": "ElectricalDesignRevision",
+          "schema_version": "0.1",
+          "status": "active",
+          "strings": [],
+          "supersedes_revision_id": null
+        },
+        "electrical_shading_selections": {},
+        "pinned_components": {
+          "inverters": {},
+          "modules": {}
+        },
+        "pinned_electrical_shading_assets": {
+          "electrical_parameterization_definitions": {},
+          "electrical_parameterization_evidence": {},
+          "module_topologies": {},
+          "sources": {}
+        },
+        "project": {
+          "description": null,
+          "name": "S7b parity fixture",
+          "project_id": "project-618f96afd3",
+          "project_revision": {
+            "change_summary": "Scene command edit_exact_dimension on ['surface-9600fca430'] (dimensioned).",
+            "electrical_revision_id": "project-618f96afd3-electrical-r1",
+            "project_revision_id": "project-618f96afd3-r4",
+            "revision_number": 4,
+            "scene_revision_id": "project-618f96afd3-scene-r4",
+            "simulation_defaults_revision_id": null,
+            "supersedes_revision_id": "project-618f96afd3-r3",
+            "weather_dataset_revision_id": null
+          },
+          "schema_name": "Project",
+          "schema_version": "0.1",
+          "site": {
+            "elevation_m": 0.0,
+            "latitude_deg": -6.9,
+            "local_coordinate_system": {
+              "coordinate_system_id": "project-618f96afd3-lcs",
+              "geographic_crs": "EPSG:4326",
+              "local_frame": "rotated_enu",
+              "map_projection": {
+                "crs": "EPSG:3857",
+                "role": "context_only"
+              },
+              "origin_elevation_m": 0.0,
+              "origin_latitude_deg": -6.9,
+              "origin_longitude_deg": 107.6,
+              "rotation_convention": "positive_clockwise_local_y_from_true_north",
+              "rotation_from_true_north_deg": 0.0,
+              "schema_name": "LocalCoordinateSystem",
+              "schema_version": "0.1",
+              "site_id": "project-618f96afd3-site",
+              "x_axis_definition": "East",
+              "y_axis_definition": "North",
+              "z_axis_definition": "Up"
+            },
+            "longitude_deg": 107.6,
+            "name": "S7b parity fixture",
+            "north_reference": "geodetic_true_north",
+            "site_id": "project-618f96afd3-site",
+            "timezone": "Asia/Jakarta"
+          },
+          "status": "design"
+        },
+        "scene": {
+          "change_summary": "Scene command edit_exact_dimension on ['surface-9600fca430'] (dimensioned).",
+          "coordinate_system_id": "project-618f96afd3-lcs",
+          "created_at": "2026-10-30T09:16:08.864894Z",
+          "created_by": "browser-api",
+          "map_layer_configuration": null,
+          "module_instances": [],
+          "notes": "Phase-6.0C browser workspace scene.",
+          "obstacles": [],
+          "project_id": "project-618f96afd3",
+          "pv_fields": [],
+          "reference_lines": [],
+          "revision_id": "project-618f96afd3-scene-r4",
+          "revision_number": 4,
+          "scene_id": "project-618f96afd3-scene",
+          "schema_name": "Scene",
+          "schema_version": "0.1",
+          "status": "active",
+          "supersedes_revision_id": "project-618f96afd3-scene-r3",
+          "surfaces": [
+            {
+              "albedo": null,
+              "azimuth_deg": 0.0,
+              "base_elevation_m": 6.1,
+              "boundary_2d": {
+                "closed": true,
+                "holes": [],
+                "vertices": [
+                  [
+                    19.51794919243112,
+                    1.200961894323342
+                  ],
+                  [
+                    23.848076211353316,
+                    -1.2990381056766571
+                  ],
+                  [
+                    24.48205080756888,
+                    1.799038105676658
+                  ],
+                  [
+                    21.01794919243112,
+                    3.799038105676658
+                  ]
+                ],
+                "winding": "counterclockwise"
+              },
+              "edge_dimension_sources": [
+                {
+                  "edge_index": 0,
+                  "original_value_m": 4.000000000000002,
+                  "source": "user_override",
+                  "source_reference_id": null,
+                  "value_m": 5.000000000000001
+                },
+                {
+                  "edge_index": 1,
+                  "original_value_m": 3.0,
+                  "source": "derived",
+                  "source_reference_id": null,
+                  "value_m": 3.1622776601683786
+                },
+                {
+                  "edge_index": 2,
+                  "original_value_m": null,
+                  "source": "user_override",
+                  "source_reference_id": null,
+                  "value_m": 4.000000000000002
+                },
+                {
+                  "edge_index": 3,
+                  "original_value_m": null,
+                  "source": "user_override",
+                  "source_reference_id": null,
+                  "value_m": 3.0
+                }
+              ],
+              "geometry_source": "user_override",
+              "group_id": null,
+              "locked": false,
+              "material": null,
+              "metadata": {
+                "scene_id": "project-618f96afd3-scene"
+              },
+              "name": "Free roof",
+              "notes": null,
+              "parent_surface_id": null,
+              "scene_object_id": "obj-surface-9600fca430",
+              "selectable": true,
+              "shading_receiver": false,
+              "slope_deg": 0.0,
+              "surface_id": "surface-9600fca430",
+              "surface_type": "flat_roof",
+              "usable_for_pv": true,
+              "visible": true
+            }
+          ]
+        },
+        "schema_name": "ProjectWorkspaceBundle",
+        "schema_version": "0.1",
+        "simulation_runs": [],
+        "site_workspace_bootstrap": {
+          "project_id": "project-618f96afd3",
+          "schema_name": "SiteWorkspaceBootstrap",
+          "schema_version": "0.1",
+          "site": {
+            "elevation_m": 0.0,
+            "latitude_deg": -6.9,
+            "local_coordinate_system_id": "project-618f96afd3-lcs",
+            "longitude_deg": 107.6,
+            "north_reference": "geodetic_true_north",
+            "site_id": "project-618f96afd3-site",
+            "timezone": "Asia/Jakarta"
+          },
+          "workspace_context": {
+            "map_layer_configuration_id": null,
+            "mode": "blank_engineering_plane",
+            "show_metric_grid": true,
+            "show_true_north": true
+          }
+        },
+        "updated_at": "2026-10-30T09:16:08.865033Z",
+        "weather_selection": null,
+        "workspace_state": {
+          "active_project_revision_id": "project-618f96afd3-r4",
+          "active_tool": null,
+          "layer_visibility": {
+            "map": false,
+            "modules": true,
+            "obstacles": true,
+            "surfaces": true
+          },
+          "mode": "plan",
+          "panel_state": {
+            "site_workspace_mode": "blank_engineering_plane"
+          },
+          "plan_viewport": {
+            "center_x_m": 0.0,
+            "center_y_m": 0.0,
+            "pixels_per_m": 20.0,
+            "rotation_deg": 0.0
+          },
+          "project_id": "project-618f96afd3",
+          "schema_name": "DesignWorkspaceState",
+          "schema_version": "0.1",
+          "selection": {
+            "primary_entity_id": null,
+            "selected_entity_ids": []
+          },
+          "snap_preferences": {
+            "edge": true,
+            "enabled": true,
+            "grid_spacing_m": 0.5,
+            "midpoint": true,
+            "override_active": false,
+            "snap_tolerance_m": 0.1,
+            "vertex": true
+          },
+          "updated_at": "2026-10-30T09:16:08.553976Z",
+          "workspace_state_id": "project-618f96afd3-workspace"
+        }
+      },
+      "scene_view": {
+        "local_features": [
+          {
+            "id": "surface-9600fca430",
+            "category": "surface",
+            "subtype": "flat_roof",
+            "name": "Free roof",
+            "polygon": [
+              [
+                19.51794919243112,
+                1.200961894323342
+              ],
+              [
+                23.848076211353316,
+                -1.2990381056766571
+              ],
+              [
+                24.48205080756888,
+                1.799038105676658
+              ],
+              [
+                21.01794919243112,
+                3.799038105676658
+              ]
+            ]
+          }
+        ],
+        "geojson": {
+          "type": "FeatureCollection",
+          "features": [
+            {
+              "type": "Feature",
+              "id": "surface-9600fca430",
+              "properties": {
+                "id": "surface-9600fca430",
+                "category": "surface",
+                "subtype": "flat_roof",
+                "name": "Free roof"
+              },
+              "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                  [
+                    [
+                      107.6001766033238,
+                      -6.899989140408568
+                    ],
+                    [
+                      107.60021578341468,
+                      -6.9000117463527415
+                    ],
+                    [
+                      107.60022151976386,
+                      -6.8999837323549995
+                    ],
+                    [
+                      107.60019017569249,
+                      -6.8999656476002755
+                    ],
+                    [
+                      107.6001766033238,
+                      -6.899989140408568
+                    ]
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "site": {
+          "latitude_deg": -6.9,
+          "longitude_deg": 107.6,
+          "elevation_m": 0.0,
+          "timezone": "Asia/Jakarta",
+          "north_reference": "geodetic_true_north"
+        }
+      },
+      "topology_view": {
+        "schema_name": "ElectricalTopologyView",
+        "schema_version": "0.1",
+        "electrical_revision_id": "project-618f96afd3-electrical-r1",
+        "pcc_definition": {
+          "name": "PCC",
+          "pcc_id": "project-618f96afd3-pcc"
+        },
+        "inverters": [],
+        "unassigned_strings": []
+      },
+      "topology_consistency": {
+        "schema_name": "ElectricalTopologyConsistencyReport",
+        "schema_version": "0.1",
+        "electrical_revision_id": "project-618f96afd3-electrical-r1",
+        "blocking_count": 0,
+        "draft_count": 0,
+        "findings": []
+      },
+      "identity": {
+        "scene_hash": "1194ca9c6ab86c0374917654080a065562c399f627982e14e1ca63ed0a1b19a7",
+        "electrical_hash": "1d4d8691834057f191cecb676449fd309009055091a90f302f43127f77819482"
+      },
+      "catalog": {
+        "modules": [
+          {
+            "revision_id": "mod-rawibumi-ref-650-r1",
+            "manufacturer": "RawiBumi Reference",
+            "model": "REF-MOD-650",
+            "pmp_w": 650.0,
+            "width_m": 1.134,
+            "height_m": 2.382,
+            "synthetic_reference": true,
+            "simulation_ready": false,
+            "electrical_shading": {
+              "module_revision_id": "mod-rawibumi-ref-650-r1",
+              "topology_revision_ids": [],
+              "topology_selection_required": false,
+              "maximum_fidelity_without_topology_selection": "level_0_geometric_only",
+              "available_fidelity_without_topology_selection": [
+                "level_0_geometric_only"
+              ],
+              "findings": [
+                {
+                  "code": "ELECTRICAL_SHADING_MODULE_CAPABILITY_EVIDENCE_INVALID",
+                  "severity": "warning",
+                  "message": "detailed electrical shading requires resolved model module.pvsyst_singlediode.v6"
+                }
+              ]
+            }
+          },
+          {
+            "revision_id": "mod-rawibumi-uat-550-r1",
+            "manufacturer": "OpenSIMPV Synthetic",
+            "model": "SYN-MOD-550-UAT",
+            "pmp_w": 550.0956,
+            "width_m": 1.134,
+            "height_m": 2.278,
+            "synthetic_reference": true,
+            "simulation_ready": true,
+            "electrical_shading": {
+              "module_revision_id": "mod-rawibumi-uat-550-r1",
+              "topology_revision_ids": [
+                "topology-rawibumi-uat-550-r1"
+              ],
+              "topology_selection_required": true,
+              "maximum_fidelity_without_topology_selection": "level_1_module_approximation",
+              "available_fidelity_without_topology_selection": [
+                "level_0_geometric_only",
+                "level_1_module_approximation"
+              ],
+              "findings": []
+            }
+          }
+        ],
+        "inverters": [
+          {
+            "revision_id": "inv-rawibumi-ref-150k-r1",
+            "manufacturer": "RawiBumi Reference",
+            "model": "REF-INV-150K",
+            "nominal_ac_power_w": 150000,
+            "mppt_count": 2,
+            "synthetic_reference": true,
+            "simulation_ready": false,
+            "execution_readiness_findings": [
+              {
+                "rule_id": "EXECUTION_INVERTER_EXPLICIT_MPPTS_UNSUPPORTED",
+                "severity": "blocking_error",
+                "category": "execution_readiness",
+                "entity_id": "inv-rawibumi-ref-150k-r1",
+                "message": "The current Phase-5 worker executes the homogeneous mppt_template contract only. Explicit mppts[] definitions are valid canonical design data but require a topology-specific electrical runtime.",
+                "context": {}
+              },
+              {
+                "rule_id": "EXECUTION_INVERTER_MPPT_TEMPLATE_REQUIRED",
+                "severity": "blocking_error",
+                "category": "execution_readiness",
+                "entity_id": "inv-rawibumi-ref-150k-r1",
+                "message": "The current Phase-5 worker requires inverter mppt_template.",
+                "context": {}
+              }
+            ]
+          },
+          {
+            "revision_id": "inv-rawibumi-uat-150k-r1",
+            "manufacturer": "RawiBumi Reference",
+            "model": "UAT-INV-150K-HOM",
+            "nominal_ac_power_w": 150000,
+            "mppt_count": 2,
+            "synthetic_reference": true,
+            "simulation_ready": true,
+            "execution_readiness_findings": []
+          }
+        ],
+        "module_topologies": [
+          {
+            "revision_id": "topology-rawibumi-uat-550-r1",
+            "module_definition_revision_id": "mod-rawibumi-uat-550-r1",
+            "region_resolution": "grouped_cells",
+            "verification_state": "reviewed",
+            "topology_provenance": "manual_verified",
+            "source_ids": [
+              "src-rawibumi-uat-topology-fixture"
+            ],
+            "bypass_coverage_complete": true,
+            "synthetic_reference": true
+          }
+        ]
+      }
+    },
+    "vertexMoved": {
+      "bundle": {
+        "electrical_design": {
+          "change_summary": "Initial empty browser electrical design.",
+          "connections": [],
+          "created_at": "2026-10-30T09:16:08.553972Z",
+          "created_by": "browser-api",
+          "electrical_revision_id": "project-618f96afd3-electrical-r1",
+          "inverter_instances": [],
+          "mppt_instances": [],
+          "pcc_definition": {
+            "name": "PCC",
+            "pcc_id": "project-618f96afd3-pcc"
+          },
+          "project_id": "project-618f96afd3",
+          "project_revision_id": "project-618f96afd3-r1",
+          "revision_number": 1,
+          "schema_name": "ElectricalDesignRevision",
+          "schema_version": "0.1",
+          "status": "active",
+          "strings": [],
+          "supersedes_revision_id": null
+        },
+        "electrical_shading_selections": {},
+        "pinned_components": {
+          "inverters": {},
+          "modules": {}
+        },
+        "pinned_electrical_shading_assets": {
+          "electrical_parameterization_definitions": {},
+          "electrical_parameterization_evidence": {},
+          "module_topologies": {},
+          "sources": {}
+        },
+        "project": {
+          "description": null,
+          "name": "S7b parity fixture",
+          "project_id": "project-618f96afd3",
+          "project_revision": {
+            "change_summary": "Scene command move_vertex on ['surface-9600fca430'] (vertexMoved).",
+            "electrical_revision_id": "project-618f96afd3-electrical-r1",
+            "project_revision_id": "project-618f96afd3-r5",
+            "revision_number": 5,
+            "scene_revision_id": "project-618f96afd3-scene-r5",
+            "simulation_defaults_revision_id": null,
+            "supersedes_revision_id": "project-618f96afd3-r4",
+            "weather_dataset_revision_id": null
+          },
+          "schema_name": "Project",
+          "schema_version": "0.1",
+          "site": {
+            "elevation_m": 0.0,
+            "latitude_deg": -6.9,
+            "local_coordinate_system": {
+              "coordinate_system_id": "project-618f96afd3-lcs",
+              "geographic_crs": "EPSG:4326",
+              "local_frame": "rotated_enu",
+              "map_projection": {
+                "crs": "EPSG:3857",
+                "role": "context_only"
+              },
+              "origin_elevation_m": 0.0,
+              "origin_latitude_deg": -6.9,
+              "origin_longitude_deg": 107.6,
+              "rotation_convention": "positive_clockwise_local_y_from_true_north",
+              "rotation_from_true_north_deg": 0.0,
+              "schema_name": "LocalCoordinateSystem",
+              "schema_version": "0.1",
+              "site_id": "project-618f96afd3-site",
+              "x_axis_definition": "East",
+              "y_axis_definition": "North",
+              "z_axis_definition": "Up"
+            },
+            "longitude_deg": 107.6,
+            "name": "S7b parity fixture",
+            "north_reference": "geodetic_true_north",
+            "site_id": "project-618f96afd3-site",
+            "timezone": "Asia/Jakarta"
+          },
+          "status": "design"
+        },
+        "scene": {
+          "change_summary": "Scene command move_vertex on ['surface-9600fca430'] (vertexMoved).",
+          "coordinate_system_id": "project-618f96afd3-lcs",
+          "created_at": "2026-10-30T09:16:08.946282Z",
+          "created_by": "browser-api",
+          "map_layer_configuration": null,
+          "module_instances": [],
+          "notes": "Phase-6.0C browser workspace scene.",
+          "obstacles": [],
+          "project_id": "project-618f96afd3",
+          "pv_fields": [],
+          "reference_lines": [],
+          "revision_id": "project-618f96afd3-scene-r5",
+          "revision_number": 5,
+          "scene_id": "project-618f96afd3-scene",
+          "schema_name": "Scene",
+          "schema_version": "0.1",
+          "status": "active",
+          "supersedes_revision_id": "project-618f96afd3-scene-r4",
+          "surfaces": [
+            {
+              "albedo": null,
+              "azimuth_deg": 0.0,
+              "base_elevation_m": 6.1,
+              "boundary_2d": {
+                "closed": true,
+                "holes": [],
+                "vertices": [
+                  [
+                    19.51794919243112,
+                    1.200961894323342
+                  ],
+                  [
+                    23.848076211353316,
+                    -1.2990381056766571
+                  ],
+                  [
+                    25.0,
+                    3.0
+                  ],
+                  [
+                    21.01794919243112,
+                    3.799038105676658
+                  ]
+                ],
+                "winding": "counterclockwise"
+              },
+              "edge_dimension_sources": [
+                {
+                  "edge_index": 0,
+                  "original_value_m": 4.000000000000002,
+                  "source": "user_override",
+                  "source_reference_id": null,
+                  "value_m": 5.000000000000001
+                },
+                {
+                  "edge_index": 1,
+                  "original_value_m": 3.0,
+                  "source": "derived",
+                  "source_reference_id": null,
+                  "value_m": 4.450691749482329
+                },
+                {
+                  "edge_index": 2,
+                  "original_value_m": 4.000000000000002,
+                  "source": "derived",
+                  "source_reference_id": null,
+                  "value_m": 4.061427154139699
+                },
+                {
+                  "edge_index": 3,
+                  "original_value_m": null,
+                  "source": "user_override",
+                  "source_reference_id": null,
+                  "value_m": 3.0
+                }
+              ],
+              "geometry_source": "user_override",
+              "group_id": null,
+              "locked": false,
+              "material": null,
+              "metadata": {
+                "last_vertex_edit": {
+                  "source": "user_override",
+                  "target_x_m": 25.0,
+                  "target_y_m": 3.0,
+                  "vertex_index": 2
+                },
+                "scene_id": "project-618f96afd3-scene"
+              },
+              "name": "Free roof",
+              "notes": null,
+              "parent_surface_id": null,
+              "scene_object_id": "obj-surface-9600fca430",
+              "selectable": true,
+              "shading_receiver": false,
+              "slope_deg": 0.0,
+              "surface_id": "surface-9600fca430",
+              "surface_type": "flat_roof",
+              "usable_for_pv": true,
+              "visible": true
+            }
+          ]
+        },
+        "schema_name": "ProjectWorkspaceBundle",
+        "schema_version": "0.1",
+        "simulation_runs": [],
+        "site_workspace_bootstrap": {
+          "project_id": "project-618f96afd3",
+          "schema_name": "SiteWorkspaceBootstrap",
+          "schema_version": "0.1",
+          "site": {
+            "elevation_m": 0.0,
+            "latitude_deg": -6.9,
+            "local_coordinate_system_id": "project-618f96afd3-lcs",
+            "longitude_deg": 107.6,
+            "north_reference": "geodetic_true_north",
+            "site_id": "project-618f96afd3-site",
+            "timezone": "Asia/Jakarta"
+          },
+          "workspace_context": {
+            "map_layer_configuration_id": null,
+            "mode": "blank_engineering_plane",
+            "show_metric_grid": true,
+            "show_true_north": true
+          }
+        },
+        "updated_at": "2026-10-30T09:16:08.946407Z",
+        "weather_selection": null,
+        "workspace_state": {
+          "active_project_revision_id": "project-618f96afd3-r5",
+          "active_tool": null,
+          "layer_visibility": {
+            "map": false,
+            "modules": true,
+            "obstacles": true,
+            "surfaces": true
+          },
+          "mode": "plan",
+          "panel_state": {
+            "site_workspace_mode": "blank_engineering_plane"
+          },
+          "plan_viewport": {
+            "center_x_m": 0.0,
+            "center_y_m": 0.0,
+            "pixels_per_m": 20.0,
+            "rotation_deg": 0.0
+          },
+          "project_id": "project-618f96afd3",
+          "schema_name": "DesignWorkspaceState",
+          "schema_version": "0.1",
+          "selection": {
+            "primary_entity_id": null,
+            "selected_entity_ids": []
+          },
+          "snap_preferences": {
+            "edge": true,
+            "enabled": true,
+            "grid_spacing_m": 0.5,
+            "midpoint": true,
+            "override_active": false,
+            "snap_tolerance_m": 0.1,
+            "vertex": true
+          },
+          "updated_at": "2026-10-30T09:16:08.553976Z",
+          "workspace_state_id": "project-618f96afd3-workspace"
+        }
+      },
+      "scene_view": {
+        "local_features": [
+          {
+            "id": "surface-9600fca430",
+            "category": "surface",
+            "subtype": "flat_roof",
+            "name": "Free roof",
+            "polygon": [
+              [
+                19.51794919243112,
+                1.200961894323342
+              ],
+              [
+                23.848076211353316,
+                -1.2990381056766571
+              ],
+              [
+                25.0,
+                3.0
+              ],
+              [
+                21.01794919243112,
+                3.799038105676658
+              ]
+            ]
+          }
+        ],
+        "geojson": {
+          "type": "FeatureCollection",
+          "features": [
+            {
+              "type": "Feature",
+              "id": "surface-9600fca430",
+              "properties": {
+                "id": "surface-9600fca430",
+                "category": "surface",
+                "subtype": "flat_roof",
+                "name": "Free roof"
+              },
+              "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                  [
+                    [
+                      107.6001766033238,
+                      -6.899989140408568
+                    ],
+                    [
+                      107.60021578341468,
+                      -6.9000117463527415
+                    ],
+                    [
+                      107.60022620629354,
+                      -6.899972872794038
+                    ],
+                    [
+                      107.60019017569249,
+                      -6.8999656476002755
+                    ],
+                    [
+                      107.6001766033238,
+                      -6.899989140408568
+                    ]
+                  ]
+                ]
+              }
+            }
+          ]
+        },
+        "site": {
+          "latitude_deg": -6.9,
+          "longitude_deg": 107.6,
+          "elevation_m": 0.0,
+          "timezone": "Asia/Jakarta",
+          "north_reference": "geodetic_true_north"
+        }
+      },
+      "topology_view": {
+        "schema_name": "ElectricalTopologyView",
+        "schema_version": "0.1",
+        "electrical_revision_id": "project-618f96afd3-electrical-r1",
+        "pcc_definition": {
+          "name": "PCC",
+          "pcc_id": "project-618f96afd3-pcc"
+        },
+        "inverters": [],
+        "unassigned_strings": []
+      },
+      "topology_consistency": {
+        "schema_name": "ElectricalTopologyConsistencyReport",
+        "schema_version": "0.1",
+        "electrical_revision_id": "project-618f96afd3-electrical-r1",
+        "blocking_count": 0,
+        "draft_count": 0,
+        "findings": []
+      },
+      "identity": {
+        "scene_hash": "40382592dd5b374e69f74d4db05e96c5117cbfa04c1d59c371d00baeafe80326",
+        "electrical_hash": "1d4d8691834057f191cecb676449fd309009055091a90f302f43127f77819482"
+      },
+      "catalog": {
+        "modules": [
+          {
+            "revision_id": "mod-rawibumi-ref-650-r1",
+            "manufacturer": "RawiBumi Reference",
+            "model": "REF-MOD-650",
+            "pmp_w": 650.0,
+            "width_m": 1.134,
+            "height_m": 2.382,
+            "synthetic_reference": true,
+            "simulation_ready": false,
+            "electrical_shading": {
+              "module_revision_id": "mod-rawibumi-ref-650-r1",
+              "topology_revision_ids": [],
+              "topology_selection_required": false,
+              "maximum_fidelity_without_topology_selection": "level_0_geometric_only",
+              "available_fidelity_without_topology_selection": [
+                "level_0_geometric_only"
+              ],
+              "findings": [
+                {
+                  "code": "ELECTRICAL_SHADING_MODULE_CAPABILITY_EVIDENCE_INVALID",
+                  "severity": "warning",
+                  "message": "detailed electrical shading requires resolved model module.pvsyst_singlediode.v6"
+                }
+              ]
+            }
+          },
+          {
+            "revision_id": "mod-rawibumi-uat-550-r1",
+            "manufacturer": "OpenSIMPV Synthetic",
+            "model": "SYN-MOD-550-UAT",
+            "pmp_w": 550.0956,
+            "width_m": 1.134,
+            "height_m": 2.278,
+            "synthetic_reference": true,
+            "simulation_ready": true,
+            "electrical_shading": {
+              "module_revision_id": "mod-rawibumi-uat-550-r1",
+              "topology_revision_ids": [
+                "topology-rawibumi-uat-550-r1"
+              ],
+              "topology_selection_required": true,
+              "maximum_fidelity_without_topology_selection": "level_1_module_approximation",
+              "available_fidelity_without_topology_selection": [
+                "level_0_geometric_only",
+                "level_1_module_approximation"
+              ],
+              "findings": []
+            }
+          }
+        ],
+        "inverters": [
+          {
+            "revision_id": "inv-rawibumi-ref-150k-r1",
+            "manufacturer": "RawiBumi Reference",
+            "model": "REF-INV-150K",
+            "nominal_ac_power_w": 150000,
+            "mppt_count": 2,
+            "synthetic_reference": true,
+            "simulation_ready": false,
+            "execution_readiness_findings": [
+              {
+                "rule_id": "EXECUTION_INVERTER_EXPLICIT_MPPTS_UNSUPPORTED",
+                "severity": "blocking_error",
+                "category": "execution_readiness",
+                "entity_id": "inv-rawibumi-ref-150k-r1",
+                "message": "The current Phase-5 worker executes the homogeneous mppt_template contract only. Explicit mppts[] definitions are valid canonical design data but require a topology-specific electrical runtime.",
+                "context": {}
+              },
+              {
+                "rule_id": "EXECUTION_INVERTER_MPPT_TEMPLATE_REQUIRED",
+                "severity": "blocking_error",
+                "category": "execution_readiness",
+                "entity_id": "inv-rawibumi-ref-150k-r1",
+                "message": "The current Phase-5 worker requires inverter mppt_template.",
+                "context": {}
+              }
+            ]
+          },
+          {
+            "revision_id": "inv-rawibumi-uat-150k-r1",
+            "manufacturer": "RawiBumi Reference",
+            "model": "UAT-INV-150K-HOM",
+            "nominal_ac_power_w": 150000,
+            "mppt_count": 2,
+            "synthetic_reference": true,
+            "simulation_ready": true,
+            "execution_readiness_findings": []
+          }
+        ],
+        "module_topologies": [
+          {
+            "revision_id": "topology-rawibumi-uat-550-r1",
+            "module_definition_revision_id": "mod-rawibumi-uat-550-r1",
+            "region_resolution": "grouped_cells",
+            "verification_state": "reviewed",
+            "topology_provenance": "manual_verified",
+            "source_ids": [
+              "src-rawibumi-uat-topology-fixture"
+            ],
+            "bypass_coverage_complete": true,
+            "synthetic_reference": true
+          }
+        ]
+      }
+    }
+  }
+}

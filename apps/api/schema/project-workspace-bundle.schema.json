@@ -1,0 +1,475 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/project-workspace-bundle.schema.json",
+  "title": "OpenSIMPV ProjectWorkspaceBundle v0.1",
+  "description": "Persistence envelope for the browser/API workspace. Canonical engineering authorities remain the nested Project, Scene and ElectricalDesignRevision objects; workspace state is not a simulation input.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "project",
+    "scene",
+    "electrical_design",
+    "pinned_components",
+    "site_workspace_bootstrap",
+    "workspace_state",
+    "weather_selection",
+    "simulation_runs",
+    "updated_at"
+  ],
+  "properties": {
+    "shading_accuracy": {
+      "$ref": "https://opensimpv.org/schema/shading-accuracy-settings.schema.json"
+    },
+    "schema_name": {
+      "const": "ProjectWorkspaceBundle"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "project": {
+      "$ref": "https://opensimpv.org/schema/project.schema.json"
+    },
+    "scene": {
+      "$ref": "https://opensimpv.org/schema/scene.schema.json"
+    },
+    "electrical_design": {
+      "$ref": "https://opensimpv.org/schema/electrical-design.schema.json"
+    },
+    "pinned_components": {
+      "type": "object",
+      "required": [
+        "modules",
+        "inverters"
+      ],
+      "properties": {
+        "modules": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "https://opensimpv.org/schema/module-definition.schema.json"
+          }
+        },
+        "inverters": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "https://opensimpv.org/schema/inverter-definition.schema.json"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "site_workspace_bootstrap": {
+      "$ref": "https://opensimpv.org/schema/site-workspace-bootstrap.schema.json"
+    },
+    "workspace_state": {
+      "$ref": "https://opensimpv.org/schema/design-workspace-state.schema.json"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "weather_selection": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "weather_dataset_id",
+            "revision_id",
+            "source_id",
+            "start_time",
+            "end_time",
+            "timezone",
+            "data_quality_status"
+          ],
+          "properties": {
+            "weather_dataset_id": {
+              "type": "string"
+            },
+            "revision_id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,254}(?!\\n)$"
+            },
+            "source_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "start_time": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "end_time": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "timezone": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "data_quality_status": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "manifest": {
+              "type": [
+                "object",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "simulation_runs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "simulation_run_id",
+          "status",
+          "project_revision_id",
+          "scene_revision_id",
+          "electrical_revision_id",
+          "weather_dataset_revision_id"
+        ],
+        "properties": {
+          "origin": {
+            "const": "imported"
+          },
+          "simulation_run_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,254}(?!\\n)$"
+          },
+          "weather_dataset_revision_id": {
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,254}(?!\\n)$"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "pinned_electrical_shading_assets": {
+      "type": "object",
+      "description": "Optional Phase-6.2 project-pinned electrical-shading library assets. Omitted pre-6.2 bundles are upgraded in memory to empty collections.",
+      "required": [
+        "module_topologies",
+        "electrical_parameterization_evidence",
+        "sources"
+      ],
+      "properties": {
+        "module_topologies": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "https://opensimpv.org/schema/module-topology-definition.schema.json"
+          }
+        },
+        "electrical_parameterization_definitions": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "https://opensimpv.org/schema/electrical-parameterization-definition.schema.json"
+          }
+        },
+        "electrical_parameterization_evidence": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "https://opensimpv.org/schema/electrical-parameterization-evidence.schema.json"
+          }
+        },
+        "sources": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/source_record"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "electrical_shading_selections": {
+      "type": "object",
+      "description": "Optional Phase-6.2 per-ModuleDefinition-revision simulation/product selection state. Keys are exact module revision IDs. This is not Scene or ElectricalDesignRevision authority.",
+      "additionalProperties": {
+        "$ref": "#/$defs/electrical_shading_selection"
+      }
+    },
+    "loss_settings": {
+      "$ref": "https://opensimpv.org/schema/loss-settings.schema.json"
+    },
+    "optics_thermal_settings": {
+      "$ref": "https://opensimpv.org/schema/optics-thermal-settings.schema.json"
+    },
+    "uncertainty_assumptions": {
+      "description": "UNC1 project uncertainty-assumption ledger for annual Pxx (U1 analytical method). Engineer-supplied terms with sources; no numerical defaults. Never part of the RES1 design fingerprint.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "terms", "correlation"],
+      "properties": {
+        "schema_version": {"const": "1.0"},
+        "terms": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source_key", "double_count_group", "scope", "sigma_value", "sigma_unit", "provenance_type", "source_ref", "justification"],
+            "properties": {
+              "source_key": {"type": "string", "minLength": 1, "maxLength": 2000},
+              "double_count_group": {"type": "string", "minLength": 1, "maxLength": 2000},
+              "scope": {"enum": ["project_persistent", "annual_weather", "intraday_operating"]},
+              "sigma_value": {"type": "number", "minimum": 0},
+              "sigma_unit": {"enum": ["kwh", "fraction_of_annual_mean"]},
+              "provenance_type": {"enum": ["user_assumption", "versioned_software_catalog", "measured_or_derived"]},
+              "source_ref": {"type": "string", "minLength": 1, "maxLength": 2000},
+              "justification": {"type": "string", "minLength": 1, "maxLength": 2000}
+            }
+          }
+        },
+        "correlation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode"],
+          "properties": {
+            "mode": {"enum": ["independent_explicit", "matrix_explicit"]},
+            "independence_basis": {"type": "string", "minLength": 1, "maxLength": 2000},
+            "matrix": {"type": "array", "maxItems": 64, "items": {"type": "array", "maxItems": 64, "items": {"type": "number", "minimum": -1, "maximum": 1}}},
+            "matrix_basis": {"type": "string", "minLength": 1, "maxLength": 2000}
+          }
+        }
+      }
+    },
+    "imagery": {
+      "description": "UX1 context-only imagery (MapLayerConfiguration). Never part of the scene, its hash or the RES1 design fingerprint.",
+      "anyOf": [
+        {
+          "$ref": "https://opensimpv.org/schema/map-layer-configuration.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "fidelity": {
+      "enum": [
+        "level_0_geometric_only",
+        "level_1_module_approximation",
+        "level_2_bypass_substring",
+        "level_3_cell_submodule_iv"
+      ]
+    },
+    "source_record": {
+      "type": "object",
+      "required": [
+        "schema_name",
+        "schema_version",
+        "source_id",
+        "source_type",
+        "title"
+      ],
+      "properties": {
+        "schema_name": {
+          "const": "SourceRecord"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "manufacturer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "filename": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "file_hash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "external_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "publication_date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "imported_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "imported_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "license_note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "electrical_shading_selection": {
+      "type": "object",
+      "required": [
+        "state_version",
+        "module_definition_revision_id",
+        "module_topology_revision_id",
+        "region_parameterization_evidence_id",
+        "cell_parameterization_evidence_id",
+        "requested_fidelity",
+        "resolved_fidelity",
+        "fallback_policy",
+        "fallback_applied",
+        "fallback_reason",
+        "selection_payload_sha256",
+        "capability_snapshot"
+      ],
+      "properties": {
+        "state_version": {
+          "const": "0.1"
+        },
+        "module_definition_revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "module_topology_revision_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "region_parameterization_evidence_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "cell_parameterization_evidence_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "requested_fidelity": {
+          "$ref": "#/$defs/fidelity"
+        },
+        "resolved_fidelity": {
+          "$ref": "#/$defs/fidelity"
+        },
+        "fallback_policy": {
+          "enum": [
+            "fail_closed",
+            "explicit_lower_fidelity"
+          ]
+        },
+        "fallback_applied": {
+          "type": "boolean"
+        },
+        "fallback_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "selection_payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "capability_snapshot": {
+          "type": "object",
+          "required": [
+            "available_fidelity_levels",
+            "maximum_fidelity_level",
+            "bypass_assumption_ids",
+            "findings"
+          ],
+          "properties": {
+            "available_fidelity_levels": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/fidelity"
+              },
+              "uniqueItems": true
+            },
+            "maximum_fidelity_level": {
+              "$ref": "#/$defs/fidelity"
+            },
+            "bypass_assumption_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "findings": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

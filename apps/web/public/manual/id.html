@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panduan RawiBumi</title>
+<style>
+:root { --bg: #f6f5f2; --panel: #ffffff; --text: #1d1d1b; --muted: #55534c; --rule: #d9d6cd; --accent: #8a5a00; --code: #efece4; --warn: #9a3412; }
+@media (prefers-color-scheme: dark) { :root { --bg: #151513; --panel: #1d1d1b; --text: #ecebe6; --muted: #b3b1a8; --rule: #3a3934; --accent: #e5b45c; --code: #2a2a26; --warn: #f0a070; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+header { position: sticky; top: 0; background: var(--panel); border-bottom: 1px solid var(--rule); padding: 10px 16px; display: flex; gap: 12px; align-items: center; z-index: 1; flex-wrap: wrap; }
+header h1 { font-size: 17px; margin: 0; flex: 1; }
+header a { color: var(--text); }
+main { max-width: 900px; margin: 0 auto; padding: 16px; }
+a { color: var(--accent); text-underline-offset: 2px; }
+a:hover, a:focus-visible { color: var(--text); }
+nav.toc { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 16px; }
+nav.toc ol { margin: 6px 0; padding-left: 0; list-style: none; columns: 2; }
+@media (max-width: 640px) { nav.toc ol { columns: 1; } }
+h2 { margin-top: 36px; border-bottom: 1px solid var(--rule); padding-bottom: 4px; }
+h3 { margin: 20px 0 4px; }
+kbd, code { background: var(--code); border-radius: 3px; padding: 0 4px; font: 13px ui-monospace, Menlo, Consolas, monospace; }
+table { border-collapse: collapse; width: 100%; margin: 8px 0; display: block; overflow-x: auto; }
+th, td { border-bottom: 1px solid var(--rule); text-align: left; padding: 4px 8px; vertical-align: top; }
+th { white-space: nowrap; }
+.note { background: var(--panel); border-left: 3px solid var(--accent); padding: 8px 12px; margin: 10px 0; }
+.warn { border-left-color: var(--warn); }
+.muted { color: var(--muted); }
+dl dt { font-weight: 600; margin-top: 8px; }
+dl dd { margin: 0 0 0 16px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Panduan RawiBumi</h1>
+  <a href="index.html" lang="en">English</a>
+  <a href="/">Kembali ke RawiBumi</a>
+</header>
+<main>
+<p>RawiBumi merancang dan menyimulasikan <strong>PV terhubung jaringan</strong> di atap dan di tanah. Anda menggambar
+atap, mengisinya dengan modul, mengelompokkannya menjadi sistem, merangkai string ke inverter, memilih data cuaca
+setahun, menjalankan simulasi per jam selama setahun penuh dengan bayangan dekat, lalu membaca hasil dan mengekspor
+laporan. Panduan ini menjelaskan cara mengoperasikan setiap langkah serta arti setiap pengaturan dan hasil.
+<span class="muted">Perangkat lunak ini masih beta; batasannya ada di bab 19.</span></p>
+
+<nav class="toc" aria-label="Daftar isi"><strong>Daftar isi</strong><ol>
+<li><a href="#start">1. Memulai</a></li>
+<li><a href="#workspace">2. Ruang kerja</a></li>
+<li><a href="#conventions">3. Konvensi dan satuan</a></li>
+<li><a href="#site">4. Langkah 1 · Proyek &amp; lokasi</a></li>
+<li><a href="#components">5. Langkah 2 · Komponen</a></li>
+<li><a href="#scene">6. Langkah 3 · Geometri</a></li>
+<li><a href="#layout">7. Langkah 4 · Tata letak PV</a></li>
+<li><a href="#systems">8. Langkah 5 · Sistem</a></li>
+<li><a href="#electrical">9. Langkah 6 · Kelistrikan</a></li>
+<li><a href="#meteo">10. Langkah 7 · Cuaca</a></li>
+<li><a href="#losses-grid">11. Langkah 8 · Rugi-rugi &amp; jaringan</a></li>
+<li><a href="#simulate">12. Langkah 9 · Simulasi</a></li>
+<li><a href="#results">13. Langkah 10 · Hasil</a></li>
+<li><a href="#export">14. Langkah 11 · Laporan &amp; ekspor</a></li>
+<li><a href="#losses">15. Rantai rugi-rugi</a></li>
+<li><a href="#glossary">16. Glosarium</a></li>
+<li><a href="#keys">17. Pintasan papan ketik</a></li>
+<li><a href="#trouble">18. Pesan dan pemecahan masalah</a></li>
+<li><a href="#limits">19. Batasan</a></li>
+<li><a href="#beta">20. Data Anda, status beta, dan masukan</a></li>
+</ol></nav>
+
+<h2 id="start">1. Memulai</h2>
+<h3>Layar awal</h3>
+<p>Layar awal menampilkan proyek tersimpan (nama, lokasi, zona waktu) dan jumlah modul serta inverter di pustaka komponen.
+Klik proyek untuk membukanya. Setiap baris juga memiliki <em>Ubah nama</em>, <em>Hapus</em> (ketik nama proyek persis
+untuk konfirmasi; proyek, hasil dan cuacanya terhapus), <em>Ekspor…</em> dan <em>Cadangan…</em>.</p>
+<p><strong>Proyek baru:</strong> isi nama, lintang dan bujur (klik peta atau ketik), elevasi, dan zona waktu (nama IANA
+seperti <code>Asia/Jakarta</code>). Pilih <em>Mulai di</em>: <em>bidang rekayasa kosong</em> (grid kosong) atau
+<em>lapisan peta</em> (menggambar di atas peta). Tekan <em>Buat proyek</em>.</p>
+<h3>Berkas proyek dan cadangan</h3>
+<ul>
+<li><strong>Ekspor</strong> (<em>Ekspor…</em> di layar awal, atau langkah Ekspor): satu berkas <code>.rawibumi</code> berisi
+proyek, cuaca dan gambar latarnya, dan bila dipilih hasil tersimpan (berkas menjadi lebih besar). Gunakan untuk menyimpan
+salinan atau memindahkan proyek ke RawiBumi lain.</li>
+<li><strong>Impor proyek</strong> (layar awal): memulihkan berkas tersebut. Jika proyek yang sama sudah ada, Anda ditanya
+apakah akan menggantinya; proyek saat ini dicadangkan dahulu. Hasil yang datang lewat impor diberi label <em>Diimpor:
+tidak dihitung oleh instalasi ini</em>.</li>
+<li><strong>Cadangan</strong>: setiap penyimpanan disimpan (20 terbaru), ditambah salinan terlindungi sebelum impor,
+pemulihan atau pembaruan. Buka <em>Cadangan…</em> untuk memulihkannya.</li>
+</ul>
+
+<h2 id="workspace">2. Ruang kerja</h2>
+<dl>
+<dt>Bilah atas</dt><dd>Nama dan revisi proyek, <em>Urungkan</em>, <em>Ulangi</em> dan <em>Panduan</em>.</dd>
+<dt>Rel (tepi kiri)</dt><dd>Sebelas langkah sesuai urutan kerja. Setiap langkah menampilkan status: <em>Belum
+dimulai</em>, <em>Draf</em>, <em>Valid</em> atau <em>Terblokir</em> (ada yang harus diperbaiki sebelum simulasi). Arahkan
+kursor ke langkah untuk melihat pintasannya.</dd>
+<dt>Panel tugas (kiri)</dt><dd>Pekerjaan langkah saat ini, dalam <strong>bagian</strong> yang dapat dilipat. Bagian yang
+berisi pekerjaan utama (misalnya formulir isi atau daftar lapisan) terbuka sendiri; lainnya terlipat. Klik judul untuk
+membuka atau melipat. RawiBumi mengingat pilihan Anda di peramban ini.</dd>
+<dt>Panggung (tengah)</dt><dd>Satu jendela geometri dengan preset tampilan: <strong>Atas</strong> (denah, utara sejati ke atas, semua alat sunting),
+<strong>Depan</strong> (dari selatan), <strong>Belakang</strong> (dari utara), <strong>Kiri</strong> (dari barat),
+<strong>Kanan</strong> (dari timur), <strong>Isometrik</strong> (perspektif), dan <strong>Tegak lurus bidang</strong>
+(pilih atap dahulu). Pilih melalui tombol ikon atau klik kanan → <strong>Tampilan</strong>. Tampilan samping dan
+bidang memakai proyeksi ortografis, mempertahankan pilihan, dan menyediakan gizmo pindah/ketinggian. Alat lainnya
+menampilkan “Alat ini bekerja di tampilan Atas” dan kembali ke Pilih. Shift+T/F/I memilih Atas/Depan/Isometrik.
+Tampilan diingat per proyek di peramban ini. <strong>SLD</strong> tetap menjadi diagram satu garis inverter, MPPT dan
+string yang terpisah. Label panggung menjelaskan citra atau lapisan kelistrikan. Di Atas, <em>Grid</em> mengatur grid.
+<em>Fokus</em> (<kbd>Alt</kbd>+<kbd>\</kbd>) menyembunyikan panel samping.</dd>
+<dt>Inspektur (kanan)</dt><dd>Properti objek terpilih: nama, transformasi (pindah, putar, ubah ukuran), ketinggian dan
+bidang atap, tautan topologi, riwayat dan identitas.</dd>
+<dt>Notifikasi</dt><dd>Pesan singkat di bawah setelah tindakan: tersimpan, terisi, ditolak, dan seterusnya.</dd>
+<dt>Menu konteks</dt><dd>Klik kanan objek di denah (atau tekan <kbd>Shift</kbd>+<kbd>F10</kbd>) untuk tindakan yang
+tersedia: ubah, hapus, tambah modul ke string, string baru, selesaikan atau batalkan gambar, urungkan atau ulangi.</dd>
+</dl>
+<h3>Urungkan dan ulangi</h3>
+<p><kbd>Ctrl</kbd>+<kbd>Z</kbd> mengurungkan; <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> atau <kbd>Ctrl</kbd>+<kbd>Y</kbd>
+mengulangi. Setiap perubahan mesin (atap, pengisian, pemindahan meja, perubahan string) adalah satu langkah. Jika Anda
+menekan Urungkan saat penyimpanan masih berjalan, misalnya perubahan atap yang mengisi ulang field PV-nya, urungkan
+dijalankan begitu penyimpanan selesai. Mesin menyimpan 10 langkah terakhir setiap proyek, juga setelah halaman dimuat
+ulang.</p>
+<h3>Menyimpan</h3>
+<p>Perubahan tersimpan saat Anda membuatnya; tidak ada yang perlu disimpan manual. Formulir dengan tombol <em>Terapkan</em>
+atau <em>Simpan</em> menyimpan draf sampai tombol itu ditekan.</p>
+
+<h2 id="conventions">3. Konvensi dan satuan</h2>
+<ul>
+<li><strong>Koordinat denah</strong> dalam meter: X ke timur, Y ke utara, diukur dari titik asal, yang ditandai panah X dan
+Y berlabel di denah.</li>
+<li><strong>Azimut</strong> adalah arah hadap permukaan atau modul: 0° utara, 90° timur, 180° selatan, 270° barat, searah
+jarum jam. Di Indonesia, di selatan khatulistiwa, modul yang menghadap kira-kira ke utara (azimut mendekati 0°) biasanya
+menghasilkan paling banyak.</li>
+<li><strong>Kemiringan</strong> adalah sudut dari bidang datar: 0° datar, 90° tegak.</li>
+<li><strong>Ketinggian</strong>: tinggi atap adalah levelnya di atas tanah. Penghalang memiliki elevasi dasar (tempat
+mulainya) dan tinggi (seberapa tinggi).</li>
+<li><strong>Angka</strong> memakai titik untuk desimal. Isian tinggi dan elevasi di inspektur tersimpan saat Anda menekan
+<kbd>Enter</kbd> atau meninggalkan isian; <kbd>Esc</kbd> membatalkan; panah atas dan bawah langsung mengubah nilai.</li>
+<li><strong>Isian ketik saat menggambar</strong>: <code>x,y</code> untuk titik, <code>@dx,dy</code> relatif terhadap titik
+terakhir, <code>d&lt;arah</code> untuk jarak menurut arah (0° utara, searah jarum jam), atau satu panjang searah kursor.
+Satuan <code>m</code>, <code>cm</code> dan <code>mm</code> serta aritmetika seperti <code>12.5+0.3</code> dapat dipakai.
+Koma memisahkan x dan y, jadi desimal memakai titik.</li>
+<li><strong>Energi</strong> dalam kWh atau MWh; daya dalam kW (AC) atau kWp (DC pada kondisi uji standar).</li>
+</ul>
+
+<h2 id="site">4. Langkah 1 · Proyek &amp; lokasi <span class="muted">(<kbd>Alt</kbd>+<kbd>1</kbd>)</span></h2>
+<h3>Data lokasi</h3>
+<table><tr><th>Isian</th><th>Arti dan batas</th></tr>
+<tr><td>Nama lokasi</td><td>1–160 karakter.</td></tr>
+<tr><td>Lintang, bujur</td><td>Derajat desimal. Lintang antara −90° dan 90° (kutub tidak didukung); bujur −180° sampai
+180°.</td></tr>
+<tr><td>Elevasi</td><td>Meter di atas permukaan laut, −500 sampai 9.000 m.</td></tr>
+<tr><td>Zona waktu</td><td>Nama IANA seperti <code>Asia/Jakarta</code>. Hasil dan grafik memakai waktu standar setempat.</td></tr>
+</table>
+<p>Tekan <em>Terapkan</em> untuk menyimpan. Jika cuaca sudah dipilih dan Anda memindahkan lokasi, RawiBumi bertanya dahulu:
+cuaca terpilih dikosongkan karena milik lokasi lama. Hasil tersimpan dan berkas cuaca tetap disimpan.</p>
+<h3>Alamat</h3>
+<p>RawiBumi mencari alamat dari koordinat (OpenStreetMap Nominatim; pencarian dapat dimatikan). Ubah sesuka Anda: teks Anda
+tidak pernah diganti. Alamat disimpan bersama proyek dan dicetak di sampul laporan.</p>
+<h3>Ringkasan sistem</h3>
+<p>Jenis instalasi (on-grid, on-grid tanpa ekspor, off-grid, hibrida dengan baterai, atau tidak diisi) serta energi dan daya
+baterai (BESS). Data ini tampil di sampul laporan. <strong>Data ini tidak disimulasikan</strong>: RawiBumi hanya
+menyimulasikan PV terhubung jaringan.</p>
+<h3>Citra</h3>
+<ul>
+<li><strong>Peta dasar</strong>: jalan; satelit atau hibrida setelah Anda mengatur penyedia citra yang lisensinya Anda
+miliki (alamat ubin https berisi <code>{z}</code>, <code>{x}</code> dan <code>{y}</code>; kuncinya tetap di peramban Anda
+dan tidak pernah disimpan dalam proyek).</li>
+<li><strong>Gambar latar</strong>: unggah foto udara, ortofoto drone atau gambar (PNG, JPEG atau WebP, hingga 10 MB dan
+8.192 px per sisi). Seret untuk memindah, seret sudut untuk mengubah skala (<kbd>Shift</kbd> menjaga proporsi), gunakan
+pegangan bulat untuk memutar, atau ketik resolusi, rotasi dan posisi kiri atas.</li>
+<li><strong>Kalibrasi dua titik</strong>: klik dua titik yang jaraknya diketahui pada gambar, lalu ketik jarak itu. Gambar
+diskalakan agar sesuai.</li>
+<li><strong>Kunci tumpangan</strong> bila sudah tepat, agar klik diteruskan ke gambar desain Anda. Turunkan opasitas latar agar
+desain terlihat di atasnya.</li>
+</ul>
+<div class="note">Citra hanya konteks: ukuran yang Anda ketik atau ukur selalu mengalahkan hasil jiplakan. Gambar latar
+unggahan Anda tampil di gambar tata letak laporan; ubin satelit tidak pernah.</div>
+
+<h2 id="components">5. Langkah 2 · Komponen <span class="muted">(<kbd>Alt</kbd>+<kbd>2</kbd>)</span></h2>
+<ul>
+<li><strong>Dalam proyek ini</strong>: modul dan inverter yang dipakai desain. Proyek menyimpan salinannya sendiri (revisi
+tersemat), sehingga perubahan pustaka tidak pernah mengubahnya diam-diam.</li>
+<li><strong>Pustaka</strong>: saring menurut jenis (modul atau inverter), merek dan status, atau cari model. Daftar panjang
+dipersingkat; persempit saringan untuk melihat sisanya.</li>
+<li><strong>Impor PAN / OND</strong>: tambahkan berkas komponen PVsyst Anda (hingga 2 MiB dan 5.000 baris per berkas).
+Berkas yang ditolak menampilkan alasannya. Nilai lembar data inverter yang hilang dapat dilengkapi dengan sumber yang
+dirujuk.</li>
+<li>Nilai degradasi akibat cahaya (LID) dari berkas PAN ditawarkan sebagai <strong>saran</strong> dan tidak diterapkan:
+pengaturan rugi-rugi menjaga LID pada 0 % sampai Anda mengubahnya.</li>
+</ul>
+
+<h2 id="scene">6. Langkah 3 · Geometri <span class="muted">(<kbd>Alt</kbd>+<kbd>3</kbd>)</span></h2>
+<p>Di Inspector, pilih satu dari sembilan titik acuan pada kotak sumbu objek (u mengikuti sisi pertama; v berputar 90° berlawanan arah jarum jam). Pilihan disimpan; default adalah start/start (u dan v minimum). Posisi X/Y menempatkan titik tersebut dalam meter adegan. Pindahkan titik acuan ke titik asal menempatkannya di (0, 0). Orientasi adalah arah kompas u (0° utara, searah jarum jam) dan memutar terhadap titik acuan. Geser sebesar ΔX/ΔY dapat memakai sumbu adegan atau objek. Panjang/Lebar persegi panjang mengikuti u/v dan mempertahankan titik acuan. Putaran relatif dapat memakai pusat atau titik acuan.</p>
+<p>Geometri adalah model 3D semua yang menopang atau membayangi modul: atap, lubang, penghalang dan zona larangan.</p>
+<h3>Alat</h3>
+<table><tr><th>Tombol</th><th>Alat</th><th>Cara pakai</th></tr>
+<tr><td><kbd>V</kbd></td><td>Pilih</td><td>Klik untuk memilih, <kbd>Shift</kbd>-klik untuk menambah. Seret untuk memindah.
+Pegangan sudut, sisi dan putar muncul pada pilihan.</td></tr>
+<tr><td><kbd>M</kbd></td><td>Pindah</td><td>Pilih titik dasar, lalu tujuan; atau ketik <code>@dx,dy</code> atau
+<code>d&lt;arah</code>.</td></tr>
+<tr><td><kbd>R</kbd></td><td>Putar</td><td>Pilih poros, lalu arahkan; atau ketik sudutnya (searah jarum jam).</td></tr>
+<tr><td><kbd>B</kbd></td><td>Atap persegi</td><td>Dua sudut berseberangan.</td></tr>
+<tr><td><kbd>P</kbd></td><td>Atap poligon</td><td>Klik setiap sudut (bentuk cekung boleh); <kbd>Enter</kbd> menutup garis.</td></tr>
+<tr><td><kbd>H</kbd></td><td>Lubang atap</td><td>Skylight, halaman dalam dan potongan lain di dalam atap.</td></tr>
+<tr><td><kbd>O</kbd></td><td>Penghalang kotak</td><td>Dua sudut dan tinggi: tangki, ruang mesin, parapet.</td></tr>
+<tr><td><kbd>E</kbd></td><td>Penghalang poligon</td><td>Bentuk bebas yang ditarik ke suatu tinggi.</td></tr>
+<tr><td><kbd>K</kbd></td><td>Zona larangan</td><td>Area tanpa PV: akses kebakaran, jalur jalan, area servis.</td></tr>
+<tr><td><kbd>D</kbd></td><td>Ukur</td><td>Jarak dan arah antara dua titik.</td></tr>
+<tr><td><kbd>Z</kbd></td><td>Perbesar semua</td><td>Menampilkan seluruh desain.</td></tr></table>
+<p>Saat menggambar, <kbd>Backspace</kbd> menghapus titik terakhir dan <kbd>Esc</kbd> membatalkan gambar.</p>
+<h3>Mengubah bentuk</h3>
+<ul>
+<li>Seret sudut untuk memindahkannya, atau pegangan sisi untuk memindahkan seluruh sisi.</li>
+<li>Klik ganda label ukuran untuk mengetik panjang sisi yang tepat; klik ganda sisi untuk menambah sudut;
+<kbd>Alt</kbd>-klik sudut untuk menghapusnya.</li>
+<li>Tombol panah menggeser pilihan 0,10 m, <kbd>Shift</kbd>+panah 1,00 m.</li>
+<li>Objek terkunci (gembok di daftar lapisan) tidak dapat diubah.</li>
+</ul>
+<div class="note warn"><strong>Bangunan yang diputar:</strong> atur panjang persegi selagi masih searah utara, baru
+kemudian putar. Mengetik panjang baru pada persegi yang sudah diputar dapat membuatnya menjadi jajaran genjang.</div>
+<h3>Bidang atap</h3>
+<p>Pilih atap dan atur bidangnya di inspektur (<em>Bidang dan ketinggian</em>):</p>
+<table><tr><th>Definisi</th><th>Gunakan untuk</th></tr>
+<tr><td>Datar pada ketinggian</td><td>Atap datar: satu tinggi atap.</td></tr>
+<tr><td>Sisi acuan + kemiringan</td><td>Atap miring yang diukur dari lisplang atau bubungan: pilih sisi, tingginya, kemiringan
+atap, dan apakah atap turun atau naik dari sisi itu.</td></tr>
+<tr><td>Ketinggian + kemiringan + arah lereng</td><td>Atap miring yang diketahui di satu titik: ketinggian di titik acuan,
+kemiringan, dan azimut arah turun.</td></tr>
+</table>
+<p>Penghalang memiliki <em>elevasi dasar</em> dan <em>tinggi</em>. Jika Anda menempatkan penghalang di atas modul, RawiBumi
+bertanya apakah modul di bawahnya dihapus atau dibatalkan.</p>
+<h3>Jepret dan grid</h3>
+<p>Di <em>Jepret</em>, pilih ke mana titik menempel: sudut, titik ujung, sisi, titik tengah, perpotongan, garis sejajar dan
+tegak lurus, tepi modul dan baris, serta grid (dengan jaraknya, bawaan 0,5 m). Tahan <kbd>Shift</kbd> untuk langkah sudut
+15° dan <kbd>Alt</kbd> untuk menempatkan titik tanpa snap. Grid denah digambar menurut jarak grid, dengan garis lebih tegas
+setiap 10 sel, pada semua tingkat perbesaran.</p>
+<h3>Lapisan</h3>
+<p>Daftar lapisan memuat setiap atap, penghalang dan zona larangan. Klik nama untuk memilih. Ikon mata menyembunyikan; ikon
+gembok mengunci.</p>
+<h3>Tampilan 3D</h3>
+<p>Ganti panggung ke 3D untuk memeriksa ketinggian, kemiringan dan penghalang. Urungkan dan ulangi juga berfungsi di sana.</p>
+
+<h2 id="layout">7. Langkah 4 · Tata letak PV <span class="muted">(<kbd>Alt</kbd>+<kbd>4</kbd>)</span></h2>
+<p><strong>Field PV</strong> adalah atap yang diisi modul dalam meja dan baris. Isi atap dengan formulir, lalu atur meja
+secara manual bila perlu.</p>
+<h3>Formulir isi</h3>
+<table><tr><th>Pengaturan</th><th>Arti</th><th>Bawaan</th></tr>
+<tr><td>Nama field</td><td>Nama field PV.</td><td>"Roof array"</td></tr>
+<tr><td>Permukaan penopang</td><td>Atap yang diisi.</td><td>Atap terpilih</td></tr>
+<tr><td>Modul</td><td>Model modul. Ukuran tapaknya (lebar × tinggi) berasal dari komponen dan tidak dapat diregangkan.</td><td>—</td></tr>
+<tr><td>Orientasi</td><td>Potret (sisi panjang searah lereng) atau lanskap.</td><td>Potret</td></tr>
+<tr><td>Pemasangan</td><td><em>Rak miring</em>: Anda mengatur kemiringan dan azimut. <em>Sejajar atap</em>: modul berada
+di bidang atap dan mengikuti kemiringan serta azimutnya; isi ulang bila kemiringan atap berubah.</td><td>Rak miring</td></tr>
+<tr><td>Kemiringan</td><td>Kemiringan modul dari bidang datar, 0–89°. Di atap datar ini adalah kemiringan rak.</td><td>10°</td></tr>
+<tr><td>Azimut</td><td>Arah hadap modul, 0° utara, searah jarum jam.</td><td>0°</td></tr>
+<tr><td>Tinggi pemasangan</td><td>Tinggi tepi bawah modul di atas atap.</td><td>0,2 m</td></tr>
+<tr><td>Baris per meja</td><td>Jumlah baris modul bertumpuk dalam satu meja; 1 berarti satu baris.</td><td>1</td></tr>
+<tr><td>Celah modul</td><td>Celah antarmodul sepanjang baris, di bidang modul.</td><td>0,02 m</td></tr>
+<tr><td>Celah dalam meja</td><td>Celah antarbaris dalam satu meja, di bidang modul.</td><td>0,02 m</td></tr>
+<tr><td>Sisa kedalaman</td><td>Dengan beberapa baris per meja: letak meja terakhir yang lebih kecil (di belakang, di
+depan) atau dibiarkan kosong.</td><td>Di belakang</td></tr>
+<tr><td>Perataan</td><td>Pemilih 3×3 yang menggeser tata letak di ruang sisa atap: depan (tepi rendah), tengah atau
+belakang (tepi tinggi), serta kiri, tengah atau kanan. Tidak pernah mengurangi modul.</td><td>Baris ditempatkan untuk modul
+terbanyak</td></tr>
+<tr><td>Batas ukuran meja</td><td>Meja terpanjang, dalam modul per baris; 0 berarti tanpa batas.</td><td>0</td></tr>
+<tr><td>Jalur jalan setiap N modul</td><td>Jalur melintang setiap N modul, beserta lebarnya; 0 berarti tidak ada.</td><td>0</td></tr>
+<tr><td>Jarak baris</td><td>Cara mengatur jarak baris. <em>Lorong tetap</em>: jarak bebas antarmeja di atap.
+<em>GCR</em> (rasio tutupan): kedalaman miring meja ÷ jarak baris, di atas 0 dan paling besar 1. <em>Bebas bayangan</em>:
+mesin mengatur jarak agar baris tidak saling membayangi untuk elevasi dan selisih azimut matahari rencana, dan menampilkan
+jarak yang dihasilkan.</td><td>Lorong tetap 0,6 m (GCR 0,5; matahari rencana 30°)</td></tr>
+<tr><td>Jarak tepi</td><td>Jarak yang dijaga dari tepi atap: sama di setiap tepi, atau per tepi (masing-masing dengan
+panjang dan arah hadapnya).</td><td>0,3 m</td></tr>
+<tr><td>Jarak dari penghalang</td><td>Jarak bebas di sekitar penghalang dan zona larangan.</td><td>0,3 m</td></tr>
+</table>
+<div class="note">Lorong tetap dan GCR hanya mencegah baris bertumpuk. Baris miring tetap dapat saling membayangi pada pagi,
+sore atau bulan dengan matahari rendah. Gunakan <em>Bebas bayangan</em> untuk mengatur jarak menurut matahari, dan periksa
+rugi bayangan di Hasil.</div>
+<h3>Menerapkan</h3>
+<p><strong>Terapkan pengisian</strong> menempatkan modul; satu pengisian adalah satu langkah urungkan. Jika atap sudah memiliki
+field PV, Terapkan pengisian meminta konfirmasi bahwa tata letak yang ada akan diganti. Konfirmasi menampilkan jumlah modul dan
+daya STC sebelum dan sesudah, serta string yang akan dihapus.</p>
+<h3>Daftar field PV</h3>
+<p>Setiap field tampil dalam satu baris ringkasan: modul, kWp, kemiringan dan azimut. Buka <em>Rincian</em> untuk atap,
+jumlah meja, orientasi dan catatan. <strong>Isi ulang</strong> memuat pengaturan tersimpan field ke formulir agar dapat
+diubah dan diterapkan lagi. <strong>Hapus field</strong> menampilkan apa yang akan terhapus (modul, string) sebelum Anda
+mengonfirmasi.</p>
+<h3>Mengubah meja</h3>
+<p>Klik modul untuk memilihnya; seret untuk memindahkan seluruh mejanya. Meja terpilih dapat dipindahkan sejauh jarak tepat
+ke timur dan utara, dihapus, atau modul tunggal dihapus: <kbd>Delete</kbd> menghapus modul terpilih dan
+<kbd>Shift</kbd>+<kbd>Delete</kbd> mejanya. Setiap perubahan <strong>menyematkan</strong> meja yang disentuh, dan
+pengisian ulang berikutnya mempertahankan meja tersemat di tempatnya. <em>Lepas sematan</em> agar pengisian dapat
+menempatkannya lagi.</p>
+
+<h2 id="systems">8. Langkah 5 · Sistem <span class="muted">(<kbd>Alt</kbd>+<kbd>5</kbd>)</span></h2>
+<p>Sistem mengatur desain sebelum perangkaian rinci: atap mana yang membentuk bangunan, seberapa jauh antarbangunan, modul
+mana yang menghadap arah sama, dan inverter mana melayani atap mana.</p>
+<h3>Bangunan</h3>
+<p>Tekan <em>Gunakan saran bangunan</em> untuk mengelompokkan atap yang bersentuhan atau berdekatan. Ganti nama
+bangunan, gabungkan dua, atau lepaskan satu atap. Bangunan mengatur desain dan laporan; tidak mengubah fisika.</p>
+<h3>Jarak</h3>
+<p>Jarak tepi ke tepi terdekat antarbangunan. Jarak di atas <em>ambang peringatan</em> (bawaan 50 m) ditandai, misalnya
+karena kabel DC yang panjang. Ini peringatan, tidak pernah pemblokiran.</p>
+<h3>Kelompok orientasi</h3>
+<p>Modul dikelompokkan menurut arah hadap, dalam toleransi orientasi (paling besar 1° antara normal modul; diatur di
+Kelistrikan).</p>
+<h3>Inverter</h3>
+<ol>
+<li>Pilih <strong>model inverter</strong> dan <strong>jumlah</strong>, lalu <em>Tambah inverter</em>.</li>
+<li>Pilih atap yang <strong>dilayani</strong> setiap inverter, lalu <em>Simpan area</em>.</li>
+<li>Baca bantuan ukuran: <strong>rentang panjang string</strong> yang sah (dari tegangan rangkaian terbuka modul saat dingin
+dan batas tegangan inverter), berapa inverter model ini mencapai <strong>target DC/AC</strong> Anda, masukan setiap MPPT,
+dan apakah arus hubung singkat membatasi jumlah string suatu MPPT.</li>
+<li>Isi baris setiap MPPT: atap <strong>sumber</strong> (atau atap mana pun yang dilayani inverter ini), <strong>panjang
+string</strong> dan jumlah <strong>string</strong>. Atau tekan <em>Sarankan</em> untuk tata letak yang diukur mesin, lalu
+sesuaikan.</li>
+<li>Periksa pemeriksaan mesin langsung di bawah tabel, lalu tekan <strong>Terapkan susunan MPPT</strong>.</li>
+</ol>
+<p>Penerapan mempertahankan string yang masih sesuai (MPPT dan panjang sama) dan merangkai ulang sisanya, memakai modul dari
+string yang diganti dan modul yang belum dirangkai.</p>
+<h3>Notasi ahli</h3>
+<p>Tata letak yang sama dalam teks. String pada satu MPPT dipisah koma, MPPT dipisah titik koma: <code>16,16 ; 16</code>
+berarti dua string 16 modul di MPPT 1 dan satu di MPPT 2. <code>0</code> membiarkan masukan kosong; <code>3x(16,0)</code>
+mengulang pola.</p>
+<div class="note">Jika satu MPPT menggabungkan orientasi atap, RawiBumi menyimulasikannya secara fisik, dan rugi tambahannya
+tampil sebagai <em>Ketidakcocokan orientasi</em> di Hasil.</div>
+
+<h2 id="electrical">9. Langkah 6 · Kelistrikan <span class="muted">(<kbd>Alt</kbd>+<kbd>6</kbd>)</span></h2>
+<p>Di sini Anda merangkai modul menjadi <strong>string</strong> dan menghubungkan string ke <strong>MPPT</strong> inverter.
+Denah mewarnai modul menurut MPPT; modul yang belum dirangkai diberi arsiran.</p>
+<h3>MPPT target</h3>
+<p>String baru dan kuas tugas masuk ke MPPT <strong>target</strong>. Pindah antar-MPPT dengan <kbd>[</kbd> dan <kbd>]</kbd>,
+pilih di dalam inverter dengan <kbd>1</kbd>–<kbd>9</kbd>, atau klik MPPT di pohon topologi.</p>
+<h3>Alat</h3>
+<table><tr><th>Tombol</th><th>Alat</th><th>Fungsi</th></tr>
+<tr><td><kbd>V</kbd></td><td>Pilih</td><td>Pilih modul; <kbd>Shift</kbd>-klik menambah.</td></tr>
+<tr><td><kbd>S</kbd></td><td>Jalur string</td><td>Klik modul sesuai urutan kabel; <kbd>Enter</kbd> membuat string pada MPPT
+target.</td></tr>
+<tr><td><kbd>A</kbd></td><td>Kuas tugas</td><td>Lukis string yang ada ke MPPT target.</td></tr>
+<tr><td><kbd>L</kbd></td><td>Laso</td><td>Pilih modul di dalam lingkaran.</td></tr>
+<tr><td><kbd>X</kbd></td><td>Pisah</td><td>Pisahkan string setelah modul yang diklik.</td></tr>
+<tr><td><kbd>J</kbd></td><td>Gabung</td><td>Sambungkan satu string ke string lain.</td></tr>
+<tr><td><kbd>R</kbd></td><td>Balik</td><td>Balik urutan kabel dan polaritas string.</td></tr>
+<tr><td><kbd>M</kbd></td><td>Pindah modul</td><td>Pindahkan satu modul ke tempat atau string lain.</td></tr>
+<tr><td><kbd>W</kbd></td><td>Tukar modul</td><td>Tukar tempat dua modul yang sudah dirangkai.</td></tr></table>
+<h3>Bekerja dengan pilihan</h3>
+<p>Bagian <em>Pilihan</em> meringkas yang Anda pilih: modul, berapa yang belum dirangkai, dan string utuh. Tersedia
+<em>Buat string dari pilihan</em> (string dengan panjang tertentu), <em>Tugaskan string ke target</em>, <em>Lepas</em>,
+<em>Hapus string</em> dan <em>Replikasi pola</em> (menyalin rangkaian satu meja ke setiap meja identik yang belum
+dirangkai). Klik kanan modul yang belum dirangkai untuk <em>Tambah n ke S00x</em> atau <em>String baru n pada MPPT…</em>.</p>
+<h3>String seragam</h3>
+<p>Membuat string dengan jumlah modul tetap untuk satu field PV atau semua modul yang belum dirangkai, baris demi baris atau
+serpentin (baris berselang dibalik, memperpendek kabel string), dengan pilihan string terakhir lebih pendek.</p>
+<h3>Pohon topologi dan pemeriksaan</h3>
+<p>Pohon memuat inverter, MPPT dan string. Setiap string dan MPPT memiliki pemeriksaan langsung: <em>Lulus</em>,
+<em>Peringatan</em>, <em>Gagal</em> atau <em>Tidak tersedia</em>, dengan rentang tegangan operasi string terhadap jendela
+MPPT.</p>
+<div class="note warn"><strong>Aturan yang memblokir simulasi</strong>
+<ul>
+<li>Tegangan rangkaian terbuka string pada suhu sel terdingin melebihi <strong>tegangan DC maksimum</strong> inverter. Ini
+dapat merusak inverter pada pagi yang dingin sebelum mulai melacak. Perpendek string.</li>
+<li>Tegangan operasi string pada suhu terpanas atau terdingin keluar dari <strong>jendela MPPT</strong>. Ubah panjang string
+atau inverter.</li>
+<li>Terlalu banyak string paralel untuk arus operasi atau arus hubung singkat MPPT.</li>
+</ul></div>
+<h3>Aturan orientasi</h3>
+<p>Toleransi orientasi (0–1°) adalah sudut terbesar antara normal modul yang masih dihitung satu orientasi pada suatu MPPT.
+Anda dapat menerima MPPT campuran dengan pengecualian dan alasan tertulis; MPPT itu lalu disimulasikan dengan orientasi
+campurannya.</p>
+<h3>Diagram satu garis</h3>
+<p>Ganti panggung ke SLD untuk melihat inverter, MPPT dan string sebagai diagram.</p>
+
+<h2 id="meteo">10. Langkah 7 · Cuaca <span class="muted">(<kbd>Alt</kbd>+<kbd>7</kbd>)</span></h2>
+<h3>Cuaca</h3>
+<p><strong>Ambil</strong>: pilih sumber (ERA5 melalui Open-Meteo Historical Weather API), tanggal mulai dan akhir, lalu
+tekan <em>Ambil</em>. Satu tahun kalender penuh memberi hasil tahunan.</p>
+<p><strong>Impor berkas</strong>:</p>
+<table><tr><th>Format</th><th>Catatan</th></tr>
+<tr><td>TMY3 (<code>.csv</code>)</td><td>Berkas tahun tipikal, misalnya ekspor TMY3 dari Meteonorm.</td></tr>
+<tr><td>EPW</td><td>Cuaca EnergyPlus. EPW tahun tipikal yang disusun dari bulan-bulan tahun berbeda belum didukung.</td></tr>
+<tr><td>CSV Standar PVsyst</td><td>Diekspor dari PVsyst dalam format "PVsyst Standard".</td></tr>
+<tr><td><code>.dat</code> Meteonorm dengan header</td><td>Hanya berkas dengan acuan waktu standar −30 menit.</td></tr>
+<tr><td>CSV RawiBumi</td><td>Format RawiBumi sendiri.</td></tr>
+<tr><td>Tidak dibaca</td><td><code>.MET</code> PVsyst, serta <code>.dat</code> Meteonorm tanpa header atau dalam tata letak
+"PVsyst". Ekspor TMY3 atau CSV "PVsyst Standard" sebagai gantinya.</td></tr>
+</table>
+<p>Sebelum berkas disimpan, pratinjau menampilkan format, lokasi dan jaraknya dari lokasi proyek, periode, langkah waktu dan
+jumlah baris, zona waktu, variabel, GHI bulanan dan pemeriksaan kualitas. Berkas yang berjarak lebih dari 50 km dari lokasi
+memerlukan persetujuan eksplisit Anda. Peringatan menandai lokasi yang hilang, elevasi yang berbeda atau selisih UTC yang
+berbeda.</p>
+<p>Simulasi berjalan <strong>per jam</strong>: cuaca setiap jam berlaku selama interval 60 menit itu.</p>
+<p>ERA5 dapat memberi nilai terlalu tinggi di daerah tropis berawan; bandingkan dengan data lokal.</p>
+
+<h2 id="losses-grid">11. Langkah 8 · Rugi-rugi &amp; jaringan <span class="muted">(<kbd>Alt</kbd>+<kbd>8</kbd>)</span></h2>
+<h3>Rugi-rugi dan pengaturan</h3>
+<p>Setiap nilai dimulai dari nilai rekomendasi RawiBumi; ubah agar sesuai proyek Anda. Perubahan hanya berlaku untuk simulasi
+berikutnya, dan setiap simulasi mencatat pengaturan yang dipakainya.</p>
+<p>Proyek baru memakai recommended_defaults.v2: isian LID pengguna berlaku untuk semua sirkuit; jika tidak ada, setiap sirkuit memakai fraksi LID berkas modul yang terhingga dalam [0, 1). Nilai yang hilang atau tidak valid memakai nilai awal generik: 0,5 % untuk teknologi TOPCon, HJT, heterojunction atau IBC; 1,5 % untuk silikon kristalin lainnya dan teknologi tidak diketahui; 0 % untuk film tipis. Ini nilai awal, bukan pengukuran: periksa lembar data. Kosongkan isian untuk memulihkan LID otomatis. Setiap simulasi mencatat nilai dan sumber per sirkuit. Proyek v1 tetap memakai LID 0 % kecuali diubah pengguna; “Gunakan bawaan terkini” beralih ke v2 dalam satu penyimpanan yang dapat dibatalkan, dengan mempertahankan isian pengguna. Hasil tersimpan tidak berubah.</p>
+<table><tr><th>Pengaturan</th><th>Bawaan</th><th>Arti</th></tr>
+<tr><td>Kotoran, per bulan</td><td>3 %</td><td>Kotoran pada modul, diterapkan pada iradiansi setelah efek sudut datang.</td></tr>
+<tr><td>LID awal</td><td>Berkas modul atau teknologi</td><td>Degradasi akibat cahaya: penurunan permanen yang diterapkan sekali.</td></tr>
+<tr><td>Ketidakcocokan modul</td><td>Otomatis</td><td>Sebaran pabrikasi antarmodul seri: 0 % untuk 1 modul, 0,5 % untuk 2,
+1 % untuk 3, 2 % untuk 4 atau lebih; separuhnya untuk film tipis. Isi nilai untuk mengganti.</td></tr>
+<tr><td>Ketidakcocokan string</td><td>Otomatis</td><td>Sebaran antarstring paralel pada satu MPPT: 0 % untuk 1 string,
+0,05 % untuk 2, 0,1 % sampai 10, 0,15 % lebih dari itu.</td></tr>
+<tr><td>Kabel DC pada STC</td><td>1,5 %</td><td>Rugi resistif kabel DC setiap MPPT pada kondisi uji standar. Berubah dengan
+kuadrat arus.</td></tr>
+<tr><td>Kabel AC pada daya nominal</td><td>Tidak diatur (0 %)</td><td>Rugi resistif per inverter pada daya AC nominalnya,
+kuadratik terhadap beban.</td></tr>
+<tr><td>Degradasi tahunan</td><td>0,4 % per tahun</td><td>Penuaan, diterapkan sebagai laju × (tahun operasi − 0,5).</td></tr>
+<tr><td>Tahun operasi yang disimulasikan</td><td>1</td><td>Tahun operasi yang disimulasikan, 1–100. Tahun 1 mencakup penuaan
+setengah tahun (0,2 %).</td></tr>
+<tr><td>Ketidaktersediaan</td><td>Tidak diatur (0 %)</td><td>Pengurangan tetap energi ekspor; tanpa gangguan acak.</td></tr>
+<tr><td>Trafo</td><td>Mati</td><td>Bila aktif: rugi besi (tetap, juga malam hari) dan rugi tembaga (kuadratik) pada daya
+acuan.</td></tr>
+</table>
+<p><strong>Rugi per inverter dan rangkaian</strong> menggantikan nilai proyek untuk satu inverter atau MPPT: kabel DC, kualitas
+modul, dan kabel AC, baik sebagai persentase pada daya tertentu maupun sebagai kabel (bahan, panjang satu arah, penampang dari
+ukuran standar, tegangan antarfase dan suhu konduktor; disarankan 50 °C).</p>
+<h3>Optik dan termal</h3>
+<table><tr><th>Pengaturan</th><th>Bawaan</th><th>Arti</th></tr>
+<tr><td>Model transposisi</td><td>Perez, per jam</td><td>Cara iradiansi langit diubah ke bidang miring. Alternatif: Perez
+1990, Perez–Driesse, Hay–Davies, isotropik.</td></tr>
+<tr><td>Model sudut datang (IAM)</td><td>Tabel modul, dengan cadangan</td><td>Rugi pantulan saat matahari miring. Memakai
+tabel modul, atau kaca Fresnel tanpa lapisan antipantul bila tidak ada.</td></tr>
+<tr><td>Pemasangan modul</td><td>Semi-terintegrasi</td><td>Menentukan koefisien pelepasan panas: Uc 20 W/(m²·K) dan Uv 0.
+Rak terbuka lebih dingin; bagian belakang terisolasi lebih panas; atau isi nilai sendiri.</td></tr>
+<tr><td>Basis iradiansi termal</td><td>Efektif</td><td>Iradiansi setelah IAM dan kotoran memanaskan sel. Basis datang hanya
+untuk perbandingan dengan simulasi lama.</td></tr>
+<tr><td>Albedo</td><td>0,2 setiap bulan</td><td>Pantulan tanah (0–1), untuk cahaya yang dipantulkan ke modul.</td></tr>
+</table>
+<h3>Profil beban dan tanpa ekspor</h3>
+<p>Bagian ini ditampilkan untuk perencanaan tetapi <strong>belum aktif</strong>: beban dan batas ekspor belum disimulasikan
+pada versi ini.</p>
+
+<h3>Akurasi bayangan</h3>
+<p><em>Standar</em> (direkomendasikan) mengambil sampel langit dalam 48 × 12 sektor, dengan sampel horizon dan tanah yang
+sepadan. <em>Tinggi</em> lebih rapat dan lebih lama, terutama dengan bayangan listrik rinci.</p>
+<h2 id="simulate">12. Langkah 9 · Simulasi <span class="muted">(<kbd>Alt</kbd>+<kbd>9</kbd>)</span></h2>
+<h3>Preflight (pemeriksaan awal)</h3>
+<p><em>Preflight</em> menampilkan hal yang <strong>memblokir</strong> simulasi (misalnya tidak ada cuaca, modul wajib belum
+dirangkai, atau aturan tegangan gagal) dan yang hanya <strong>memperingatkan</strong> (<em>Sebelum menjalankan</em>). Hanya
+data mesin tersimpan yang disimulasikan; draf yang belum diterapkan tidak pernah masuk fisika.</p>
+<h3>Eksekusi</h3>
+<table><tr><th>Pilihan</th><th>Arti</th></tr>
+<tr><td>Eksekusi geometri yang ada</td><td>Jalur standar: bayangan dekat geometris untuk cahaya langsung, langit dan tanah
+pada setiap kelompok modul.</td></tr>
+<tr><td>Bayangan listrik rinci</td><td>Juga memodelkan efek listrik bayangan sebagian melalui substring modul dan dioda bypass
+(lebih lambat). Kebijakan cadangan menentukan apakah fidelitas lebih rendah boleh dipakai bila rincian itu tidak tersedia;
+<em>gagal tertutup</em> menolak.</td></tr>
+</table>
+<p>Tekan <strong>Validate and run</strong>. Simulasi berlangsung dari kurang dari satu menit hingga banyak menit,
+tergantung jumlah modul dan penghalang serta tingkat akurasi. Tunggu hingga selesai sebelum mengubah desain; pada koneksi
+lambat halaman terus memeriksa sampai simulasi selesai.</p>
+<h3>Riwayat simulasi</h3>
+<p>Memuat simulasi proyek. Simulasi dari desain sebelumnya ditandai <em>desain sebelumnya</em>: jalankan lagi untuk
+memperbarui.</p>
+
+<h2 id="results">13. Langkah 10 · Hasil <span class="muted">(<kbd>Alt</kbd>+<kbd>0</kbd>)</span></h2>
+<h3>Angka utama</h3>
+<dl>
+<dt>Energi AC (Produksi Acuan)</dt><dd>Energi AC dari PV di titik sambung bersama (PCC) selama periode simulasi, setelah semua
+rugi yang dimodelkan.</dd>
+<dt>Hasil spesifik</dt><dd>Energi ÷ kapasitas DC terpasang, dalam kWh/kWp, sehingga pembangkit berbeda ukuran dapat
+dibandingkan.</dd>
+<dt>Rasio kinerja (PR)</dt><dd>Energi ÷ (kWp tersimulasi × iradiasi bidang modul tanpa bayangan): seberapa besar potensi
+sinar matahari yang sampai ke jaringan. Atap yang dirancang baik sering sekitar 0,75–0,85.</dd>
+<dt>Puncak AC</dt><dd>Daya AC tertinggi dalam periode.</dd>
+<dt>Pemotongan (clipping)</dt><dd>Energi yang hilang karena inverter membatasi keluarannya pada daya pengenalnya.</dd>
+</dl>
+<h3>Tampilan</h3>
+<ul>
+<li><strong>Bulanan</strong>: energi, kinerja (hasil spesifik dan PR per bulan), rugi-rugi dan meteorologi per bulan.</li>
+<li><strong>Air terjun rugi</strong>: dari energi acuan ke energi AC, tahap demi tahap; selalu seimbang (bab 15).</li>
+<li><strong>Peta panas</strong>: daya rata-rata, atau suhu sel, menurut minggu dan jam.</li>
+<li><strong>Profil harian</strong>: hari rata-rata setiap bulan.</li>
+<li><strong>Asumsi</strong>: pengaturan yang dipakai simulasi ini.</li>
+</ul>
+<p>Di bawahnya: <strong>hasil inverter</strong> (energi, rugi jendela tegangan dan rugi awal per inverter), hasil orientasi
+campuran bila ada, peringatan kesiapan yang tercatat saat simulasi dimulai, dan <strong>pemeriksaan hasil</strong>, aturan
+otomatis yang dijalankan pada hasil. Aturan pemblokir yang gagal menghentikan laporan.</p>
+<h3>P50–P95 tahunan</h3>
+<p>Simulasi sendiri tidak memiliki ketidakpastian. Isi <strong>asumsi ketidakpastian</strong> Anda: untuk setiap istilah,
+σ dan satuannya, sumber dan justifikasi. Istilah dalam satu kelompok hitung-ganda harus digabung dahulu. Nyatakan apakah
+istilah saling bebas atau berikan matriks korelasi. RawiBumi lalu menghitung P50 sampai P95, energi tahunan yang terlampaui
+dengan peluang tersebut. P99 tidak diberikan oleh metode ini, dan RawiBumi tidak menyediakan persentase bawaan.</p>
+
+<h2 id="export">14. Langkah 11 · Laporan &amp; ekspor</h2>
+<p>Buka langkah ini dari rel atau palet perintah; tidak ada pintasan angka.</p>
+<table><tr><th>Ekspor</th><th>Yang Anda peroleh</th></tr>
+<tr><td>Laporan</td><td>Pratinjau, lalu unduh satu berkas HTML mandiri, atau cetak ke PDF dari peramban (A4). Bab: angka
+utama, metodologi, denah (dengan gambar latar Anda), pemetaan inverter, MPPT dan string, diagram satu garis, bayangan, energi
+bulanan, air terjun rugi, peta panas 52 minggu, pemeriksaan hasil, asumsi, serta cakupan dan batasan. Laporan gratis memuat
+kaki halaman "Made with RawiBumi"; laporan bermerek adalah fitur berbayar.</td></tr>
+<tr><td>PDF numerik terverifikasi</td><td>PDF terlindungi yang dapat dicari dari laporan terverifikasi yang sama, dalam bahasa
+antarmuka.</td></tr>
+<tr><td>CSV gratis</td><td>CSV per jam dengan sepuluh kolom: cap waktu, GHI, DNI, DHI, iradiansi bidang modul, suhu udara dan
+sel, energi DC masuk inverter, energi AC di PCC (kWh), dan PR.</td></tr>
+<tr><td>Ekspor CSV numerik</td><td>ZIP berisi kolom per jam yang dipilih dan manifes. Paket lengkap menambahkan tabel bulanan,
+ringkasan simulasi, temuan validasi dan catatan simulasi.</td></tr>
+<tr><td>Berkas proyek</td><td>Seluruh proyek sebagai satu berkas <code>.rawibumi</code> (bab 1).</td></tr>
+</table>
+<p>Laporan hanya dibuat dari simulasi desain saat ini; setelah desain berubah, jalankan simulasi lagi dahulu.</p>
+
+<h2 id="losses">15. Rantai rugi-rugi</h2>
+<p>Air terjun rugi dimulai dari energi yang dihasilkan modul pada efisiensi pengenalnya dengan sinar matahari yang mencapai
+larik, lalu mengurangi setiap efek berurutan:</p>
+<table><tr><th>Tahap</th><th>Artinya</th></tr>
+<tr><td>Bayangan geometris</td><td>Cahaya yang terhalang penghalang, atap dan baris lain: cahaya langsung, langit dan tanah.</td></tr>
+<tr><td>Ketidakcocokan orientasi</td><td>Rugi tambahan bila satu MPPT menggabungkan modul yang menghadap arah berbeda.</td></tr>
+<tr><td>Kotoran</td><td>Kotoran pada kaca.</td></tr>
+<tr><td>Efek operasi modul</td><td>Perilaku suhu dan iradiansi rendah pada model modul.</td></tr>
+<tr><td>LID</td><td>Degradasi akibat cahaya.</td></tr>
+<tr><td>Kualitas modul</td><td>Toleransi modul dari lembar datanya; negatif berarti keuntungan.</td></tr>
+<tr><td>Ketidakcocokan modul dan string</td><td>Sebaran listrik antarmodul dan antarstring.</td></tr>
+<tr><td>Degradasi</td><td>Penuaan pada tahun operasi yang disimulasikan.</td></tr>
+<tr><td>Kabel DC</td><td>Rugi resistif pada kabel DC.</td></tr>
+<tr><td>Inverter</td><td>Efisiensi konversi pada setiap daya dan tegangan, operasi di tepi jendela tegangan, ambang awal, dan
+pemotongan pada batas daya.</td></tr>
+<tr><td>Kabel AC dan kabel AC pembangkit</td><td>Rugi resistif pada kabel AC.</td></tr>
+<tr><td>Besi dan tembaga trafo</td><td>Bila trafo aktif.</td></tr>
+<tr><td>Ketidaktersediaan</td><td>Bila diatur.</td></tr>
+</table>
+<p>Pada setiap jam, energi acuan dikurangi semua rugi sama dengan energi AC, atau simulasi gagal.</p>
+
+<h2 id="glossary">16. Glosarium</h2>
+<dl>
+<dt>STC</dt><dd>Kondisi uji standar: 1.000 W/m² dan suhu sel 25 °C. Daya modul (Wp) diukur pada STC.</dd>
+<dt>kWp</dt><dd>Kapasitas DC: jumlah daya STC semua modul.</dd>
+<dt>GHI, DNI, DHI</dt><dd>Iradiansi global horizontal, langsung normal dan difus horizontal.</dd>
+<dt>POA</dt><dd>Bidang modul: iradiansi pada permukaan modul yang miring.</dd>
+<dt>IAM</dt><dd>Pengubah sudut datang: rugi pantulan saat cahaya mengenai kaca secara miring.</dd>
+<dt>String</dt><dd>Modul yang dirangkai seri; tegangannya dijumlahkan.</dd>
+<dt>MPPT</dt><dd>Pelacak titik daya maksimum: masukan inverter yang menjalankan string pada tegangan terbaiknya. String paralel
+pada satu MPPT sebaiknya sama panjang dan orientasinya.</dd>
+<dt>Voc, Vmp, Isc, Imp</dt><dd>Tegangan rangkaian terbuka, tegangan pada daya maksimum, arus hubung singkat dan arus pada daya
+maksimum. Voc naik saat dingin, sehingga suhu terdingin menentukan string terpanjang yang aman.</dd>
+<dt>Rasio DC/AC</dt><dd>Kapasitas DC ÷ daya AC inverter. Di atas 1, inverter memotong sebagian daya puncak.</dd>
+<dt>Pemotongan (clipping)</dt><dd>Energi yang hilang saat daya DC melebihi kemampuan konversi inverter.</dd>
+<dt>PCC</dt><dd>Titik sambung bersama: tempat pembangkit tersambung ke jaringan.</dd>
+<dt>GCR</dt><dd>Rasio tutupan: kedalaman miring meja ÷ jarak baris.</dd>
+<dt>Jarak baris (pitch)</dt><dd>Jarak dari depan satu meja ke depan meja berikutnya.</dd>
+<dt>Albedo</dt><dd>Fraksi cahaya yang dipantulkan tanah.</dd>
+<dt>Uc, Uv</dt><dd>Koefisien pelepasan panas modul: tetap dan bergantung angin.</dd>
+<dt>TMY</dt><dd>Tahun meteorologi tipikal: tahun yang disusun dari bulan-bulan tipikal.</dd>
+<dt>P50, P90</dt><dd>Energi tahunan yang terlampaui dengan peluang 50 % dan 90 %.</dd>
+</dl>
+
+<h2 id="keys">17. Pintasan papan ketik</h2>
+<table><tr><th>Tombol</th><th>Tindakan</th></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>1</kbd></td><td>Proyek &amp; lokasi</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>2</kbd></td><td>Komponen</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>3</kbd></td><td>Geometri</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>4</kbd></td><td>Tata letak PV</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>5</kbd></td><td>Sistem</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>6</kbd></td><td>Kelistrikan</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>7</kbd></td><td>Cuaca</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>8</kbd></td><td>Rugi-rugi &amp; jaringan</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>9</kbd></td><td>Simulasi</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>0</kbd></td><td>Hasil</td></tr>
+<tr><td>Rel / palet perintah</td><td>Laporan &amp; ekspor</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> · <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> atau <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>Urungkan · ulangi</td></tr>
+<tr><td><kbd>Enter</kbd> · <kbd>Esc</kbd> · <kbd>Backspace</kbd></td><td>Selesai · batal · hapus titik terakhir</td></tr>
+<tr><td><kbd>Delete</kbd> · <kbd>Shift</kbd>+<kbd>Delete</kbd></td><td>Hapus pilihan · hapus meja dari modul terpilih</td></tr>
+<tr><td>Panah · <kbd>Shift</kbd>+panah</td><td>Geser 0,10 m · 1,00 m</td></tr>
+<tr><td><kbd>Shift</kbd> saat menggambar · <kbd>Alt</kbd></td><td>Langkah 15° · tempatkan tanpa snap</td></tr>
+<tr><td><kbd>Shift</kbd>+<kbd>F10</kbd></td><td>Menu konteks</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>\</kbd></td><td>Fokus panggung (sembunyikan panel)</td></tr>
+<tr><td><kbd>Z</kbd></td><td>Perbesar semua</td></tr>
+<tr><td>Geometri: <kbd>V</kbd> <kbd>M</kbd> <kbd>R</kbd> <kbd>B</kbd> <kbd>P</kbd> <kbd>H</kbd> <kbd>O</kbd> <kbd>E</kbd> <kbd>K</kbd> <kbd>D</kbd></td><td>Lihat bab 6</td></tr>
+<tr><td>Kelistrikan: <kbd>V</kbd> <kbd>S</kbd> <kbd>A</kbd> <kbd>L</kbd> <kbd>X</kbd> <kbd>J</kbd> <kbd>R</kbd> <kbd>M</kbd> <kbd>W</kbd>, <kbd>[</kbd> <kbd>]</kbd> <kbd>1</kbd>–<kbd>9</kbd></td><td>Lihat bab 9</td></tr>
+</table>
+
+<h2 id="trouble">18. Pesan dan pemecahan masalah</h2>
+<dl>
+<dt>Sebuah langkah berstatus <em>Terblokir</em></dt><dd>Buka langkahnya: temuan pemblokir tercantum di atas, atau di Simulasi
+→ Preflight. Perbaiki itu dahulu.</dd>
+<dt>"Unable to detect weather format"</dt><dd>Berkas bukan format yang didukung (bab 10). Dari Meteonorm atau PVsyst, ekspor
+TMY3 atau CSV "PVsyst Standard".</dd>
+<dt>"Not enough unstrung modules for an n-module string"</dt><dd>Tata letak meminta lebih banyak modul daripada yang bebas di
+area inverter. Kurangi panjang atau jumlah string, atau perluas atap yang dilayani inverter.</dd>
+<dt>Pemeriksaan tegangan string gagal</dt><dd>Perpendek string bila Voc dinginnya di atas maksimum inverter; ubah panjang atau
+inverter bila keluar dari jendela MPPT.</dd>
+<dt>"These results are from an earlier design"</dt><dd>Desain berubah setelah simulasi. Jalankan lagi untuk hasil terkini dan
+laporan.</dd>
+<dt>Angka tidak tersimpan</dt><dd>Tekan <kbd>Enter</kbd> atau tinggalkan isian; di formulir, tekan <em>Terapkan</em> atau
+<em>Simpan</em> formulir itu.</dd>
+<dt>Urungkan tidak berbuat apa-apa</dt><dd>Tidak ada langkah sebelumnya untuk proyek ini (mesin menyimpan 10), atau server
+dimulai ulang.</dd>
+<dt>"The project changed elsewhere"</dt><dd>Anggota grup lain mengubah proyek yang sama; versi terbaru sudah dimuat. Ulangi
+perubahan Anda.</dd>
+</dl>
+
+<h2 id="limits">19. Batasan</h2>
+<ul>
+<li>RawiBumi belum dibandingkan dengan data pembangkit terukur. Hasilnya sesuai dengan PVsyst dalam pecahan persen pada dua
+proyek nyata yang terbayangi; PVsyst adalah pembanding, bukan kebenaran mutlak.</li>
+<li>Belum dimodelkan: baterai, beban dan batas ekspor, bayangan horizon jauh (belum ada profil horizon), langkah waktu di bawah
+satu jam, daya reaktif, perilaku suhu inverter, dan zona waktu dengan waktu musim panas.</li>
+<li>Rugi-rugi bawaan adalah nilai awal; tinjau untuk setiap lokasi.</li>
+<li>Urungkan menyimpan 10 langkah mesin terakhir per proyek dan hilang bila server dimulai ulang.</li>
+<li>Persegi yang diputar: atur panjang sebelum memutar (bab 6).</li>
+</ul>
+
+<h2 id="beta">20. Data Anda, status beta, dan masukan</h2>
+<p><strong>Di komputer Anda sendiri</strong>, semua data tetap berada di folder data aplikasi (<code>var/</code>): proyek,
+cuaca, hasil simulasi, citra dan pustaka komponen. Tidak ada yang dikirim ke mana pun kecuali layanan daring yang Anda
+pakai dari aplikasi: Open-Meteo saat Anda mengambil data cuaca setahun, Nominatim saat Anda mencari alamat, dan
+OpenFreeMap selama peta ditampilkan. Cadangkan folder data untuk mencadangkan pekerjaan Anda.</p>
+<p><strong>Di layanan uji yang Anda diundang</strong>, Anda masuk dengan kode akses dan email. Kode terikat pada email
+pertama yang dipakai, jadi gunakan email yang sama setiap kali; kode tidak berlaku lagi setelah jendela uji ditutup.
+Penyelenggara menyimpan proyek dan berkas unggahan grup Anda serta log akses (email, waktu, halaman dan tindakan),
+seperti tertulis di halaman masuk. Semua anggota grup melihat proyek grup, jadi jangan mengunggah data klien yang
+rahasia. Anda dapat meminta penyelenggara menghapus data Anda kapan saja.</p>
+<p>RawiBumi masih beta: tanpa jaminan, dan hasilnya harus ditinjau oleh insinyur sebelum dijadikan dasar keputusan.</p>
+<p><strong>Masukan:</strong> sebutkan langkahnya, apa yang Anda lakukan, apa yang terjadi dan apa yang Anda harapkan,
+dengan tangkapan layar bila bisa. Kirim sebagai <em>issue</em> di halaman GitHub proyek, atau kepada penyelenggara uji Anda.</p>
+</main>
+</body>
+</html>

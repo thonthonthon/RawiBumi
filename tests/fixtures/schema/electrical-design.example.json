@@ -1,0 +1,59 @@
+{
+  "schema_name": "ElectricalDesignRevision",
+  "schema_version": "0.1",
+  "electrical_revision_id": "elec-ref-001-r1",
+  "project_id": "proj-ref-001",
+  "created_at": "2026-09-22T00:00:00Z",
+  "change_summary": "Synthetic electrical fixture.",
+  "inverter_instances": [
+    {
+      "inverter_instance_id": "inv-inst-001",
+      "project_revision_id": "proj-ref-001-r1",
+      "inverter_definition_revision_id": "inv-openpv-ref-150k-r1",
+      "name": "INV-01",
+      "location": null,
+      "enabled": true,
+      "mppt_instance_ids": ["mppt-inst-001"],
+      "ac_connection_id": "conn-ac-001"
+    }
+  ],
+  "mppt_instances": [
+    {
+      "mppt_instance_id": "mppt-inst-001",
+      "inverter_instance_id": "inv-inst-001",
+      "mppt_definition_id": "mppt-def-001",
+      "index": 1,
+      "connected_string_ids": ["string-001"],
+      "enabled": true
+    }
+  ],
+  "strings": [
+    {
+      "string_id": "string-001",
+      "project_revision_id": "proj-ref-001-r1",
+      "name": "S01",
+      "module_instance_ids": ["module-001"],
+      "target_mppt_instance_id": "mppt-inst-001",
+      "enabled": true,
+      "polarity": "normal",
+      "cable_definition_id": null,
+      "notes": null
+    }
+  ],
+  "connections": [
+    {
+      "connection_id": "conn-ac-001",
+      "project_revision_id": "proj-ref-001-r1",
+      "from_node_id": "inv-inst-001",
+      "to_node_id": "pcc-001",
+      "connection_type": "pcc",
+      "phase": "three_phase",
+      "conductor_reference": null,
+      "length_m": null,
+      "resistance_ohm": null,
+      "loss_model_id": null,
+      "enabled": true
+    }
+  ],
+  "pcc_definition": {"pcc_id": "pcc-001"}
+}

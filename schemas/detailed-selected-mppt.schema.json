@@ -1,0 +1,308 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/detailed-selected-mppt.schema.json",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "scientific_input_sha256",
+    "diagnostic_result_sha256",
+    "temperature_metadata",
+    "intervals"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "CompactDetailedMPPTResult"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "scientific_input_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "diagnostic_result_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "temperature_metadata": {
+      "type": "object"
+    },
+    "intervals": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "interval_start",
+          "interval_end",
+          "evaluation_time",
+          "duration_seconds",
+          "mppts",
+          "modules"
+        ],
+        "properties": {
+          "interval_start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "interval_end": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "evaluation_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "duration_seconds": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "mppts": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "mppt_instance_id",
+                "mppt_index",
+                "string_ids",
+                "voltage_v",
+                "current_a",
+                "power_w",
+                "isc_a",
+                "voc_v",
+                "active",
+                "tracker_model_id",
+                "availability",
+                "combined_curve_sha256",
+                "constraint_flags"
+              ],
+              "properties": {
+                "mppt_instance_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "mppt_index": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "string_ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "voltage_v": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0
+                },
+                "current_a": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0
+                },
+                "power_w": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "isc_a": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0
+                },
+                "voc_v": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "minimum": 0
+                },
+                "active": {
+                  "type": "boolean"
+                },
+                "tracker_model_id": {
+                  "const": "rawibumi.mppt.ideal_global_mpp.v0.1"
+                },
+                "availability": {
+                  "enum": [
+                    "selected_unconstrained_state",
+                    "inactive_dark"
+                  ]
+                },
+                "combined_curve_sha256": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "constraint_flags": {
+                  "type": "object",
+                  "required": [
+                    "operating_current_above_limit",
+                    "operating_current_limit_known"
+                  ],
+                  "properties": {
+                    "operating_current_above_limit": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "operating_current_limit_known": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "current_limit_branch": {
+                  "description": "The combined curve from the selected point to open circuit (ascending voltage), carried only near a known MPPT current limit so the inverter can move to the constrained operating point.",
+                  "type": "object",
+                  "required": [
+                    "voltage_v",
+                    "current_a"
+                  ],
+                  "properties": {
+                    "voltage_v": {
+                      "type": "array",
+                      "minItems": 2,
+                      "items": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    },
+                    "current_a": {
+                      "type": "array",
+                      "minItems": 2,
+                      "items": {
+                        "type": "number",
+                        "minimum": 0
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "availability": {
+                        "const": "inactive_dark"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "voltage_v": {
+                        "type": "null"
+                      },
+                      "current_a": {
+                        "type": "null"
+                      },
+                      "isc_a": {
+                        "type": "null"
+                      },
+                      "voc_v": {
+                        "type": "null"
+                      },
+                      "combined_curve_sha256": {
+                        "type": "null"
+                      },
+                      "power_w": {
+                        "const": 0
+                      },
+                      "active": {
+                        "const": false
+                      }
+                    }
+                  },
+                  "else": {
+                    "properties": {
+                      "voltage_v": {
+                        "type": "number"
+                      },
+                      "current_a": {
+                        "type": "number"
+                      },
+                      "isc_a": {
+                        "type": "number"
+                      },
+                      "voc_v": {
+                        "type": "number"
+                      },
+                      "combined_curve_sha256": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "modules": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "module_instance_id",
+                "incident_poa_w_m2",
+                "effective_irradiance_w_m2",
+                "unshaded_poa_w_m2",
+                "cell_temperature_c"
+              ],
+              "properties": {
+                "module_instance_id": {
+                  "type": "string"
+                },
+                "incident_poa_w_m2": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "effective_irradiance_w_m2": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "unshaded_poa_w_m2": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "cell_temperature_c": {
+                  "type": "number"
+                },
+                "post_iam_pre_soiling_w_m2": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "soiling_loss_w_m2": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "loss_circuit_references": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object"
+      }
+    }
+  },
+  "additionalProperties": false
+}

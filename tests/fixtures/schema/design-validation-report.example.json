@@ -1,0 +1,42 @@
+{
+  "schema_name": "DesignValidationReport",
+  "schema_version": "0.1",
+  "design_validation_report_id": "design-validation-ref-001",
+  "project_revision_id": "proj-ref-001-r1",
+  "scene_revision_id": "scene-ref-001-r1",
+  "electrical_revision_id": "elec-ref-001-r1",
+  "rule_set_id": "design-validation.v0.1",
+  "generated_at": "2026-09-23T16:00:00Z",
+  "status": "valid_with_findings",
+  "finding_counts": {
+    "info": 0,
+    "recommendation": 0,
+    "warning": 1,
+    "error": 0,
+    "blocking_error": 0
+  },
+  "blocking_simulation": false,
+  "findings": [
+    {
+      "schema_name": "ValidationFinding",
+      "schema_version": "0.1",
+      "finding_id": "finding-design-ref-001",
+      "project_revision_id": "proj-ref-001-r1",
+      "entity_id": "field-001",
+      "rule_id": "DESIGN_REFERENCE_WARNING",
+      "severity": "warning",
+      "category": "design_contract",
+      "message": "Synthetic non-blocking Phase-4.0 design finding.",
+      "measured_value": null,
+      "limit_value": null,
+      "unit": null,
+      "context": {},
+      "generated_at": "2026-09-23T16:00:00Z",
+      "resolved_at": null,
+      "resolution_note": null
+    }
+  ],
+  "metadata": {
+    "phase": "4.0"
+  }
+}

@@ -1,0 +1,545 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/execution-breakdown.schema.json",
+  "title": "Separable execution group and inverter results",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "simulated_dc_nameplate_w",
+    "plant_poa_basis",
+    "inverters",
+    "groups",
+    "group_timeseries_reference",
+    "inverter_timeseries_reference"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "simulated_dc_nameplate_w": {
+      "type": "number"
+    },
+    "plant_poa_basis": {
+      "const": "simulated_dc_nameplate_weighted"
+    },
+    "inverters": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "inverter_instance_id",
+          "name",
+          "inverter_revision_id",
+          "simulated_dc_nameplate_w",
+          "nominal_ac_power_w",
+          "total_energy_wh",
+          "specific_yield_wh_per_wp",
+          "performance_ratio",
+          "clipping_energy_wh",
+          "voltage_threshold_energy_wh",
+          "startup_threshold_energy_wh",
+          "conversion_energy_wh",
+          "self_consumption_energy_wh",
+          "annual_energy_wh",
+          "monthly_energy",
+          "loss_summary"
+        ],
+        "properties": {
+          "inverter_instance_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "inverter_revision_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "simulated_dc_nameplate_w": {
+            "type": "number"
+          },
+          "nominal_ac_power_w": {
+            "type": "number"
+          },
+          "total_energy_wh": {
+            "type": "number"
+          },
+          "specific_yield_wh_per_wp": {
+            "type": "number"
+          },
+          "performance_ratio": {
+            "type": "number"
+          },
+          "clipping_energy_wh": {
+            "type": "number"
+          },
+          "voltage_threshold_energy_wh": {
+            "type": "number"
+          },
+          "startup_threshold_energy_wh": {
+            "type": "number"
+          },
+          "conversion_energy_wh": {
+            "type": "number"
+          },
+          "self_consumption_energy_wh": {
+            "type": "number"
+          },
+          "annual_energy_wh": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "monthly_energy": {
+            "$ref": "summary-result.schema.json#/properties/monthly_energy"
+          },
+          "loss_summary": {
+            "$ref": "summary-result.schema.json#/properties/loss_summary"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "inverter_instance_id",
+          "inverter_definition_revision_id",
+          "module_revision_id",
+          "modules_in_series",
+          "surface_tilt_deg",
+          "surface_azimuth_deg",
+          "albedo",
+          "albedo_sources",
+          "string_ids",
+          "module_instance_ids",
+          "receiver_ids",
+          "missing_receiver_module_ids",
+          "pv_field_ids",
+          "support_surface_ids",
+          "mppt_instance_ids",
+          "mppt_indices",
+          "execution_group_id",
+          "execution_group_payload_sha256",
+          "simulated_dc_nameplate_w",
+          "poa_unshaded_wh_m2",
+          "poa_wh_m2",
+          "effective_irradiation_wh_m2",
+          "raw_dc_energy_wh",
+          "post_array_loss_dc_energy_wh",
+          "dc_loss_energy_wh"
+        ],
+        "properties": {
+          "inverter_instance_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "inverter_definition_revision_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "module_revision_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "modules_in_series": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "surface_tilt_deg": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 90
+          },
+          "surface_azimuth_deg": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMaximum": 360
+          },
+          "albedo": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "albedo_sources": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "string_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "module_instance_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "receiver_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "missing_receiver_module_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "pv_field_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "support_surface_ids": {
+            "type": "array",
+            "minItems": 0,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "mppt_instance_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "mppt_indices": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "execution_group_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "execution_group_payload_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "simulated_dc_nameplate_w": {
+            "type": "number"
+          },
+          "poa_unshaded_wh_m2": {
+            "type": "number"
+          },
+          "poa_wh_m2": {
+            "type": "number"
+          },
+          "effective_irradiation_wh_m2": {
+            "type": "number"
+          },
+          "raw_dc_energy_wh": {
+            "type": "number"
+          },
+          "post_array_loss_dc_energy_wh": {
+            "type": "number"
+          },
+          "dc_loss_energy_wh": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "group_timeseries_reference": {
+      "$ref": "result-dataset-reference.schema.json"
+    },
+    "inverter_timeseries_reference": {
+      "$ref": "result-dataset-reference.schema.json"
+    },
+    "measurement_boundary": {
+      "type": "string"
+    },
+    "inverter_subtotal_energy_wh": {
+      "type": "number"
+    },
+    "plant_adjustments": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      }
+    },
+    "orientation_classes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "inverter_instance_id",
+          "inverter_definition_revision_id",
+          "module_revision_id",
+          "surface_tilt_deg",
+          "surface_azimuth_deg",
+          "albedo",
+          "albedo_sources",
+          "module_instance_ids",
+          "receiver_ids",
+          "missing_receiver_module_ids",
+          "pv_field_ids",
+          "support_surface_ids",
+          "execution_group_id",
+          "execution_group_payload_sha256",
+          "simulated_dc_nameplate_w",
+          "poa_unshaded_wh_m2",
+          "poa_wh_m2",
+          "raw_dc_energy_wh"
+        ],
+        "properties": {
+          "inverter_instance_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "inverter_definition_revision_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "module_revision_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "surface_tilt_deg": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 90
+          },
+          "surface_azimuth_deg": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMaximum": 360
+          },
+          "albedo": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "albedo_sources": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "module_instance_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "receiver_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "missing_receiver_module_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "pv_field_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "support_surface_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "execution_group_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "execution_group_payload_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "simulated_dc_nameplate_w": {
+            "type": "number"
+          },
+          "poa_unshaded_wh_m2": {
+            "type": "number"
+          },
+          "poa_wh_m2": {
+            "type": "number"
+          },
+          "raw_dc_energy_wh": {
+            "type": "number"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "mixed_mppts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "mppt_instance_id",
+          "inverter_instance_id",
+          "mppt_index",
+          "modules_in_series",
+          "strings",
+          "raw_dc_energy_wh",
+          "combined_dc_energy_wh",
+          "post_array_loss_dc_energy_wh",
+          "dc_loss_energy_wh"
+        ],
+        "properties": {
+          "mppt_instance_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "inverter_instance_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mppt_index": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "modules_in_series": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "strings": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "string_id",
+                "module_instance_ids",
+                "composition"
+              ],
+              "properties": {
+                "string_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "module_instance_ids": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "composition": {
+                  "type": "object",
+                  "minProperties": 1,
+                  "additionalProperties": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "raw_dc_energy_wh": {
+            "type": "number"
+          },
+          "combined_dc_energy_wh": {
+            "type": "number"
+          },
+          "post_array_loss_dc_energy_wh": {
+            "type": "number"
+          },
+          "dc_loss_energy_wh": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "mixed_mppts"
+        ],
+        "properties": {
+          "mixed_mppts": {
+            "type": "array",
+            "minItems": 1
+          }
+        }
+      },
+      "then": {},
+      "else": {
+        "properties": {
+          "groups": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ]
+}

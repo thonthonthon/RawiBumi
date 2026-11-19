@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/simulation-model-resolution.schema.json",
+  "title": "OpenSIMPV SimulationModelResolution v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "resolution_id",
+    "status",
+    "module",
+    "inverter",
+    "assumptions",
+    "warnings"
+  ],
+  "properties": {
+    "schema_name": {"const": "SimulationModelResolution"},
+    "schema_version": {"const": "0.1"},
+    "resolution_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["resolved", "blocked"]},
+    "module": {"$ref": "resolved-component-model.schema.json"},
+    "inverter": {"$ref": "resolved-component-model.schema.json"},
+    "assumptions": {
+      "type": "array",
+      "items": {"$ref": "simulation-assumption.schema.json"}
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

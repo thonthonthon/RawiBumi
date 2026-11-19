@@ -1,0 +1,10 @@
+{
+  "schema_name": "ElectricalTopologyCommand",
+  "schema_version": "0.1",
+  "command_id": "cmd-topo-001",
+  "command_type": "create_string",
+  "parameters": {
+    "string_id": "S01",
+    "module_instance_ids": ["module-001", "module-002"]
+  }
+}

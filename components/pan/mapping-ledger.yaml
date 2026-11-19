@@ -1,0 +1,970 @@
+schema_version: "0.1"
+format: pan
+notes: >
+  Conservative first-pass mapping. auto_map=true is used only where the source field
+  meaning and unit are sufficiently supported by PVsyst documentation and/or public
+  reference fixtures. Complex temperature-coefficient and topology semantics remain
+  deferred until representative files are compared across versions and technologies.
+rules:
+  - source_path: [PVObject_, PVObject_Commercial, Manufacturer]
+    canonical_field: manufacturer
+    source_unit: null
+    canonical_unit: null
+    conversion_rule: string
+    semantic_description: Module manufacturer.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: identity
+    notes: null
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/pv-modules-basic-data/index.html
+        note: PVsyst documents Manufacturer as a module identifier.
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/ET-M772BH550GL.PAN
+        note: Public pvlib fixture confirms the PAN path.
+
+  - source_path: [PVObject_, PVObject_Commercial, Model]
+    canonical_field: model
+    source_unit: null
+    canonical_unit: null
+    conversion_rule: string
+    semantic_description: Commercial module model identifier.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: identity
+    notes: null
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/pv-modules-basic-data/index.html
+        note: PVsyst documents Model as a module identifier.
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/ET-M772BH550GL.PAN
+        note: Public pvlib fixture confirms the PAN path.
+
+  - source_path: [PVObject_, PVObject_Commercial, Width]
+    canonical_field: mechanical.width_m
+    source_unit: m
+    canonical_unit: m
+    conversion_rule: float
+    semantic_description: Total module width.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: mechanical
+    notes: Source unit is evidenced by public fixture values corresponding to manufacturer-scale module dimensions.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/index.html
+        note: PVsyst documents Module Width as total module width.
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/ET-M772BH550GL.PAN
+        note: Width appears as 1.134 in the public PAN fixture.
+
+  - source_path: [PVObject_, PVObject_Commercial, Height]
+    canonical_field: mechanical.height_m
+    source_unit: m
+    canonical_unit: m
+    conversion_rule: float
+    semantic_description: Total module length/height.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: mechanical
+    notes: Source unit is evidenced by public fixture values corresponding to manufacturer-scale module dimensions.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/index.html
+        note: PVsyst documents Module Length as total module length.
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/ET-M772BH550GL.PAN
+        note: Height appears as 2.278 in the public PAN fixture.
+
+  - source_path: [PVObject_, PVObject_Commercial, Depth]
+    canonical_field: mechanical.thickness_m
+    source_unit: m
+    canonical_unit: m
+    conversion_rule: float
+    semantic_description: Module depth/thickness.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: mechanical
+    notes: Field-path semantics are supported by the public PAN fixture; exact cross-version behavior still needs a larger corpus.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/ET-M772BH550GL.PAN
+        note: Depth appears as 0.035 in the public PAN fixture.
+
+  - source_path: [PVObject_, PVObject_Commercial, Weight]
+    canonical_field: mechanical.mass_kg
+    source_unit: kg
+    canonical_unit: kg
+    conversion_rule: float
+    semantic_description: Module mass.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: mechanical
+    notes: Field-path semantics are supported by the public PAN fixture; exact cross-version behavior still needs a larger corpus.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/ET-M772BH550GL.PAN
+        note: Weight appears as 32.000 in the public PAN fixture.
+
+  - source_path: [PVObject_, GRef]
+    canonical_field: stc.reference_irradiance_w_m2
+    source_unit: W/m2
+    canonical_unit: W/m2
+    conversion_rule: float
+    semantic_description: Reference irradiance for Isc, Voc, Impp, and Vmpp.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: stc
+    notes: null
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/index.html
+        note: PVsyst defines GRef explicitly.
+
+  - source_path: [PVObject_, TRef]
+    canonical_field: stc.reference_cell_temperature_c
+    source_unit: degC
+    canonical_unit: degC
+    conversion_rule: float
+    semantic_description: Reference cell temperature for Isc, Voc, Impp, and Vmpp.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: stc
+    notes: null
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/index.html
+        note: PVsyst defines TRef explicitly.
+
+  - source_path: [PVObject_, PNom]
+    canonical_field: stc.nominal_power_w
+    source_unit: W
+    canonical_unit: W
+    conversion_rule: float
+    semantic_description: Module nameplate nominal power at STC.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: stc
+    notes: >
+      Intentionally not mapped to stc.pmp_w. PVsyst explicitly distinguishes PNom from
+      manufacturer Vmpp*Impp and from the modeled maximum of the P-V curve.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/pv-modules-basic-data/pnom-and-pmppstc-definitions.html
+        note: PVsyst explicitly distinguishes PNom and Pmpp definitions.
+
+  - source_path: [PVObject_, Isc]
+    canonical_field: stc.isc_a
+    source_unit: A
+    canonical_unit: A
+    conversion_rule: float
+    semantic_description: Short-circuit current at GRef and TRef.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: stc
+    notes: null
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/index.html
+        note: PVsyst defines Isc at GRef and TRef.
+
+  - source_path: [PVObject_, Voc]
+    canonical_field: stc.voc_v
+    source_unit: V
+    canonical_unit: V
+    conversion_rule: float
+    semantic_description: Open-circuit voltage at GRef and TRef.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: stc
+    notes: null
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/index.html
+        note: PVsyst defines Voc at GRef and TRef.
+
+  - source_path: [PVObject_, Imp]
+    canonical_field: stc.imp_a
+    source_unit: A
+    canonical_unit: A
+    conversion_rule: float
+    semantic_description: Manufacturer maximum-power-point current at GRef and TRef.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: stc
+    notes: null
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/index.html
+        note: PVsyst documents Impp; PAN fixture uses Imp.
+
+  - source_path: [PVObject_, Vmp]
+    canonical_field: stc.vmp_v
+    source_unit: V
+    canonical_unit: V
+    conversion_rule: float
+    semantic_description: Manufacturer maximum-power-point voltage at GRef and TRef.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: stc
+    notes: null
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/index.html
+        note: PVsyst documents Vmpp; PAN fixture uses Vmp.
+
+  - source_path: [PVObject_, NCelS]
+    canonical_field: cell_architecture.cells_in_series
+    source_unit: count
+    canonical_unit: count
+    conversion_rule: int
+    semantic_description: Number of cells in series used by the PVsyst module model.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: cell_architecture
+    notes: null
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/index.html
+        note: PVsyst documents NCell serie.
+
+  - source_path: [PVObject_, NCelP]
+    canonical_field: cell_architecture.cells_in_parallel
+    source_unit: count
+    canonical_unit: count
+    conversion_rule: int
+    semantic_description: Number of cells in parallel used by the PVsyst module model.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: cell_architecture
+    notes: PVsyst states this is not materially used by its one-diode model.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/index.html
+        note: PVsyst documents NCells parall.
+
+  - source_path: [PVObject_, NDiode]
+    canonical_field: cell_architecture.bypass_diode_count
+    source_unit: count
+    canonical_unit: count
+    conversion_rule: int
+    semantic_description: Number of bypass-diode-protected submodules.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: cell_architecture
+    notes: Exact topology still requires SubModuleLayout interpretation.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/physical-models-used/pv-module-standard-one-diode-model/pvmodule-structure/submodules-layout.html
+        note: PVsyst documents module architecture and bypass-diode organization.
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/ET-M772BH550GL.PAN
+        note: Public fixture includes NDiode.
+
+  - source_path: [PVObject_, VRevDiode]
+    canonical_field: cell_architecture.bypass_diode_forward_voltage_v
+    source_unit: V
+    canonical_unit: V
+    conversion_rule: abs_float
+    semantic_description: Positive magnitude of the PAN bypass-diode forward voltage.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: cell_architecture
+    notes: PAN records a negative reverse-bias clamp; preserve the signed source in provenance.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/ET-M772BH550GL.PAN
+        note: VRevDiode is the signed bypass voltage; USE5 uses its magnitude.
+
+  - source_path: [PVObject_, LIDLoss]
+    canonical_field: quality.lid_loss_fraction
+    source_unit: "%"
+    canonical_unit: fraction
+    conversion_rule: loss_percent_to_fraction
+    semantic_description: Module PAN light-induced degradation loss suggestion, not a simulation setting.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: quality
+    notes: applied as the default LID for its module model (owner decision 2026-11-18); shown with its source and editable
+    evidence:
+      - kind: official_documentation
+        url: https://3f01987ab2c43f1e1a1e-5dee5c72ef4d5ad7dd4b61ef3ab73822.ssl.cf1.rackcdn.com/3349821-2943854-001.pdf
+        note: DNV Primer on PAN and OND Files shows module-level LIDLoss beside VRevDiode, before IAM. Tests use synthetic values.
+
+  - source_path: [PVObject_, SubModuleLayout]
+    canonical_field: cell_architecture.source_layout_code
+    source_unit: null
+    canonical_unit: null
+    conversion_rule: string
+    semantic_description: PVsyst source code describing submodule layout.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: cell_architecture
+    notes: Stored as source code only; no canonical topology is inferred yet.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/physical-models-used/pv-module-standard-one-diode-model/pvmodule-structure/submodules-layout.html
+        note: PVsyst documents submodule-layout semantics.
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/ET-M772BH550GL.PAN
+        note: Public fixture contains SubModuleLayout.
+
+  - source_path: [PVObject_, RShunt]
+    canonical_field: electrical_models[pvsyst_singlediode].parameter_set.r_shunt_ref_ohm
+    source_unit: ohm
+    canonical_unit: ohm
+    conversion_rule: float
+    semantic_description: PVsyst one-diode-model shunt resistance at reference irradiance.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: pvsyst_singlediode
+    notes: null
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/pv-modules-model-parameters.html
+        note: PVsyst documents Rshunt as a one-diode-model parameter.
+
+  - source_path: [PVObject_, Rp_0]
+    canonical_field: electrical_models[pvsyst_singlediode].parameter_set.r_shunt_0_ohm
+    source_unit: ohm
+    canonical_unit: ohm
+    conversion_rule: float
+    semantic_description: PVsyst shunt-resistance intercept at zero irradiance.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: pvsyst_singlediode
+    notes: null
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/physical-models-used/pv-module-standard-one-diode-model/parameters-besides-datasheets.html
+        note: PVsyst documents Rsh0.
+
+  - source_path: [PVObject_, Rp_Exp]
+    canonical_field: electrical_models[pvsyst_singlediode].parameter_set.r_shunt_exp
+    source_unit: null
+    canonical_unit: null
+    conversion_rule: float
+    semantic_description: PVsyst stored exponential parameter for irradiance-dependent shunt resistance.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: pvsyst_singlediode
+    notes: Raw sign/value is preserved; no sign reinterpretation is applied by the mapper.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/physical-models-used/pv-module-standard-one-diode-model/parameters-besides-datasheets.html
+        note: PVsyst documents the Rsh exponential parameter.
+
+  - source_path: [PVObject_, RSerie]
+    canonical_field: electrical_models[pvsyst_singlediode].parameter_set.r_series_ohm
+    source_unit: ohm
+    canonical_unit: ohm
+    conversion_rule: float
+    semantic_description: PVsyst one-diode-model series resistance.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: pvsyst_singlediode
+    notes: null
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/pv-modules-model-parameters.html
+        note: PVsyst documents Rseries.
+
+  - source_path: [PVObject_, Gamma]
+    canonical_field: electrical_models[pvsyst_singlediode].parameter_set.gamma_ref
+    source_unit: null
+    canonical_unit: null
+    conversion_rule: float
+    semantic_description: PVsyst diode quality factor Gamma at reference conditions.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: pvsyst_singlediode
+    notes: null
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/pv-modules-model-parameters.html
+        note: PVsyst documents Gamma as diode quality factor.
+
+  - source_path: [PVObject_, muGamma]
+    canonical_field: electrical_models[pvsyst_singlediode].parameter_set.mu_gamma
+    source_unit: 1/K
+    canonical_unit: 1/K
+    conversion_rule: float
+    semantic_description: PVsyst temperature coefficient for the diode ideality factor Gamma.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: pvsyst_singlediode
+    notes: pvlib calcparams_pvsyst defines mu_gamma in 1/K; off-STC validation now exercises this term across cell temperature.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/pv-modules-model-parameters.html
+        note: PVsyst documents muGamma as the thermal correction on Gamma.
+
+  - source_path: [PVObject_, VMaxIEC]
+    canonical_field: limits.max_system_voltage_iec_v
+    source_unit: V
+    canonical_unit: V
+    conversion_rule: float
+    semantic_description: IEC maximum array/system voltage.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: limits
+    notes: Kept separate from UL value; no jurisdictional consolidation is done automatically.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/index.html
+        note: PVsyst documents Max voltage IEC.
+
+  - source_path: [PVObject_, VMaxUL]
+    canonical_field: limits.max_system_voltage_ul_v
+    source_unit: V
+    canonical_unit: V
+    conversion_rule: float
+    semantic_description: UL maximum array/system voltage.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: limits
+    notes: Kept separate from IEC value; no jurisdictional consolidation is done automatically.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/index.html
+        note: PVsyst documents Max voltage UL.
+
+  - source_path: [PVObject_, Technol]
+    canonical_field: null
+    source_unit: null
+    canonical_unit: null
+    conversion_rule: identity_unmapped
+    semantic_description: PVsyst technology code.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: false
+    scope: identity
+    notes: A code dictionary must be verified before normalizing into canonical technology.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/ET-M772BH550GL.PAN
+        note: Public fixture contains Technol=mtSiMono.
+
+  - source_path: [PVObject_, muISC]
+    canonical_field: temperature_coefficients.alpha_isc_per_c
+    source_unit: mA/K
+    canonical_unit: A/K
+    conversion_rule: ma_to_a
+    semantic_description: Absolute temperature coefficient of short-circuit current.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: temperature
+    notes: PVsyst PAN stores this coefficient in mA/K for the reference module data.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/index.html
+        note: PVsyst documents muIsc as the temperature coefficient on Isc and supports mA/K display.
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/ET-M772BH550GL.PAN
+        note: Public fixture contains muISC=7.28.
+
+  - source_path: [PVObject_, muVocSpec]
+    canonical_field: temperature_coefficients.beta_voc_per_c
+    source_unit: mV/K
+    canonical_unit: V/K
+    conversion_rule: mv_to_v
+    semantic_description: Absolute temperature coefficient of open-circuit voltage.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: temperature
+    notes: Stored canonically as an absolute V/K coefficient.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/index.html
+        note: PVsyst documents the temperature coefficient on Voc.
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/ET-M772BH550GL.PAN
+        note: Public fixture contains muVocSpec=-128.0.
+
+  - source_path: [PVObject_, muPmpReq]
+    canonical_field: temperature_coefficients.gamma_pmp_relative_per_c
+    source_unit: "%/K"
+    canonical_unit: fraction/K
+    conversion_rule: percent_to_fraction
+    semantic_description: Relative temperature coefficient of maximum power requested/stored by PVsyst.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: temperature
+    notes: Candidate construction converts this relative coefficient to absolute W/K only when reference Pmp is available, preserving the derivation.
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/photovoltaics-modules/pv-modules-main-interface/index.html
+        note: PVsyst documents the Pmpp temperature coefficient as a relative percent-per-degree quantity.
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/ET-M772BH550GL.PAN
+        note: Public fixture contains muPmpReq=-0.340.
+
+  - source_path: [PVObject_, Technol]
+    canonical_field: technology
+    source_unit: null
+    canonical_unit: null
+    conversion_rule: pvsyst_technology_code
+    semantic_description: PVsyst module technology code normalized into a canonical technology identifier.
+    required_for_model: true
+    confidence: empirically_verified
+    auto_map: true
+    scope: identity
+    notes: Recognizes mtSiMono and mtSiPoly as crystalline silicon. Unknown codes remain unmapped with a warning. The shared crystalline-silicon bandgap completion is documented by pvlib calcparams_pvsyst (EgRef 1.121 eV).
+    first_seen_format_version: "7.2"
+    last_verified_format_version: "7.2"
+    evidence:
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/ET-M772BH550GL.PAN
+        note: Public fixture contains Technol=mtSiMono.
+
+  - source_path: [PVObject_, PNomTolLow]
+    canonical_field: quality.nameplate_power_tolerance.lower_fraction
+    source_unit: "%"
+    canonical_unit: fraction
+    conversion_rule: percent_to_fraction
+    semantic_description: Lower manufacturer tolerance on module nominal power.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: module_quality
+    notes: >
+      Stored as a signed fractional tolerance. Candidate semantic assembly derives
+      the PVsyst default module-quality loss only when both lower and upper bounds exist.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help-basic/en/pvsyst-basic/input-data/pv-module.html
+        note: PVsyst documents positive and negative nominal-power tolerances and their use for default module quality.
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/JKM550M-72HL4-V_SGS_6079M3.PAN
+        note: Manufacturer PAN fixture contains PNomTolLow=0.00.
+
+  - source_path: [PVObject_, PNomTolUp]
+    canonical_field: quality.nameplate_power_tolerance.upper_fraction
+    source_unit: "%"
+    canonical_unit: fraction
+    conversion_rule: percent_to_fraction
+    semantic_description: Upper manufacturer tolerance on module nominal power.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: module_quality
+    notes: >
+      Stored as a signed fractional tolerance. Candidate semantic assembly derives
+      the PVsyst default module-quality loss only when both lower and upper bounds exist.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/project-design/array-and-system-losses/module-quality-losses.html
+        note: PVsyst documents the tolerance-based default module-quality convention.
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/JKM550M-72HL4-V_SGS_6079M3.PAN
+        note: Manufacturer PAN fixture contains PNomTolUp=3.00.
+
+  - source_path: [PVObject_, Absorb]
+    canonical_field: optical.absorptance_fraction
+    source_unit: fraction
+    canonical_unit: fraction
+    conversion_rule: float
+    semantic_description: Module solar absorptance used by the PVsyst thermal balance.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: optical_thermal
+    notes: >
+      This is a module property. Mounting heat-transfer coefficients remain project/array
+      configuration properties.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/project-design/array-and-system-losses/array-thermal-losses/steady-state-thermal-model.html
+        note: PVsyst defines alpha as PV-module absorptance and documents 0.9 as the default.
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/JKM550M-72HL4-V_SGS_6079M3.PAN
+        note: Manufacturer PAN fixture contains Absorb=0.90.
+
+  - source_path: [PVObject_, PVObject_IAM, IAMMode]
+    canonical_field: pan_iam_source.mode
+    source_unit: null
+    canonical_unit: null
+    conversion_rule: string
+    semantic_description: PVsyst IAM definition mode.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: iam_source
+    notes: >
+      OpenSIMPV currently assembles PAN IAM data only when IAMMode is UserProfile.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/project-design/array-and-system-losses/array-incidence-loss-iam.html
+        note: PVsyst documents module-defined and user-defined IAM profiles.
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/JKM550M-72HL4-V_SGS_6079M3.PAN
+        note: Manufacturer PAN fixture contains IAMMode=UserProfile.
+
+  - source_path: [PVObject_, PVObject_IAM, IAMProfile]
+    canonical_field: pan_iam_source.profile_type
+    source_unit: null
+    canonical_unit: null
+    conversion_rule: string
+    semantic_description: PVsyst source profile object type for the module IAM curve.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: iam_source
+    notes: >
+      TCubicProfile is preserved as source semantics. OpenSIMPV does not claim its
+      cubic interpolation algorithm is identical to PVsyst.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/project-design/array-and-system-losses/array-incidence-loss-iam.html
+        note: PVsyst documents user-defined IAM profiles as module simulation inputs.
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/JKM550M-72HL4-V_SGS_6079M3.PAN
+        note: Manufacturer PAN fixture contains IAMProfile=TCubicProfile.
+
+  - source_path: [PVObject_, PVObject_IAM, IAMProfile, NPtsEff]
+    canonical_field: pan_iam_source.point_count
+    source_unit: count
+    canonical_unit: count
+    conversion_rule: int
+    semantic_description: Number of effective points in the PAN user IAM profile.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: iam_source
+    notes: Only Point_1 through Point_NPtsEff are assembled.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/JKM550M-72HL4-V_SGS_6079M3.PAN
+        note: Manufacturer PAN fixture contains NPtsEff=9.
+
+  - source_path: [PVObject_, PVObject_IAM, IAMProfile, Mode]
+    canonical_field: pan_iam_source.source_interpolation_mode_code
+    source_unit: null
+    canonical_unit: null
+    conversion_rule: int
+    semantic_description: PVsyst source interpolation/profile mode code stored with TCubicProfile.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: iam_source
+    notes: >
+      Preserved for provenance only. OpenSIMPV does not infer exact PVsyst interpolation
+      mathematics from this numeric code.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/JKM550M-72HL4-V_SGS_6079M3.PAN
+        note: Manufacturer PAN fixture contains Mode=3.
+
+  - source_path: [PVObject_, PVObject_IAM, IAMProfile, Point_1]
+    canonical_field: pan_iam_source.point_1
+    source_unit: "deg,fraction"
+    canonical_unit: "deg,fraction"
+    conversion_rule: angle_modifier_pair
+    semantic_description: Incidence angle and normalized transmission modifier for PAN IAM point 1.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: iam_source
+    notes: >
+      The pair is preserved as angle_deg and modifier. Candidate semantic assembly uses
+      only the first NPtsEff points and validates strict angle ordering.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/project-design/array-and-system-losses/array-incidence-loss-iam.html
+        note: PVsyst documents user-defined IAM as transmission modifier versus incidence angle.
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/JKM550M-72HL4-V_SGS_6079M3.PAN
+        note: Manufacturer PAN fixture contains Point_1.
+
+  - source_path: [PVObject_, PVObject_IAM, IAMProfile, Point_2]
+    canonical_field: pan_iam_source.point_2
+    source_unit: "deg,fraction"
+    canonical_unit: "deg,fraction"
+    conversion_rule: angle_modifier_pair
+    semantic_description: Incidence angle and normalized transmission modifier for PAN IAM point 2.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: iam_source
+    notes: >
+      The pair is preserved as angle_deg and modifier. Candidate semantic assembly uses
+      only the first NPtsEff points and validates strict angle ordering.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/project-design/array-and-system-losses/array-incidence-loss-iam.html
+        note: PVsyst documents user-defined IAM as transmission modifier versus incidence angle.
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/JKM550M-72HL4-V_SGS_6079M3.PAN
+        note: Manufacturer PAN fixture contains Point_2.
+
+  - source_path: [PVObject_, PVObject_IAM, IAMProfile, Point_3]
+    canonical_field: pan_iam_source.point_3
+    source_unit: "deg,fraction"
+    canonical_unit: "deg,fraction"
+    conversion_rule: angle_modifier_pair
+    semantic_description: Incidence angle and normalized transmission modifier for PAN IAM point 3.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: iam_source
+    notes: >
+      The pair is preserved as angle_deg and modifier. Candidate semantic assembly uses
+      only the first NPtsEff points and validates strict angle ordering.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/project-design/array-and-system-losses/array-incidence-loss-iam.html
+        note: PVsyst documents user-defined IAM as transmission modifier versus incidence angle.
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/JKM550M-72HL4-V_SGS_6079M3.PAN
+        note: Manufacturer PAN fixture contains Point_3.
+
+  - source_path: [PVObject_, PVObject_IAM, IAMProfile, Point_4]
+    canonical_field: pan_iam_source.point_4
+    source_unit: "deg,fraction"
+    canonical_unit: "deg,fraction"
+    conversion_rule: angle_modifier_pair
+    semantic_description: Incidence angle and normalized transmission modifier for PAN IAM point 4.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: iam_source
+    notes: >
+      The pair is preserved as angle_deg and modifier. Candidate semantic assembly uses
+      only the first NPtsEff points and validates strict angle ordering.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/project-design/array-and-system-losses/array-incidence-loss-iam.html
+        note: PVsyst documents user-defined IAM as transmission modifier versus incidence angle.
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/JKM550M-72HL4-V_SGS_6079M3.PAN
+        note: Manufacturer PAN fixture contains Point_4.
+
+  - source_path: [PVObject_, PVObject_IAM, IAMProfile, Point_5]
+    canonical_field: pan_iam_source.point_5
+    source_unit: "deg,fraction"
+    canonical_unit: "deg,fraction"
+    conversion_rule: angle_modifier_pair
+    semantic_description: Incidence angle and normalized transmission modifier for PAN IAM point 5.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: iam_source
+    notes: >
+      The pair is preserved as angle_deg and modifier. Candidate semantic assembly uses
+      only the first NPtsEff points and validates strict angle ordering.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/project-design/array-and-system-losses/array-incidence-loss-iam.html
+        note: PVsyst documents user-defined IAM as transmission modifier versus incidence angle.
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/JKM550M-72HL4-V_SGS_6079M3.PAN
+        note: Manufacturer PAN fixture contains Point_5.
+
+  - source_path: [PVObject_, PVObject_IAM, IAMProfile, Point_6]
+    canonical_field: pan_iam_source.point_6
+    source_unit: "deg,fraction"
+    canonical_unit: "deg,fraction"
+    conversion_rule: angle_modifier_pair
+    semantic_description: Incidence angle and normalized transmission modifier for PAN IAM point 6.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: iam_source
+    notes: >
+      The pair is preserved as angle_deg and modifier. Candidate semantic assembly uses
+      only the first NPtsEff points and validates strict angle ordering.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/project-design/array-and-system-losses/array-incidence-loss-iam.html
+        note: PVsyst documents user-defined IAM as transmission modifier versus incidence angle.
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/JKM550M-72HL4-V_SGS_6079M3.PAN
+        note: Manufacturer PAN fixture contains Point_6.
+
+  - source_path: [PVObject_, PVObject_IAM, IAMProfile, Point_7]
+    canonical_field: pan_iam_source.point_7
+    source_unit: "deg,fraction"
+    canonical_unit: "deg,fraction"
+    conversion_rule: angle_modifier_pair
+    semantic_description: Incidence angle and normalized transmission modifier for PAN IAM point 7.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: iam_source
+    notes: >
+      The pair is preserved as angle_deg and modifier. Candidate semantic assembly uses
+      only the first NPtsEff points and validates strict angle ordering.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/project-design/array-and-system-losses/array-incidence-loss-iam.html
+        note: PVsyst documents user-defined IAM as transmission modifier versus incidence angle.
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/JKM550M-72HL4-V_SGS_6079M3.PAN
+        note: Manufacturer PAN fixture contains Point_7.
+
+  - source_path: [PVObject_, PVObject_IAM, IAMProfile, Point_8]
+    canonical_field: pan_iam_source.point_8
+    source_unit: "deg,fraction"
+    canonical_unit: "deg,fraction"
+    conversion_rule: angle_modifier_pair
+    semantic_description: Incidence angle and normalized transmission modifier for PAN IAM point 8.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: iam_source
+    notes: >
+      The pair is preserved as angle_deg and modifier. Candidate semantic assembly uses
+      only the first NPtsEff points and validates strict angle ordering.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/project-design/array-and-system-losses/array-incidence-loss-iam.html
+        note: PVsyst documents user-defined IAM as transmission modifier versus incidence angle.
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/JKM550M-72HL4-V_SGS_6079M3.PAN
+        note: Manufacturer PAN fixture contains Point_8.
+
+  - source_path: [PVObject_, PVObject_IAM, IAMProfile, Point_9]
+    canonical_field: pan_iam_source.point_9
+    source_unit: "deg,fraction"
+    canonical_unit: "deg,fraction"
+    conversion_rule: angle_modifier_pair
+    semantic_description: Incidence angle and normalized transmission modifier for PAN IAM point 9.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: iam_source
+    notes: >
+      The pair is preserved as angle_deg and modifier. Candidate semantic assembly uses
+      only the first NPtsEff points and validates strict angle ordering.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/project-design/array-and-system-losses/array-incidence-loss-iam.html
+        note: PVsyst documents user-defined IAM as transmission modifier versus incidence angle.
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/JKM550M-72HL4-V_SGS_6079M3.PAN
+        note: Manufacturer PAN fixture contains Point_9.
+

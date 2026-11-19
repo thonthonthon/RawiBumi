@@ -1,0 +1,265 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/electrical-region-map.schema.json",
+  "title": "OpenSIMPV ElectricalRegionMap v0.1",
+  "description": "Deterministic derived mapping from one placed module receiver and one ModuleTopologyDefinition into physical electrical regions. It binds the exact compiled-geometry hash and the frozen portrait/landscape intrinsic-UV transform. This artifact is never editable engineering authority.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "contract_version",
+    "authority",
+    "editable",
+    "electrical_region_map_id",
+    "source_scene_revision_id",
+    "source_module_instance_id",
+    "source_module_definition_revision_id",
+    "source_module_topology_revision_id",
+    "source_receiver_id",
+    "coordinate_convention",
+    "mapper_manifest",
+    "placement_orientation",
+    "source_compiled_geometry_hash",
+    "source_receiver_area_m2",
+    "mapped_region_area_m2",
+    "mapped_region_area_fraction",
+    "mapping_payload_sha256",
+    "regions",
+    "findings"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "ElectricalRegionMap"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "contract_version": {
+      "const": "0.1"
+    },
+    "authority": {
+      "const": "derived_physics_only"
+    },
+    "editable": {
+      "const": false
+    },
+    "electrical_region_map_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_scene_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_module_instance_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_module_definition_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_module_topology_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_receiver_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_compiled_geometry_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "coordinate_convention": {
+      "const": "module_front_uv_normalized_width_height"
+    },
+    "mapping_payload_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "regions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "region_id",
+          "source_topology_region_id",
+          "polygon_uv",
+          "vertices_3d",
+          "source_electrical_substring_id",
+          "region_type",
+          "equivalent_element_count",
+          "area_m2"
+        ],
+        "properties": {
+          "region_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_topology_region_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "polygon_uv": {
+            "type": "array",
+            "minItems": 3,
+            "items": {
+              "$ref": "#/$defs/uv_vertex"
+            }
+          },
+          "vertices_3d": {
+            "type": "array",
+            "minItems": 3,
+            "items": {
+              "$ref": "#/$defs/xyz"
+            }
+          },
+          "area_m2": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "metadata": {
+            "type": "object"
+          },
+          "source_electrical_substring_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "region_type": {
+            "enum": [
+              "cell",
+              "half_cell",
+              "grouped_cells",
+              "submodule"
+            ]
+          },
+          "equivalent_element_count": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    },
+    "mapper_manifest": {
+      "type": "object",
+      "required": [
+        "mapper_id",
+        "mapper_version",
+        "landscape_rotation_convention"
+      ],
+      "properties": {
+        "mapper_id": {
+          "const": "opensimpv.electrical_region_mapper.module_uv"
+        },
+        "mapper_version": {
+          "const": "0.1"
+        },
+        "landscape_rotation_convention": {
+          "const": "clockwise_90_viewed_from_module_front"
+        }
+      },
+      "additionalProperties": false
+    },
+    "placement_orientation": {
+      "enum": [
+        "portrait",
+        "landscape"
+      ]
+    },
+    "source_receiver_area_m2": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "mapped_region_area_m2": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "mapped_region_area_fraction": {
+      "type": "number",
+      "exclusiveMinimum": 0,
+      "maximum": 1
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "uv_vertex": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "xyz": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "finding": {
+      "type": "object",
+      "required": [
+        "severity",
+        "code",
+        "message"
+      ],
+      "properties": {
+        "severity": {
+          "enum": [
+            "info",
+            "warning",
+            "error"
+          ]
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "entity_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "context": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "schema_name": "ImportRecord",
+  "schema_version": "0.1",
+  "import_record_id": "import-pan-001",
+  "source_id": "src-pan-001",
+  "format": "pan",
+  "format_version": null,
+  "parser_version": "0.1",
+  "imported_at": "2026-09-22T00:00:00Z",
+  "imported_by": "test",
+  "raw_field_map": [
+    {
+      "line_number": 1,
+      "path": ["PVObject_"],
+      "key": "PVObject_",
+      "value_raw": "pvModule",
+      "indent_spaces": 0,
+      "indent_valid": true
+    }
+  ],
+  "mapped_fields": [],
+  "unmapped_fields": [
+    {
+      "line_number": 1,
+      "path": ["PVObject_"],
+      "key": "PVObject_",
+      "value_raw": "pvModule",
+      "indent_spaces": 0,
+      "indent_valid": true
+    }
+  ],
+  "mapping_warnings": [],
+  "validation_summary": null,
+  "target_component_id": null
+}

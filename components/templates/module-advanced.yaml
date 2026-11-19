@@ -1,0 +1,64 @@
+# OpenSIMPV advanced module overlay template v0.1
+component_type: module
+source:
+  source_id: replace-me
+  source_kind: manufacturer_datasheet
+  source_url: null
+  priority: 100
+  license_spdx: null
+  license_url: null
+  attribution: null
+  notes: null
+
+# Use canonical OpenSIMPV field names. Delete fields you do not have.
+# Null values are ignored by the overlay importer.
+data:
+  manufacturer: null
+  model: null
+  family: null
+  technology: null
+
+  mechanical:
+    width_m: null
+    height_m: null
+    thickness_m: null
+    mass_kg: null
+
+  stc:
+    nominal_power_w: null
+    pmp_w: null
+    voc_v: null
+    isc_a: null
+    vmp_v: null
+    imp_a: null
+    reference_irradiance_w_m2: 1000
+    reference_cell_temperature_c: 25
+
+  temperature_coefficients:
+    alpha_isc_per_c: null
+    beta_voc_per_c: null
+    gamma_pmp_per_c: null
+    coefficient_basis: absolute
+
+  cell_architecture:
+    physical_cell_count: null
+    cell_rows: null
+    cell_columns: null
+    half_cell: null
+    cells_in_series: null
+    cells_in_parallel: null
+    bypass_diode_count: null
+
+  limits:
+    max_system_voltage_v: null
+    max_series_fuse_a: null
+    operating_temperature_min_c: null
+    operating_temperature_max_c: null
+
+  bifacial:
+    enabled: null
+    bifaciality_factor: null
+
+  # Optional. Supply a COMPLETE model entry when overriding an existing model list.
+  # Detailed SDM capability is granted only after model validation, not just presence.
+  electrical_models: []

@@ -1,0 +1,345 @@
+{
+  "schema_name": "ModuleTopologyDefinition",
+  "schema_version": "0.1",
+  "contract_version": "0.1",
+  "module_topology_id": "topology-rawibumi-uat-550",
+  "revision_id": "topology-rawibumi-uat-550-r1",
+  "module_definition_revision_id": "mod-rawibumi-uat-550-r1",
+  "topology_version": "0.1",
+  "orientation_reference": "viewed_from_module_front",
+  "coordinate_convention": "module_front_uv_normalized_width_height",
+  "topology_class": "series_substrings_parallel_branches",
+  "region_resolution": "grouped_cells",
+  "physical_regions": [
+    {
+      "region_id": "s0-r0",
+      "region_type": "grouped_cells",
+      "polygon_normalized": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.3333333333333333,
+          0.0
+        ],
+        [
+          0.3333333333333333,
+          0.5
+        ],
+        [
+          0.0,
+          0.5
+        ]
+      ],
+      "electrical_substring_id": "s0",
+      "equivalent_element_count": 24,
+      "shading_weight": null,
+      "active_area_fraction": null,
+      "label": "Substring 1 branch 1",
+      "metadata": {}
+    },
+    {
+      "region_id": "s0-r1",
+      "region_type": "grouped_cells",
+      "polygon_normalized": [
+        [
+          0.0,
+          0.5
+        ],
+        [
+          0.3333333333333333,
+          0.5
+        ],
+        [
+          0.3333333333333333,
+          1.0
+        ],
+        [
+          0.0,
+          1.0
+        ]
+      ],
+      "electrical_substring_id": "s0",
+      "equivalent_element_count": 24,
+      "shading_weight": null,
+      "active_area_fraction": null,
+      "label": "Substring 1 branch 2",
+      "metadata": {}
+    },
+    {
+      "region_id": "s1-r0",
+      "region_type": "grouped_cells",
+      "polygon_normalized": [
+        [
+          0.3333333333333333,
+          0.0
+        ],
+        [
+          0.6666666666666666,
+          0.0
+        ],
+        [
+          0.6666666666666666,
+          0.5
+        ],
+        [
+          0.3333333333333333,
+          0.5
+        ]
+      ],
+      "electrical_substring_id": "s1",
+      "equivalent_element_count": 24,
+      "shading_weight": null,
+      "active_area_fraction": null,
+      "label": "Substring 2 branch 1",
+      "metadata": {}
+    },
+    {
+      "region_id": "s1-r1",
+      "region_type": "grouped_cells",
+      "polygon_normalized": [
+        [
+          0.3333333333333333,
+          0.5
+        ],
+        [
+          0.6666666666666666,
+          0.5
+        ],
+        [
+          0.6666666666666666,
+          1.0
+        ],
+        [
+          0.3333333333333333,
+          1.0
+        ]
+      ],
+      "electrical_substring_id": "s1",
+      "equivalent_element_count": 24,
+      "shading_weight": null,
+      "active_area_fraction": null,
+      "label": "Substring 2 branch 2",
+      "metadata": {}
+    },
+    {
+      "region_id": "s2-r0",
+      "region_type": "grouped_cells",
+      "polygon_normalized": [
+        [
+          0.6666666666666666,
+          0.0
+        ],
+        [
+          1.0,
+          0.0
+        ],
+        [
+          1.0,
+          0.5
+        ],
+        [
+          0.6666666666666666,
+          0.5
+        ]
+      ],
+      "electrical_substring_id": "s2",
+      "equivalent_element_count": 24,
+      "shading_weight": null,
+      "active_area_fraction": null,
+      "label": "Substring 3 branch 1",
+      "metadata": {}
+    },
+    {
+      "region_id": "s2-r1",
+      "region_type": "grouped_cells",
+      "polygon_normalized": [
+        [
+          0.6666666666666666,
+          0.5
+        ],
+        [
+          1.0,
+          0.5
+        ],
+        [
+          1.0,
+          1.0
+        ],
+        [
+          0.6666666666666666,
+          1.0
+        ]
+      ],
+      "electrical_substring_id": "s2",
+      "equivalent_element_count": 24,
+      "shading_weight": null,
+      "active_area_fraction": null,
+      "label": "Substring 3 branch 2",
+      "metadata": {}
+    }
+  ],
+  "electrical_substrings": [
+    {
+      "substring_id": "s0",
+      "series_order": 0,
+      "physical_region_ids": [
+        "s0-r0",
+        "s0-r1"
+      ],
+      "parallel_branches": [
+        {
+          "branch_id": "s0-b0",
+          "series_region_ids": [
+            "s0-r0"
+          ],
+          "metadata": {}
+        },
+        {
+          "branch_id": "s0-b1",
+          "series_region_ids": [
+            "s0-r1"
+          ],
+          "metadata": {}
+        }
+      ],
+      "bypass_device_id": "d0",
+      "metadata": {}
+    },
+    {
+      "substring_id": "s1",
+      "series_order": 1,
+      "physical_region_ids": [
+        "s1-r0",
+        "s1-r1"
+      ],
+      "parallel_branches": [
+        {
+          "branch_id": "s1-b0",
+          "series_region_ids": [
+            "s1-r0"
+          ],
+          "metadata": {}
+        },
+        {
+          "branch_id": "s1-b1",
+          "series_region_ids": [
+            "s1-r1"
+          ],
+          "metadata": {}
+        }
+      ],
+      "bypass_device_id": "d1",
+      "metadata": {}
+    },
+    {
+      "substring_id": "s2",
+      "series_order": 2,
+      "physical_region_ids": [
+        "s2-r0",
+        "s2-r1"
+      ],
+      "parallel_branches": [
+        {
+          "branch_id": "s2-b0",
+          "series_region_ids": [
+            "s2-r0"
+          ],
+          "metadata": {}
+        },
+        {
+          "branch_id": "s2-b1",
+          "series_region_ids": [
+            "s2-r1"
+          ],
+          "metadata": {}
+        }
+      ],
+      "bypass_device_id": "d2",
+      "metadata": {}
+    }
+  ],
+  "bypass_devices": [
+    {
+      "bypass_device_id": "d0",
+      "device_type": "bypass_diode",
+      "protects_substring_ids": [
+        "s0"
+      ],
+      "forward_voltage_model": {
+        "model_type": "constant_forward_drop",
+        "model_id": "bypass.constant_drop.synthetic_assumption",
+        "model_version": "0.1",
+        "model_authority": "explicit_simulation_assumption",
+        "verification_state": "not_applicable",
+        "model_provenance": "simulation_assumption",
+        "validation_record_id": null,
+        "assumption_id": "assumption-rawibumi-uat-bypass-055v",
+        "assumption_rationale": "Synthetic reference fixture uses a 0.55 V constant-drop bypass model solely to exercise explicit-assumption capability handling.",
+        "parameters": {
+          "forward_voltage_v": 0.55
+        },
+        "source_ids": [],
+        "model_payload_sha256": "210dba63f7d8eaee4f9c16935a99382f20555b9da2feee000b2928796b61d6c0"
+      }
+    },
+    {
+      "bypass_device_id": "d1",
+      "device_type": "bypass_diode",
+      "protects_substring_ids": [
+        "s1"
+      ],
+      "forward_voltage_model": {
+        "model_type": "constant_forward_drop",
+        "model_id": "bypass.constant_drop.synthetic_assumption",
+        "model_version": "0.1",
+        "model_authority": "explicit_simulation_assumption",
+        "verification_state": "not_applicable",
+        "model_provenance": "simulation_assumption",
+        "validation_record_id": null,
+        "assumption_id": "assumption-rawibumi-uat-bypass-055v",
+        "assumption_rationale": "Synthetic reference fixture uses a 0.55 V constant-drop bypass model solely to exercise explicit-assumption capability handling.",
+        "parameters": {
+          "forward_voltage_v": 0.55
+        },
+        "source_ids": [],
+        "model_payload_sha256": "210dba63f7d8eaee4f9c16935a99382f20555b9da2feee000b2928796b61d6c0"
+      }
+    },
+    {
+      "bypass_device_id": "d2",
+      "device_type": "bypass_diode",
+      "protects_substring_ids": [
+        "s2"
+      ],
+      "forward_voltage_model": {
+        "model_type": "constant_forward_drop",
+        "model_id": "bypass.constant_drop.synthetic_assumption",
+        "model_version": "0.1",
+        "model_authority": "explicit_simulation_assumption",
+        "verification_state": "not_applicable",
+        "model_provenance": "simulation_assumption",
+        "validation_record_id": null,
+        "assumption_id": "assumption-rawibumi-uat-bypass-055v",
+        "assumption_rationale": "Synthetic reference fixture uses a 0.55 V constant-drop bypass model solely to exercise explicit-assumption capability handling.",
+        "parameters": {
+          "forward_voltage_v": 0.55
+        },
+        "source_ids": [],
+        "model_payload_sha256": "210dba63f7d8eaee4f9c16935a99382f20555b9da2feee000b2928796b61d6c0"
+      }
+    }
+  ],
+  "bypass_coverage_complete": true,
+  "verification_state": "reviewed",
+  "topology_provenance": "manual_verified",
+  "source_ids": [
+    "src-rawibumi-uat-topology-fixture"
+  ],
+  "notes": "Explicit RawiBumi synthetic topology fixture for product/capability integration. It is not inferred from PAN cell/bypass counts.",
+  "metadata": {
+    "synthetic_reference": true,
+    "public_redistributable": true
+  }
+}

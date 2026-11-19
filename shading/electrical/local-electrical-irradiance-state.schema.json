@@ -1,0 +1,452 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/local-electrical-irradiance-state.schema.json",
+  "title": "OpenSIMPV LocalElectricalIrradianceState v0.1",
+  "description": "Per-module/per-region irradiance handoff from geometric shading and optical treatment into electrical shading. Beam, sky diffuse, and ground-reflected channels remain separate until the documented optical/effective-irradiance step.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "contract_version",
+    "state_id",
+    "interval_start",
+    "evaluation_time",
+    "source_scene_revision_id",
+    "source_module_instance_id",
+    "source_module_definition_revision_id",
+    "source_electrical_region_map_id",
+    "source_electrical_region_map_hash",
+    "source_shading_result_id",
+    "source_shading_physical_result_hash",
+    "irradiance_mapping_order",
+    "irradiance_side_scope",
+    "thermal_state_scope",
+    "module_temperature_c",
+    "regions",
+    "state_payload_sha256"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "LocalElectricalIrradianceState"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "contract_version": {
+      "const": "0.1"
+    },
+    "state_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "interval_start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "evaluation_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_scene_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_module_instance_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_module_definition_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_electrical_region_map_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_electrical_region_map_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_shading_result_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_shading_physical_result_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "irradiance_mapping_order": {
+      "const": "unshaded_poa_by_channel_then_geometry_visibility_then_optical_treatment"
+    },
+    "irradiance_side_scope": {
+      "const": "front_side_only_v0.1",
+      "description": "Phase-6.1 v0.1 freezes only the existing front-side geometry-to-electrical handoff. Spatial bifacial rear-side electrical nonuniformity requires a future explicit contract extension."
+    },
+    "thermal_state_scope": {
+      "const": "single_module_temperature"
+    },
+    "module_temperature_c": {
+      "type": "number"
+    },
+    "optical_model_manifest": {
+      "type": "object",
+      "required": [
+        "model_id",
+        "model_version"
+      ],
+      "properties": {
+        "model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "regions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/region_state"
+      }
+    },
+    "state_payload_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "quality_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "three_channel_irradiance": {
+      "type": "object",
+      "required": [
+        "beam_w_m2",
+        "sky_diffuse_w_m2",
+        "ground_reflected_w_m2"
+      ],
+      "properties": {
+        "beam_w_m2": {
+          "type": "number",
+          "minimum": 0
+        },
+        "sky_diffuse_w_m2": {
+          "type": "number",
+          "minimum": 0
+        },
+        "ground_reflected_w_m2": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "visibility": {
+      "type": "object",
+      "required": [
+        "beam",
+        "sky_diffuse",
+        "ground"
+      ],
+      "properties": {
+        "beam": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "sky_diffuse": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ground": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "region_state": {
+      "type": "object",
+      "required": [
+        "region_id",
+        "unshaded_poa",
+        "visibility_factor",
+        "post_geometry_poa",
+        "optical_modifier",
+        "effective_irradiance_w_m2",
+        "quality_flags"
+      ],
+      "properties": {
+        "region_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "unshaded_poa": {
+          "$ref": "#/$defs/three_channel_irradiance"
+        },
+        "visibility_factor": {
+          "$ref": "#/$defs/visibility"
+        },
+        "post_geometry_poa": {
+          "$ref": "#/$defs/three_channel_irradiance"
+        },
+        "effective_irradiance_w_m2": {
+          "type": "number",
+          "minimum": 0
+        },
+        "quality_flags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "optical_modifier": {
+          "type": "object",
+          "required": [
+            "beam",
+            "sky_diffuse",
+            "ground_reflected"
+          ],
+          "properties": {
+            "beam": {
+              "type": "number",
+              "minimum": 0
+            },
+            "sky_diffuse": {
+              "type": "number",
+              "minimum": 0
+            },
+            "ground_reflected": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false,
+          "description": "Explicit channel optical modifiers applied only after geometric visibility."
+        },
+        "component_state": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "unshaded",
+            "post_geometry",
+            "post_optical",
+            "visibility",
+            "optical_modifier"
+          ],
+          "properties": {
+            "unshaded": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "beam",
+                "isotropic",
+                "circumsolar",
+                "horizon",
+                "ground"
+              ],
+              "properties": {
+                "beam": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "isotropic": {
+                  "type": "number"
+                },
+                "circumsolar": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "horizon": {
+                  "type": "number"
+                },
+                "ground": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "post_geometry": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "beam",
+                "isotropic",
+                "circumsolar",
+                "horizon",
+                "ground"
+              ],
+              "properties": {
+                "beam": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "isotropic": {
+                  "type": "number"
+                },
+                "circumsolar": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "horizon": {
+                  "type": "number"
+                },
+                "ground": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "post_optical": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "beam",
+                "isotropic",
+                "circumsolar",
+                "horizon",
+                "ground"
+              ],
+              "properties": {
+                "beam": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "isotropic": {
+                  "type": "number"
+                },
+                "circumsolar": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "horizon": {
+                  "type": "number"
+                },
+                "ground": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            },
+            "visibility": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "beam",
+                "sky",
+                "horizon",
+                "ground"
+              ],
+              "properties": {
+                "beam": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "sky": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "horizon": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "ground": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            },
+            "optical_modifier": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "beam",
+                "sky",
+                "horizon",
+                "ground"
+              ],
+              "properties": {
+                "beam": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "sky": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "horizon": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "ground": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": false,
+      "if": {
+        "required": [
+          "component_state"
+        ]
+      },
+      "else": {
+        "properties": {
+          "optical_modifier": {
+            "type": "object",
+            "required": [
+              "beam",
+              "sky_diffuse",
+              "ground_reflected"
+            ],
+            "properties": {
+              "beam": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "sky_diffuse": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "ground_reflected": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            },
+            "additionalProperties": false,
+            "description": "Explicit channel optical modifiers applied only after geometric visibility."
+          }
+        }
+      }
+    }
+  }
+}

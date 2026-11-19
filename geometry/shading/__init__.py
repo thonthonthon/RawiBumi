@@ -1,0 +1,216 @@
+"""Phase-5 geometry-aware shading contracts.
+
+Phase 5.0 intentionally exposes conventions and validation only. Production
+shadow, sky-view, ground-view, caching, and annual integration algorithms are
+introduced by later Phase-5 tranches.
+"""
+
+from .beam import (
+    BEAM_SOLVER_ID,
+    BEAM_SOLVER_VERSION,
+    DEFAULT_BEAM_TOLERANCES,
+    BeamShadowError,
+    BeamShadowTolerances,
+    calculate_direct_beam_shadow,
+    calculate_direct_beam_shadow_with_diagnostics,
+)
+
+from .prepared import (
+    PREPARED_DIRECTIONAL_ENGINE_ID,
+    PREPARED_DIRECTIONAL_ENGINE_VERSION,
+    PreparedDirectionalError,
+    PreparedDirectionalReceiver,
+    PreparedOccluderFace,
+    prepare_directional_receiver,
+    calculate_prepared_directional_receiver_visibility,
+    calculate_prepared_direct_beam_shadow,
+)
+from .cache import (
+    SHADING_ACCELERATION_ID,
+    SHADING_ACCELERATION_VERSION,
+    STATIC_CACHE_ID,
+    STATIC_CACHE_VERSION,
+    ShadingAccelerationError,
+    ShadingAccelerationContext,
+    ExactStaticShadingCache,
+    GLOBAL_EXACT_STATIC_SHADING_CACHE,
+    build_shading_acceleration_context,
+    clear_global_exact_shading_cache,
+)
+
+from .directional import (
+    DIRECTIONAL_VISIBILITY_SOLVER_ID,
+    DIRECTIONAL_VISIBILITY_SOLVER_VERSION,
+    DirectionalVisibilityError,
+    calculate_directional_receiver_visibility,
+    calculate_directional_receiver_visibility_with_diagnostics,
+)
+
+from .ground import (
+    GROUND_BAND_COORDINATE,
+    GROUND_VISIBILITY_SOLVER_ID,
+    GROUND_VISIBILITY_SOLVER_VERSION,
+    GROUND_WEIGHTING_METHOD,
+    GroundDomeResolution,
+    GroundPatch,
+    GroundVisibilityError,
+    calculate_ground_visibility,
+    generate_ground_patches,
+)
+from .ground_snapshot import (
+    GROUND_SNAPSHOT_ORCHESTRATOR_ID,
+    GROUND_SNAPSHOT_ORCHESTRATOR_VERSION,
+    GroundShadingSnapshotResult,
+    GroundSnapshotError,
+    evaluate_ground_shading_snapshot,
+)
+
+from .sky import (
+    SKY_BAND_COORDINATE,
+    SKY_VISIBILITY_SOLVER_ID,
+    SKY_VISIBILITY_SOLVER_VERSION,
+    SKY_WEIGHTING_METHOD,
+    SkyDomeResolution,
+    SkyPatch,
+    SkyVisibilityError,
+    calculate_sky_visibility,
+    generate_horizon_patches,
+    generate_sky_patches,
+)
+
+from .sky_snapshot import (
+    SKY_SNAPSHOT_ORCHESTRATOR_ID,
+    SKY_SNAPSHOT_ORCHESTRATOR_VERSION,
+    SkyShadingSnapshotResult,
+    SkySnapshotError,
+    evaluate_sky_shading_snapshot,
+)
+
+from .snapshot import (
+    SNAPSHOT_ORCHESTRATOR_ID,
+    SNAPSHOT_ORCHESTRATOR_VERSION,
+    BeamShadingSnapshotResult,
+    BeamSnapshotError,
+    evaluate_beam_shading_snapshot,
+    receiver_ids_from_execution_group_plan,
+)
+
+from .compiler import (
+    COMPILER_ID,
+    COMPILER_VERSION,
+    compilation_input_hash,
+    compile_shading_geometry,
+)
+from .serialization import (
+    canonical_compiled_shading_geometry_hash,
+    canonical_compiled_shading_geometry_json,
+    canonical_geometry_payload_hash,
+    canonical_geometry_payload_json,
+)
+
+from .contract import (
+    CONTRACT_VERSION,
+    COORDINATE_BASIS,
+    ELECTRICAL_SHADING_SCOPE,
+    FACTOR_CONVENTION,
+    SUN_VECTOR_CONVENTION,
+    CURRENT_PRODUCT_NAMESPACE_PREFIX,
+    LEGACY_PRODUCT_NAMESPACE_PREFIXES,
+    normalize_product_namespace_identifier,
+    ShadingContractError,
+    assert_geometry_aware_shading_configuration,
+    assert_shading_result_storage_consistency,
+    shaded_fraction_from_visibility,
+    sun_vector_from_azimuth_elevation,
+    validate_visibility_factor,
+)
+
+__all__ = [
+    "PREPARED_DIRECTIONAL_ENGINE_ID",
+    "PREPARED_DIRECTIONAL_ENGINE_VERSION",
+    "PreparedDirectionalError",
+    "PreparedDirectionalReceiver",
+    "PreparedOccluderFace",
+    "prepare_directional_receiver",
+    "calculate_prepared_directional_receiver_visibility",
+    "calculate_prepared_direct_beam_shadow",
+    "SHADING_ACCELERATION_ID",
+    "SHADING_ACCELERATION_VERSION",
+    "STATIC_CACHE_ID",
+    "STATIC_CACHE_VERSION",
+    "ShadingAccelerationError",
+    "ShadingAccelerationContext",
+    "ExactStaticShadingCache",
+    "GLOBAL_EXACT_STATIC_SHADING_CACHE",
+    "build_shading_acceleration_context",
+    "clear_global_exact_shading_cache",
+    "DIRECTIONAL_VISIBILITY_SOLVER_ID",
+    "DIRECTIONAL_VISIBILITY_SOLVER_VERSION",
+    "DirectionalVisibilityError",
+    "calculate_directional_receiver_visibility",
+    "calculate_directional_receiver_visibility_with_diagnostics",
+    "GROUND_BAND_COORDINATE",
+    "GROUND_VISIBILITY_SOLVER_ID",
+    "GROUND_VISIBILITY_SOLVER_VERSION",
+    "GROUND_WEIGHTING_METHOD",
+    "GroundDomeResolution",
+    "GroundPatch",
+    "GroundVisibilityError",
+    "calculate_ground_visibility",
+    "generate_ground_patches",
+    "GROUND_SNAPSHOT_ORCHESTRATOR_ID",
+    "GROUND_SNAPSHOT_ORCHESTRATOR_VERSION",
+    "GroundShadingSnapshotResult",
+    "GroundSnapshotError",
+    "evaluate_ground_shading_snapshot",
+    "SKY_BAND_COORDINATE",
+    "SKY_VISIBILITY_SOLVER_ID",
+    "SKY_VISIBILITY_SOLVER_VERSION",
+    "SKY_WEIGHTING_METHOD",
+    "SkyDomeResolution",
+    "SkyPatch",
+    "SkyVisibilityError",
+    "calculate_sky_visibility",
+    "generate_horizon_patches",
+    "generate_sky_patches",
+    "BEAM_SOLVER_ID",
+    "BEAM_SOLVER_VERSION",
+    "DEFAULT_BEAM_TOLERANCES",
+    "BeamShadowError",
+    "BeamShadowTolerances",
+    "calculate_direct_beam_shadow",
+    "calculate_direct_beam_shadow_with_diagnostics",
+    "SKY_SNAPSHOT_ORCHESTRATOR_ID",
+    "SKY_SNAPSHOT_ORCHESTRATOR_VERSION",
+    "SkyShadingSnapshotResult",
+    "SkySnapshotError",
+    "evaluate_sky_shading_snapshot",
+    "SNAPSHOT_ORCHESTRATOR_ID",
+    "SNAPSHOT_ORCHESTRATOR_VERSION",
+    "BeamShadingSnapshotResult",
+    "BeamSnapshotError",
+    "evaluate_beam_shading_snapshot",
+    "receiver_ids_from_execution_group_plan",
+    "COMPILER_ID",
+    "COMPILER_VERSION",
+    "compilation_input_hash",
+    "compile_shading_geometry",
+    "canonical_compiled_shading_geometry_hash",
+    "canonical_compiled_shading_geometry_json",
+    "canonical_geometry_payload_hash",
+    "canonical_geometry_payload_json",
+    "CONTRACT_VERSION",
+    "COORDINATE_BASIS",
+    "ELECTRICAL_SHADING_SCOPE",
+    "FACTOR_CONVENTION",
+    "SUN_VECTOR_CONVENTION",
+    "CURRENT_PRODUCT_NAMESPACE_PREFIX",
+    "LEGACY_PRODUCT_NAMESPACE_PREFIXES",
+    "normalize_product_namespace_identifier",
+    "ShadingContractError",
+    "assert_geometry_aware_shading_configuration",
+    "assert_shading_result_storage_consistency",
+    "shaded_fraction_from_visibility",
+    "sun_vector_from_azimuth_elevation",
+    "validate_visibility_factor",
+]

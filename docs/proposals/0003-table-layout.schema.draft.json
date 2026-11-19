@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/proposals/0003/table-layout.draft.json",
+  "title": "Table-level PV layout (proposal 0003, draft)",
+  "description": "Draft for Track E (E2, E3, E4). Not named *.schema.json, so type generation ignores it until it is accepted. Mirrors apps/web/src/engine/layout.ts.",
+  "$defs": {
+    "vec2": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+    "pitch": {
+      "oneOf": [
+        { "type": "object", "required": ["mode", "aisle_m"], "additionalProperties": false, "properties": { "mode": { "const": "fixed_aisle" }, "aisle_m": { "type": "number", "minimum": 0 } } },
+        { "type": "object", "required": ["mode", "gcr"], "additionalProperties": false, "properties": { "mode": { "const": "gcr" }, "gcr": { "type": "number", "exclusiveMinimum": 0, "maximum": 1 } } },
+        {
+          "type": "object",
+          "required": ["mode", "sun_elevation_deg", "sun_azimuth_offset_deg"],
+          "additionalProperties": false,
+          "properties": {
+            "mode": { "const": "shading_free" },
+            "sun_elevation_deg": { "type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 90 },
+            "sun_azimuth_offset_deg": { "type": "number", "exclusiveMinimum": -90, "exclusiveMaximum": 90 }
+          }
+        }
+      ]
+    },
+    "fillZoneRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pv_field_id", "name", "support_surface_id", "module_definition_revision_id", "orientation", "azimuth_deg", "tilt_deg", "mounting_height_m", "rows_per_table", "module_gap_m", "in_table_gap_m", "pitch", "edge_setbacks_m", "keepout_offset_m", "leftover_depth", "walkway", "max_table_columns"],
+      "properties": {
+        "pv_field_id": { "type": ["string", "null"] },
+        "name": { "type": "string" },
+        "support_surface_id": { "type": "string" },
+        "module_definition_revision_id": { "type": "string" },
+        "orientation": { "enum": ["portrait", "landscape"] },
+        "azimuth_deg": { "type": "number", "minimum": 0, "exclusiveMaximum": 360 },
+        "tilt_deg": { "type": "number", "minimum": 0, "exclusiveMaximum": 90 },
+        "mounting_height_m": { "type": "number", "minimum": 0 },
+        "rows_per_table": { "type": "integer", "minimum": 1 },
+        "module_gap_m": { "type": "number", "minimum": 0 },
+        "in_table_gap_m": { "type": "number", "minimum": 0 },
+        "pitch": { "$ref": "#/$defs/pitch" },
+        "edge_setbacks_m": { "type": "array", "items": { "type": "number", "minimum": 0 } },
+        "keepout_offset_m": { "type": "number", "minimum": 0 },
+        "leftover_depth": { "enum": ["smaller_table", "leave_empty"] },
+        "walkway": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "object", "required": ["every_modules", "width_m"], "additionalProperties": false, "properties": { "every_modules": { "type": "integer", "minimum": 1 }, "width_m": { "type": "number", "minimum": 0 } } }
+          ]
+        },
+        "max_table_columns": { "type": ["integer", "null"], "minimum": 1 }
+      }
+    },
+    "tableRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["table_id", "pv_field_id", "origin_m", "azimuth_deg", "rows", "columns", "orientation", "module_plan_m", "slot_pitch_m", "removed_slots", "pinned", "status"],
+      "properties": {
+        "table_id": { "type": "string" },
+        "pv_field_id": { "type": "string" },
+        "origin_m": { "$ref": "#/$defs/vec2", "description": "Front-left corner of the table footprint in plan, m" },
+        "azimuth_deg": { "type": "number" },
+        "rows": { "type": "integer", "minimum": 1 },
+        "columns": { "type": "integer", "minimum": 1 },
+        "orientation": { "enum": ["portrait", "landscape"] },
+        "module_plan_m": { "$ref": "#/$defs/vec2", "description": "Plan footprint of one module: along the row, front to back" },
+        "slot_pitch_m": { "$ref": "#/$defs/vec2", "description": "Plan distance between slot origins: along the row, front to back" },
+        "removed_slots": {
+          "type": "array",
+          "items": { "type": "array", "prefixItems": [{ "type": "integer", "minimum": 0 }, { "type": "integer", "minimum": 0 }, { "enum": ["geometry", "manual"] }], "minItems": 3, "maxItems": 3 }
+        },
+        "pinned": { "type": "boolean" },
+        "status": { "enum": ["active", "deleted"] }
+      }
+    },
+    "tableEditCommand": {
+      "oneOf": [
+        { "type": "object", "required": ["kind", "table_ids", "dx_m", "dy_m"], "properties": { "kind": { "const": "move_tables" }, "table_ids": { "type": "array", "items": { "type": "string" } }, "dx_m": { "type": "number" }, "dy_m": { "type": "number" } } },
+        { "type": "object", "required": ["kind", "table_ids"], "properties": { "kind": { "const": "delete_tables" }, "table_ids": { "type": "array", "items": { "type": "string" } } } },
+        { "type": "object", "required": ["kind", "module_instance_ids"], "properties": { "kind": { "const": "delete_modules" }, "module_instance_ids": { "type": "array", "items": { "type": "string" } } } },
+        { "type": "object", "required": ["kind", "table_ids"], "properties": { "kind": { "const": "unpin_tables" }, "table_ids": { "type": "array", "items": { "type": "string" } } } }
+      ]
+    }
+  },
+  "type": "object",
+  "required": ["requests", "tables"],
+  "properties": {
+    "requests": { "type": "object", "additionalProperties": { "$ref": "#/$defs/fillZoneRequest" } },
+    "tables": { "type": "array", "items": { "$ref": "#/$defs/tableRecord" } }
+  }
+}

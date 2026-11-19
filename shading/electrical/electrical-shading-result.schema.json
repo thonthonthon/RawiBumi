@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/electrical-shading-result.schema.json",
+  "title": "OpenSIMPV ElectricalShadingResult v0.1",
+  "description": "Electrical mismatch/shading result identity and provenance. Geometric irradiance loss remains owned by the upstream geometry/irradiance chain and is not re-booked here.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "contract_version",
+    "electrical_shading_result_id",
+    "source_scene_revision_id",
+    "source_electrical_revision_id",
+    "source_shading_result_id",
+    "source_shading_physical_result_hash",
+    "requested_fidelity",
+    "resolved_fidelity",
+    "fallback_applied",
+    "thermal_state_scope",
+    "scientific_model_manifest",
+    "execution_manifest",
+    "loss_accounting_boundary",
+    "attribution_delta_convention",
+    "attribution_channels",
+    "scientific_input_sha256",
+    "physical_result_sha256",
+    "approximation_manifest",
+    "findings"
+  ],
+  "properties": {
+    "schema_name": {"const": "ElectricalShadingResult"},
+    "schema_version": {"const": "0.1"},
+    "contract_version": {"const": "0.1"},
+    "electrical_shading_result_id": {"type": "string", "minLength": 1},
+    "source_scene_revision_id": {"type": "string", "minLength": 1},
+    "source_electrical_revision_id": {"type": "string", "minLength": 1},
+    "source_shading_result_id": {"type": "string", "minLength": 1},
+    "source_shading_physical_result_hash": {"$ref": "#/$defs/sha256"},
+    "requested_fidelity": {"$ref": "#/$defs/fidelity"},
+    "resolved_fidelity": {"$ref": "#/$defs/fidelity"},
+    "fallback_applied": {"type": "boolean"},
+    "fallback_reason": {"type": ["string", "null"]},
+    "thermal_state_scope": {"const": "single_module_temperature"},
+    "source_module_topology_revision_ids": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "source_region_map_hashes": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/sha256"},
+      "uniqueItems": true
+    },
+    "scientific_model_manifest": {
+      "type": "object",
+      "required": [
+        "module_electrical_model_id",
+        "region_parameterization_model_id",
+        "cell_parameterization_model_id",
+        "bypass_model_family_id",
+        "module_iv_assembly_model_id",
+        "string_iv_assembly_model_id",
+        "mppt_operating_point_model_id"
+      ],
+      "properties": {
+        "module_electrical_model_id": {"type": ["string", "null"]},
+        "region_parameterization_model_id": {"type": ["string", "null"]},
+        "cell_parameterization_model_id": {"type": ["string", "null"]},
+        "bypass_model_family_id": {"type": ["string", "null"]},
+        "module_iv_assembly_model_id": {"type": ["string", "null"]},
+        "string_iv_assembly_model_id": {"type": ["string", "null"]},
+        "mppt_operating_point_model_id": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "execution_manifest": {
+      "type": "object",
+      "required": ["solver_id", "solver_version"],
+      "properties": {
+        "solver_id": {"type": "string", "minLength": 1},
+        "solver_version": {"type": "string", "minLength": 1},
+        "cache_mode": {"type": ["string", "null"]},
+        "storage_mode": {"type": ["string", "null"]},
+        "parallelization": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "loss_accounting_boundary": {
+      "const": "geometry_then_electrical_mismatch_then_mppt"
+    },
+    "attribution_delta_convention": {
+      "const": "reference_minus_evaluated_positive_is_loss",
+      "description": "For each modeled counterfactual stage, delta = reference - evaluated. Positive is loss; negative is recovery/gain."
+    },
+    "attribution_channels": {
+      "type": "object",
+      "required": [
+        "geometric_irradiance",
+        "electrical_mismatch",
+        "bypass_interaction",
+        "mppt_operating_point"
+      ],
+      "properties": {
+        "geometric_irradiance": {
+          "type": "object",
+          "required": ["status", "accounting_rule"],
+          "properties": {
+            "status": {"const": "upstream"},
+            "accounting_rule": {"const": "upstream_not_rebooked"}
+          },
+          "additionalProperties": false
+        },
+        "electrical_mismatch": {
+          "$ref": "#/$defs/electrical_mismatch_channel"
+        },
+        "bypass_interaction": {
+          "$ref": "#/$defs/bypass_interaction_channel"
+        },
+        "mppt_operating_point": {
+          "$ref": "#/$defs/mppt_channel"
+        }
+      },
+      "additionalProperties": false
+    },
+    "local_state_dataset_reference": {
+      "type": ["object", "null"]
+    },
+    "module_iv_dataset_reference": {
+      "type": ["object", "null"]
+    },
+    "string_iv_dataset_reference": {
+      "type": ["object", "null"]
+    },
+    "mppt_iv_dataset_reference": {
+      "type": ["object", "null"]
+    },
+    "scientific_input_sha256": {"$ref": "#/$defs/sha256"},
+    "physical_result_sha256": {"$ref": "#/$defs/sha256"},
+    "execution_payload_sha256": {"$ref": "#/$defs/sha256"},
+    "approximation_manifest": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["approximation_id", "statement"],
+        "properties": {
+          "approximation_id": {"type": "string", "minLength": 1},
+          "statement": {"type": "string", "minLength": 1},
+          "scope": {"type": ["string", "null"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["severity", "code", "message"],
+        "properties": {
+          "severity": {"enum": ["info", "warning", "error"]},
+          "code": {"type": "string", "minLength": 1},
+          "message": {"type": "string", "minLength": 1},
+          "entity_id": {"type": ["string", "null"]},
+          "context": {"type": "object"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "fidelity": {
+      "enum": [
+        "level_0_geometric_only",
+        "level_1_module_approximation",
+        "level_2_bypass_substring",
+        "level_3_cell_submodule_iv"
+      ]
+    },
+    "channel_status": {
+      "enum": ["not_modeled", "modeled"]
+    },
+    "electrical_mismatch_channel": {
+      "type": "object",
+      "required": ["status", "counterfactual_basis"],
+      "properties": {
+        "status": {"$ref": "#/$defs/channel_status"},
+        "counterfactual_basis": {
+          "const": "uniform_same_area_weighted_effective_irradiance_to_nonuniform_bypass_forced_off"
+        }
+      },
+      "additionalProperties": false
+    },
+    "bypass_interaction_channel": {
+      "type": "object",
+      "required": ["status", "counterfactual_basis", "signed_delta"],
+      "properties": {
+        "status": {"$ref": "#/$defs/channel_status"},
+        "counterfactual_basis": {
+          "const": "nonuniform_bypass_forced_off_to_nonuniform_bypass_enabled"
+        },
+        "signed_delta": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "mppt_channel": {
+      "type": "object",
+      "required": ["status", "counterfactual_basis"],
+      "properties": {
+        "status": {"$ref": "#/$defs/channel_status"},
+        "counterfactual_basis": {
+          "const": "ideal_global_mpp_to_selected_tracker_operating_point"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

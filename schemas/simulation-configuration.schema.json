@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/simulation-configuration.schema.json",
+  "title": "OpenSIMPV SimulationConfiguration v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "simulation_configuration_id",
+    "project_revision_id",
+    "simulation_timestep_seconds",
+    "weather_dataset_revision_id",
+    "model_selections",
+    "shading_configuration"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "SimulationConfiguration"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "simulation_configuration_id": {
+      "type": "string"
+    },
+    "project_revision_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "simulation_timestep_seconds": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "start_time": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "end_time": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "weather_dataset_revision_id": {
+      "type": "string"
+    },
+    "model_selections": {
+      "type": "object",
+      "required": [
+        "solar_position",
+        "transposition",
+        "temperature",
+        "module_electrical",
+        "inverter"
+      ],
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "loss_model_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "shading_configuration": {
+      "$ref": "https://opensimpv.org/schema/shading-configuration.schema.json"
+    },
+    "numerical_options": {
+      "type": "object"
+    },
+    "output_configuration": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

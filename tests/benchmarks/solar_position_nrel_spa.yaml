@@ -1,0 +1,25 @@
+benchmark_id: SOL-POS-001
+title: NREL SPA published reference case
+authority_class: B
+source:
+  organization: National Renewable Energy Laboratory
+  report: Solar Position Algorithm for Solar Radiation Applications (Revised)
+  report_number: NREL/TP-560-34302
+  doi: https://doi.org/10.2172/15003974
+  source_url: https://docs.nrel.gov/docs/fy08osti/34302.pdf
+inputs:
+  local_time: "2003-10-17T12:30:30-07:00"
+  latitude_deg: 39.742476
+  longitude_deg: -105.1786
+  elevation_m: 1830.14
+  pressure_pa: 82000.0
+  temperature_c: 11.0
+  delta_t_seconds: 67.0
+  atmos_refract_deg: 0.5667
+expected:
+  apparent_zenith_deg: 50.11162
+  azimuth_deg: 194.34024
+  equation_of_time_minutes: 14.641503
+tolerances:
+  angle_abs_deg: 0.0002
+  equation_of_time_abs_minutes: 0.0002

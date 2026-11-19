@@ -1,0 +1,718 @@
+schema_version: "0.1"
+suite_id: P3-UNSHADED-001
+title: Phase 3 unshaded simulation benchmark contract
+status: accepted
+
+benchmark_policy:
+  external_agreement_is_evidence_not_truth: true
+  do_not_tune_to_annual_energy_only: true
+  uploaded_sources_redistributed: false
+  source_weather_families_are_not_interchangeable: true
+  notes:
+    - Meteonorm 8.2 standalone DAT files are the controlled native-resolution weather family.
+    - PVsyst V8.1.6 reports use integrated Meteonorm 9.0 weather and are a separate cross-software family.
+    - Hourly/minute PVsyst pair differences are end-to-end temporal-resolution/weather-representation differences, not a pure numerical timestep delta.
+    - PVsyst variant name NoLoss does not mean mathematically lossless; the reports retain IAM, thermal, module quality, mismatch, DC wiring, inverter conversion, and clipping where applicable.
+    - The PVsyst reports do not expose individual string-to-MPPT wiring. Phase 3.5 uses an explicit balanced OpenSIMPV analytical assignment only to exercise identical-string topology; it is not claimed to reproduce PVsyst's internal wiring.
+    - The OND efficiency source uses TCubicProfile internally, but the exact PVsyst cubic interpolation algorithm is not independently frozen. Phase 3.6 therefore uses a versioned bounded linear Pin/Pout interpolation between source points plus the canonical quadratic voltage interpolation; Phase 3.9 must attribute any residual rather than silently tune it.
+    - The PVsyst reports show zero displayed losses for input-current, voltage, power-threshold, and night-consumption channels in all eight reference cases; those are comparison targets, not assumptions forced into OpenSIMPV.
+    - The 1.50% DC wiring entry is a source STC reference used to derive/check the per-case global array resistance; runtime wiring loss is I²R from that resistance and is not a second 1.50% multiplier.
+    - Phase 3.7 electrical reconciliation starts at detailed array MPP and ends at a PCC identity boundary equal to net inverter AC output. It does not yet add AC wiring, transformer, availability, curtailment, or plant auxiliary stages.
+    - Phase 3.8 treats native weather resolution, current input-series resolution, and simulation timestep as separate metadata. Resolution conversion happens once before timeline and all physics.
+    - Phase 3.8B targets the documented PVsyst 8.1 adapted-Prilliman transient module-temperature model for both hourly and sub-hourly simulation. The immediate-previous-state policy when the documented 3*tau_max cutoff is shorter than the simulation step remains an explicit 3.9 attribution item rather than a claimed reverse-engineered PVsyst internal detail.
+    - Phase 3.8C provides a named PVsyst-8.1 Perez execution boundary and the documented HSol<2deg beam/circumsolar cutoff. Exact sub-hourly coefficient parity is not yet claimable because PVsyst publicly documents timestep-specific 48-coefficient production sets but does not publish their numeric tables; OpenSIMPV therefore fails closed rather than substituting Perez-1990, Perez-Driesse, or the older EUPVSEC-2023 prototype minute table.
+    - OpenSIMPV hourly-to-subhourly interval_mean_hold remains an explicitly low-fidelity, energy-preserving disaggregation baseline; it is never relabeled as measured or provider-native minute weather.
+    - Meteonorm 8.2 standalone 1/10/15/60-minute data are weather-resolution references only. The PVsyst simulation oracle supplied here contains Meteonorm 9 hourly and native 1-minute cases only; no 10/15-minute PVsyst oracle is implied.
+
+families:
+  - family_id: WX-MN82-NATIVE
+    family_type: native_resolution_weather
+    purpose: >
+      Validate native hourly/subhourly temporal handling with one Meteonorm 8.2
+      standalone weather-generation family before comparing against PVsyst.
+    source:
+      provider: Meteonorm
+      provider_version: "8.2"
+      provenance_basis: user_declared
+      site_name: Home
+      latitude_deg: -6.425
+      longitude_deg: 106.831
+      elevation_m: 93
+      timezone: UTC+07:00
+      source_time_reference_minutes: -30
+      calendar: yearless_typical_year
+      note: >
+        Meteonorm writes the latitude as -6.425 [deg N] in these files; the explicit
+        negative numeric sign is authoritative.
+    cases:
+      - benchmark_id: WX-MN82-H
+        case_id: MN82-H
+        status: reference_only
+        native_resolution_seconds: 3600
+        simulation_resolution_seconds: 3600
+        source_artifact:
+          filename: Home-hour.dat
+          sha256: c08b65697627a89873da5375c5f2ad573982c5bb0569ada80f23d4f8da45a306
+          size_bytes: 523634
+          redistributed: false
+          note: User-supplied reference; not committed to repository.
+        targets:
+          row_count: 8760
+          annual_ghi_kwh_m2: 1693.556
+          annual_dhi_kwh_m2: 877.181
+      - benchmark_id: WX-MN82-15
+        case_id: MN82-15
+        status: reference_only
+        native_resolution_seconds: 900
+        simulation_resolution_seconds: 900
+        source_artifact:
+          filename: Home-15min.dat
+          sha256: 98d19fc6cf2857bbcbfd0e0a210b1f0af21b229e8d29e1d41a75760fb5ca19dd
+          size_bytes: 2116061
+          redistributed: false
+          note: User-supplied reference; not committed to repository.
+        targets:
+          row_count: 35040
+          annual_ghi_kwh_m2: 1693.53575
+          annual_dhi_kwh_m2: 877.1865
+      - benchmark_id: WX-MN82-10
+        case_id: MN82-10
+        status: reference_only
+        native_resolution_seconds: 600
+        simulation_resolution_seconds: 600
+        source_artifact:
+          filename: Home-10min.dat
+          sha256: 31d2597f53cb1b155acc8af98e44573124447652badeebb3747981a0e5d63a35
+          size_bytes: 3177807
+          redistributed: false
+          note: User-supplied reference; not committed to repository.
+        targets:
+          row_count: 52560
+          annual_ghi_kwh_m2: 1693.7646666666667
+          annual_dhi_kwh_m2: 877.3955
+      - benchmark_id: WX-MN82-01
+        case_id: MN82-01
+        status: reference_only
+        native_resolution_seconds: 60
+        simulation_resolution_seconds: 60
+        source_artifact:
+          filename: Home-min.dat
+          sha256: c321ec72901c0dbe0cedef6dd55ed43a3287f57814e24b3274a58f2173fb7077
+          size_bytes: 31763432
+          redistributed: false
+          note: User-supplied reference; not committed to repository.
+        targets:
+          row_count: 525600
+          annual_ghi_kwh_m2: 1693.5347666666667
+          annual_dhi_kwh_m2: 877.1782833333333
+
+  - family_id: SYS-PVSYST-V816-UNSHADED
+    family_type: cross_software_end_to_end
+    purpose: >
+      External end-to-end validation across legacy hourly and modern native-minute
+      PVsyst simulation with four DC/AC loading ratios.
+    source:
+      software: PVsyst
+      software_version: "8.1.6"
+      project: Sampel for OpenSimPV
+      site_name: Home
+      latitude_deg: -6.4245
+      longitude_deg: 106.8307
+      elevation_m: 82
+      timezone: UTC+07:00
+      albedo: 0.20
+      weather_source: Meteonorm 9.0 dll, Sat=100% - Synthetic
+      report_date: "2026-09-23"
+      note: >
+        Hourly and one-minute cases use the corresponding PVsyst/Meteonorm 9 temporal
+        weather representation. They are not numerically interchangeable with the
+        Meteonorm 8.2 standalone DAT family.
+    shared_configuration:
+      system_type: grid_connected
+      no_3d_scene: true
+      near_shading: none
+      horizon: free
+      orientation:
+        type: fixed_plane
+        tilt_deg: 20.0
+        pvsyst_azimuth_deg: 0.0
+        canonical_azimuth_deg: 0.0
+        source_orientation_note: >
+          For this southern-hemisphere PVsyst site, PVsyst azimuth 0 is the
+          equator-facing north direction, equal to OpenSIMPV canonical azimuth 0.
+      transposition:
+        model: Perez
+        model_id: poa.transposition.pvsyst81_perez.v0.1
+        diffuse: Perez_Meteonorm
+        circumsolar: separate
+        hourly:
+          timestep_seconds: 3600
+          coefficient_basis: Perez_1990_allsitescomposite
+          coefficient_status: executable
+        subhourly:
+          supported_timestep_rule: integer_divisor_of_3600_seconds
+          production_coefficient_shape: [8, 6]
+          production_coefficient_count: 48
+          production_coefficients_publicly_documented: false
+          exact_parity_status: blocked_pending_verified_numeric_table
+          fallback_policy: fail_closed
+          prohibited_silent_substitutes:
+            - Perez_1990
+            - Perez_Driesse
+            - EUPVSEC_2023_proof_of_concept_minute_coefficients
+        low_sun_cutoff:
+          sun_height_deg_strictly_below: 2.0
+          solar_height_basis: true_geometric
+          zero_components:
+            - beam
+            - circumsolar
+          preserve_components:
+            - isotropic_diffuse
+            - horizon_diffuse
+            - ground_reflected
+      module:
+        model: JKM550M-72HL4-V
+        pan_name: JKM550M-72HL4-V_SGS_6079M3.PAN
+        unit_nominal_power_wp: 550
+        width_m: 1.134
+        height_m: 2.278
+        area_m2: 2.583252
+        mass_kg: 28.0
+        unit_mass_kg_m2: 10.839050932700333
+        stc_efficiency_fraction: 0.2129099290351851
+        absorption_coefficient: 0.90
+        electrical_model_id: module.pvsyst_singlediode.v6
+        electrical_solver: lambertw
+        electrical_inputs:
+          irradiance: optical.effective_irradiance_w_m2
+          temperature: thermal.cell_temperature_c
+        electrical_outputs:
+          - isc_a
+          - voc_v
+          - imp_a
+          - vmp_v
+          - pmp_w
+          - module_efficiency_fraction
+      inverter:
+        model: SUN2000-100KTL-M1
+        electrical_model_id: inverter.voltage_dependent_efficiency.v0.1
+        nominal_ac_kw: 100
+        max_ac_kw: 110
+        max_power_temperature_c: 30.0
+        nominal_power_temperature_c: 40.0
+        high_temperature_limit1_c: 60.0
+        high_temperature_limit1_kw: 36.0
+        absolute_temperature_limit_c: 62.0
+        runtime_temperature_basis: unresolved
+        operating_voltage_v: [200, 1000]
+        minimum_input_power_w: 500.0
+        night_loss_w: 2.0
+        efficiency_power_interpolation: bounded_linear_pin_pout_v0.1
+        efficiency_power_above_curve_policy: hold_endpoint_efficiency
+        efficiency_voltage_interpolation: bounded_quadratic_v0.1
+        units: 1
+        mppt_count: 10
+        total_dc_input_count: 20
+        input_count_per_mppt: null
+        verified_mppt_operating_current_limit_a: null
+        current_limit_runtime_policy: block_requires_full_iv_if_verified_limit_binds
+        clipping_limit_without_runtime_temperature_w: 110000.0
+        pvsyst_reported_zero_loss_channels_pct:
+          max_input_current: 0.00
+          over_nominal_input_voltage: 0.00
+          power_threshold: 0.00
+          voltage_threshold: 0.00
+          night_consumption: 0.00
+        topology_note: >
+          The OND verifies 10 MPPTs and 20 total DC inputs, but does not establish
+          a physical per-MPPT input count or per-MPPT operating-current limit.
+          OpenSIMPV therefore does not infer those limits from 20/10. Temperature
+          derating is applied only when a runtime temperature basis is explicitly
+          resolved; otherwise the verified 110 kW maximum AC power is the clipping
+          limit.
+      modules_per_string: 18
+      thermal:
+        model: PVsyst_8.1_transient
+        model_id: thermal.pvsyst81.prilliman_adapted.v0.1
+        base_steady_state_model_id: thermal.pvsyst.pvlib.v0.1
+        uc_w_m2k: 20.0
+        uv_w_m2k_per_ms: 0.0
+        irradiance_basis: incident_poa_global_before_iam
+        module_efficiency_policy: dynamic_from_module_electrical_model
+        transient_model:
+          method: pvsyst_adapted_prilliman
+          unit_mass_kg_m2: 10.839050932700333
+          unit_mass_source: module_mass_divided_by_one_sided_area
+          missing_or_invalid_mass_default_kg_m2: 11.0
+          invalid_mass_threshold_kg_m2: 20.0
+          wind_required_for_inertia: true
+          relaxation_rate_equation: P=0.0046+0.00046*Ws-0.00023*mu-0.000016*Ws*mu
+          cutoff_equation: 3_tau_max
+          interval_output: analytical_interval_average
+          cutoff_under_timestep_policy: always_include_immediate_previous_steady_state_sample
+          cutoff_under_timestep_status: requires_phase39_attribution
+        electrical_coupling:
+          method: fixed_point_iteration
+          temperature_state_used_by_sdm: transient_interval_average
+          initial_efficiency_fraction: 0.0
+          temperature_tolerance_c: 0.0001
+          efficiency_tolerance_fraction: 1.0e-8
+          max_iterations: 25
+          relaxation_factor: 1.0
+        note: >
+          Phase 3.8B keeps the steady-state PVsyst heat balance as an explicit
+          intermediate, then applies the documented PVsyst 8.1 adapted-Prilliman
+          inertia model. The transient interval-average temperature is fed to the
+          detailed single-diode model and the efficiency term is solved
+          self-consistently. Exact PVsyst 8.1.6 behavior when 3*tau_max is shorter
+          than the simulation step remains a Phase 3.9 attribution item.
+      dc_wiring_loss_fraction_at_stc: 0.015
+      module_quality_loss_fraction: -0.0075
+      module_mismatch_loss_fraction: 0.02
+      array_loss_execution:
+        model_id: array_losses.explicit_mpp_i2r.v0.1
+        module_quality:
+          model: signed_mpp_power_fraction
+          sign_convention: positive_loss_negative_gain
+        module_mismatch:
+          model: sequential_mpp_power_fraction
+        string_mismatch:
+          model: sequential_mpp_power_fraction
+          fraction_source: per_case
+        dc_wiring:
+          model: global_equivalent_resistance_i2r
+          resistance_source: per_case_dc_array_resistance_mohm
+          stc_loss_fraction_role: reference_only_not_runtime_multiplier
+          tracker_voltage_scope: common_active_mppt_voltage_required
+        ordering:
+          - module_quality
+          - module_mismatch
+          - string_mismatch
+          - dc_wiring
+      result_aggregation:
+        interval_energy_model: interval_average_times_explicit_duration
+        duration_source: case_simulation_resolution_seconds
+        pcc_boundary: net_inverter_ac_output_no_downstream_ac_stage
+        performance_ratio_irradiance_basis: incident_poa_global
+        reference_irradiance_kw_m2: 1.0
+        pvsyst_e_array_mapping_status: deferred
+        pvsyst_e_array_note: >
+          PVsyst EArray reflects the operating array output and can include DC
+          operating-point feedback when inverter limiting binds. Phase 3.7 keeps
+          array virtual MPP, AC clipping, and net AC output explicit but does not
+          fabricate a DC EArray equivalent by back-converting AC clipping.
+      temporal_execution:
+        schema: TemporalExecutionContext.v0.1
+        v1_target_timestep_seconds: [60, 300, 900, 3600]
+        arbitrary_positive_interval_where_integer_ratio_supported: true
+        resolution_conversion_stage: before_timeline_and_all_physics
+        native_resolution_preserved: true
+        source_origin_time_semantics_preserved: true
+        interval_level_provenance: true
+        working_series_origin_recorded: true
+        provider_generated_subhourly_distinct_from_opensimpv_disaggregation: true
+        opensimpv_disaggregation:
+          algorithm: interval_mean_hold
+          algorithm_version: "0.1"
+          irradiance_energy_preserving: true
+          fidelity: conservative_baseline
+          false_precision_warning: required
+          note: >
+            The simulation specification prefers a future solar-geometry-informed
+            normalized intrainterval shape. Exact hourly-to-minute shaping remains
+            an open v0.2 decision, so Phase 3.8 does not silently invent one.
+        native_pvsyst_reference_timesteps_seconds: [60, 3600]
+        meteonorm82_weather_reference_timesteps_seconds: [60, 600, 900, 3600]
+      iam_profile_type: TCubicProfile
+      iam_interpolation_method: cubic
+      iam_profile:
+        - [0, 1.000]
+        - [30, 1.000]
+        - [50, 1.000]
+        - [60, 0.999]
+        - [70, 0.988]
+        - [75, 0.965]
+        - [80, 0.925]
+        - [85, 0.743]
+        - [90, 0.000]
+      auxiliary_losses_configured: false
+    cases:
+      - benchmark_id: SYS-PVSYST-U01-H
+        case_id: VC0
+        status: reference_only
+        native_resolution_seconds: 3600
+        simulation_resolution_seconds: 3600
+        source_artifact:
+          filename: Sampel for OpenSimPV_Project.VC0-Report.pdf
+          sha256: null
+          size_bytes: 612852
+          redistributed: false
+        configuration:
+          variant: NoLoss-Hourly
+          strings: 12
+          opensimpv_mppt_assignment:
+            basis: balanced_low_index_first_analytical_only
+            source_claim: not_pvsyst_reported
+            mppt_string_counts: [2, 2, 1, 1, 1, 1, 1, 1, 1, 1]
+          modules_total: 216
+          dc_nameplate_kwp_exact: 118.8
+          dc_nameplate_kwp_reported: 119
+          dc_ac_ratio_reported: 1.19
+          string_mismatch_loss_fraction: 0.0
+          dc_array_resistance_mohm: 69
+        targets:
+          annual:
+            glob_hor_kwh_m2: 1749.8
+            diff_hor_kwh_m2: 860.20
+            ambient_temp_c: 28.04
+            glob_inc_kwh_m2: 1754.9
+            glob_eff_kwh_m2: 1748.7
+            e_array_kwh: 183903
+            e_grid_kwh: 181376
+            specific_yield_kwh_kwp: 1527
+            pr: 0.8700
+            inverter_conversion_loss_pct: 1.37
+            clipping_loss_pct: 0.00
+            array_virtual_mpp_kwh: 183905
+          monthly_e_array_kwh: [12274, 11692, 14930, 15339, 16723, 16772, 17383, 18284, 18064, 16959, 13421, 12063]
+          monthly_e_grid_kwh: [12099, 11528, 14726, 15129, 16497, 16547, 17149, 18038, 17823, 16722, 13227, 11891]
+
+      - benchmark_id: SYS-PVSYST-U01-M
+        case_id: VC1
+        status: reference_only
+        native_resolution_seconds: 60
+        simulation_resolution_seconds: 60
+        source_artifact:
+          filename: Sampel for OpenSimPV_Project.VC1-Report.pdf
+          sha256: null
+          size_bytes: 592768
+          redistributed: false
+        configuration:
+          variant: NoLoss-Minutely
+          strings: 12
+          opensimpv_mppt_assignment:
+            basis: balanced_low_index_first_analytical_only
+            source_claim: not_pvsyst_reported
+            mppt_string_counts: [2, 2, 1, 1, 1, 1, 1, 1, 1, 1]
+          modules_total: 216
+          dc_nameplate_kwp_exact: 118.8
+          dc_nameplate_kwp_reported: 119
+          dc_ac_ratio_reported: 1.19
+          string_mismatch_loss_fraction: 0.0
+          dc_array_resistance_mohm: 69
+        targets:
+          annual:
+            glob_hor_kwh_m2: 1749.9
+            diff_hor_kwh_m2: 860.17
+            ambient_temp_c: 28.04
+            glob_inc_kwh_m2: 1759.4
+            glob_eff_kwh_m2: 1753.8
+            e_array_kwh: 183962
+            e_grid_kwh: 181442
+            specific_yield_kwh_kwp: 1527
+            pr: 0.8681
+            inverter_conversion_loss_pct: 1.36
+            clipping_loss_pct: 0.02
+            array_virtual_mpp_kwh: 184003
+          monthly_e_array_kwh: [12356, 11623, 14878, 15255, 16687, 16699, 17521, 18374, 18074, 16997, 13444, 12053]
+          monthly_e_grid_kwh: [12180, 11458, 14671, 15045, 16461, 16474, 17286, 18128, 17833, 16770, 13257, 11880]
+
+      - benchmark_id: SYS-PVSYST-U02-H
+        case_id: VC2
+        status: reference_only
+        native_resolution_seconds: 3600
+        simulation_resolution_seconds: 3600
+        source_artifact:
+          filename: Sampel for OpenSimPV_Project.VC2-Report.pdf
+          sha256: null
+          size_bytes: 604287
+          redistributed: false
+        configuration:
+          variant: NoLoss-Hourly
+          strings: 14
+          opensimpv_mppt_assignment:
+            basis: balanced_low_index_first_analytical_only
+            source_claim: not_pvsyst_reported
+            mppt_string_counts: [2, 2, 2, 2, 1, 1, 1, 1, 1, 1]
+          modules_total: 252
+          dc_nameplate_kwp_exact: 138.6
+          dc_nameplate_kwp_reported: 139
+          dc_ac_ratio_reported: 1.39
+          string_mismatch_loss_fraction: 0.0
+          dc_array_resistance_mohm: 59
+        targets:
+          annual:
+            glob_hor_kwh_m2: 1749.8
+            diff_hor_kwh_m2: 860.20
+            ambient_temp_c: 28.04
+            glob_inc_kwh_m2: 1754.9
+            glob_eff_kwh_m2: 1748.7
+            e_array_kwh: 214271
+            e_grid_kwh: 211341
+            specific_yield_kwh_kwp: 1525
+            pr: 0.8689
+            inverter_conversion_loss_pct: 1.36
+            clipping_loss_pct: 0.13
+            array_virtual_mpp_kwh: 214555
+          monthly_e_array_kwh: [14317, 13638, 17339, 17847, 19489, 19545, 20249, 21288, 21046, 19780, 15658, 14073]
+          monthly_e_grid_kwh: [14116, 13450, 17103, 17604, 19226, 19282, 19976, 21000, 20764, 19506, 15436, 13878]
+
+      - benchmark_id: SYS-PVSYST-U02-M
+        case_id: VC3
+        status: reference_only
+        native_resolution_seconds: 60
+        simulation_resolution_seconds: 60
+        source_artifact:
+          filename: Sampel for OpenSimPV_Project.VC3-Report.pdf
+          sha256: null
+          size_bytes: 599399
+          redistributed: false
+        configuration:
+          variant: NoLoss-Minutely
+          strings: 14
+          opensimpv_mppt_assignment:
+            basis: balanced_low_index_first_analytical_only
+            source_claim: not_pvsyst_reported
+            mppt_string_counts: [2, 2, 2, 2, 1, 1, 1, 1, 1, 1]
+          modules_total: 252
+          dc_nameplate_kwp_exact: 138.6
+          dc_nameplate_kwp_reported: 139
+          dc_ac_ratio_reported: 1.39
+          string_mismatch_loss_fraction: 0.0
+          dc_array_resistance_mohm: 59
+        targets:
+          annual:
+            glob_hor_kwh_m2: 1749.9
+            diff_hor_kwh_m2: 860.17
+            ambient_temp_c: 28.04
+            glob_inc_kwh_m2: 1759.4
+            glob_eff_kwh_m2: 1753.8
+            e_array_kwh: 213896
+            e_grid_kwh: 210976
+            specific_yield_kwh_kwp: 1522
+            pr: 0.8652
+            inverter_conversion_loss_pct: 1.36
+            clipping_loss_pct: 0.37
+            array_virtual_mpp_kwh: 214671
+          monthly_e_array_kwh: [14395, 13506, 17234, 17650, 19398, 19436, 20394, 21356, 21009, 19790, 15676, 14053]
+          monthly_e_grid_kwh: [14193, 13318, 16996, 17407, 19135, 19172, 20118, 21069, 20727, 19525, 15461, 13855]
+
+      - benchmark_id: SYS-PVSYST-U03-H
+        case_id: VC4
+        status: reference_only
+        native_resolution_seconds: 3600
+        simulation_resolution_seconds: 3600
+        source_artifact:
+          filename: Sampel for OpenSimPV_Project.VC4-Report.pdf
+          sha256: null
+          size_bytes: 597457
+          redistributed: false
+        configuration:
+          variant: NoLoss-Hourly
+          strings: 16
+          opensimpv_mppt_assignment:
+            basis: balanced_low_index_first_analytical_only
+            source_claim: not_pvsyst_reported
+            mppt_string_counts: [2, 2, 2, 2, 2, 2, 1, 1, 1, 1]
+          modules_total: 288
+          dc_nameplate_kwp_exact: 158.4
+          dc_nameplate_kwp_reported: 158
+          dc_ac_ratio_reported: 1.58
+          string_mismatch_loss_fraction: 0.0005
+          dc_array_resistance_mohm: 52
+        targets:
+          annual:
+            glob_hor_kwh_m2: 1749.8
+            diff_hor_kwh_m2: 860.20
+            ambient_temp_c: 28.04
+            glob_inc_kwh_m2: 1754.9
+            glob_eff_kwh_m2: 1748.7
+            e_array_kwh: 240492
+            e_grid_kwh: 237207
+            specific_yield_kwh_kwp: 1498
+            pr: 0.8534
+            inverter_conversion_loss_pct: 1.34
+            clipping_loss_pct: 1.90
+            array_virtual_mpp_kwh: 245081
+          monthly_e_array_kwh: [16280, 15478, 19382, 19925, 21846, 21886, 22522, 23526, 23490, 22261, 17851, 16046]
+          monthly_e_grid_kwh: [16053, 15266, 19119, 19654, 21550, 21590, 22217, 23206, 23173, 21952, 17601, 15825]
+
+      - benchmark_id: SYS-PVSYST-U03-M
+        case_id: VC5
+        status: reference_only
+        native_resolution_seconds: 60
+        simulation_resolution_seconds: 60
+        source_artifact:
+          filename: Sampel for OpenSimPV_Project.VC5-Report.pdf
+          sha256: null
+          size_bytes: 594743
+          redistributed: false
+        configuration:
+          variant: NoLoss-Minutely
+          strings: 16
+          opensimpv_mppt_assignment:
+            basis: balanced_low_index_first_analytical_only
+            source_claim: not_pvsyst_reported
+            mppt_string_counts: [2, 2, 2, 2, 2, 2, 1, 1, 1, 1]
+          modules_total: 288
+          dc_nameplate_kwp_exact: 158.4
+          dc_nameplate_kwp_reported: 158
+          dc_ac_ratio_reported: 1.58
+          string_mismatch_loss_fraction: 0.0005
+          dc_array_resistance_mohm: 52
+        targets:
+          annual:
+            glob_hor_kwh_m2: 1749.9
+            diff_hor_kwh_m2: 860.17
+            ambient_temp_c: 28.04
+            glob_inc_kwh_m2: 1759.4
+            glob_eff_kwh_m2: 1753.8
+            e_array_kwh: 239232
+            e_grid_kwh: 235970
+            specific_yield_kwh_kwp: 1490
+            pr: 0.8467
+            inverter_conversion_loss_pct: 1.33
+            clipping_loss_pct: 2.47
+            array_virtual_mpp_kwh: 245213
+          monthly_e_array_kwh: [16259, 15183, 19163, 19492, 21604, 21688, 22821, 23737, 23355, 22157, 17792, 15983]
+          monthly_e_grid_kwh: [16034, 14973, 18899, 19225, 21311, 21393, 22511, 23417, 23040, 21859, 17549, 15760]
+
+      - benchmark_id: SYS-PVSYST-U04-H
+        case_id: VC6
+        status: reference_only
+        native_resolution_seconds: 3600
+        simulation_resolution_seconds: 3600
+        source_artifact:
+          filename: Sampel for OpenSimPV_Project.VC6-Report.pdf
+          sha256: null
+          size_bytes: 600736
+          redistributed: false
+        configuration:
+          variant: NoLoss-Hourly
+          strings: 18
+          opensimpv_mppt_assignment:
+            basis: balanced_low_index_first_analytical_only
+            source_claim: not_pvsyst_reported
+            mppt_string_counts: [2, 2, 2, 2, 2, 2, 2, 2, 1, 1]
+          modules_total: 324
+          dc_nameplate_kwp_exact: 178.2
+          dc_nameplate_kwp_reported: 178
+          dc_ac_ratio_reported: 1.78
+          string_mismatch_loss_fraction: 0.0005
+          dc_array_resistance_mohm: 46
+        targets:
+          annual:
+            glob_hor_kwh_m2: 1749.8
+            diff_hor_kwh_m2: 860.20
+            ambient_temp_c: 28.04
+            glob_inc_kwh_m2: 1754.9
+            glob_eff_kwh_m2: 1748.7
+            e_array_kwh: 261488
+            e_grid_kwh: 257919
+            specific_yield_kwh_kwp: 1447
+            pr: 0.8248
+            inverter_conversion_loss_pct: 1.29
+            clipping_loss_pct: 5.23
+            array_virtual_mpp_kwh: 275716
+          monthly_e_array_kwh: [17963, 17148, 21095, 21623, 23576, 23674, 24217, 25169, 25208, 24183, 19754, 17879]
+          monthly_e_grid_kwh: [17714, 16913, 20809, 21328, 23257, 23353, 23889, 24827, 24867, 23848, 19480, 17635]
+
+      - benchmark_id: SYS-PVSYST-U04-M
+        case_id: VC7
+        status: reference_only
+        native_resolution_seconds: 60
+        simulation_resolution_seconds: 60
+        source_artifact:
+          filename: Sampel for OpenSimPV_Project.VC7-Report.pdf
+          sha256: null
+          size_bytes: 600084
+          redistributed: false
+        configuration:
+          variant: NoLoss-Minutely
+          strings: 18
+          opensimpv_mppt_assignment:
+            basis: balanced_low_index_first_analytical_only
+            source_claim: not_pvsyst_reported
+            mppt_string_counts: [2, 2, 2, 2, 2, 2, 2, 2, 1, 1]
+          modules_total: 324
+          dc_nameplate_kwp_exact: 178.2
+          dc_nameplate_kwp_reported: 178
+          dc_ac_ratio_reported: 1.78
+          string_mismatch_loss_fraction: 0.0005
+          dc_array_resistance_mohm: 46
+        targets:
+          annual:
+            glob_hor_kwh_m2: 1749.9
+            diff_hor_kwh_m2: 860.17
+            ambient_temp_c: 28.04
+            glob_inc_kwh_m2: 1759.4
+            glob_eff_kwh_m2: 1753.8
+            e_array_kwh: 258559
+            e_grid_kwh: 255039
+            specific_yield_kwh_kwp: 1431
+            pr: 0.8135
+            inverter_conversion_loss_pct: 1.27
+            clipping_loss_pct: 6.35
+            array_virtual_mpp_kwh: 275864
+          monthly_e_array_kwh: [17827, 16575, 20693, 20899, 23211, 23280, 24545, 25481, 24999, 23893, 19504, 17652]
+          monthly_e_grid_kwh: [17582, 16347, 20409, 20614, 22896, 22964, 24212, 25136, 24662, 23571, 19238, 17408]
+
+  - family_id: WX-OSPV-DERIVED
+    family_type: opensimpv_derived_resolution
+    purpose: >
+      Reserve the Phase 3.8 contract for OpenSIMPV-generated subhourly weather from
+      the Meteonorm 8.2 hourly case. These are not native Meteonorm subhourly cases.
+    source:
+      parent_benchmark_id: WX-MN82-H
+      parent_native_resolution_seconds: 3600
+      parent_native_series_origin: unknown
+      output_series_origin: opensimpv_derived
+    cases:
+      - benchmark_id: WX-DERIVED-15
+        case_id: OSPV-H-TO-15
+        status: planned
+        native_resolution_seconds: 3600
+        simulation_resolution_seconds: 900
+        configuration:
+          target_resolution_seconds: 900
+        targets:
+          annual_ghi_kwh_m2: 1693.556
+          source_interval_energy_preserved: true
+          daylight_only_required: true
+          artificial_night_irradiance_allowed: false
+      - benchmark_id: WX-DERIVED-10
+        case_id: OSPV-H-TO-10
+        status: planned
+        native_resolution_seconds: 3600
+        simulation_resolution_seconds: 600
+        configuration:
+          target_resolution_seconds: 600
+        targets:
+          annual_ghi_kwh_m2: 1693.556
+          source_interval_energy_preserved: true
+          daylight_only_required: true
+          artificial_night_irradiance_allowed: false
+      - benchmark_id: WX-DERIVED-05
+        case_id: OSPV-H-TO-05
+        status: planned
+        native_resolution_seconds: 3600
+        simulation_resolution_seconds: 300
+        configuration:
+          target_resolution_seconds: 300
+        targets:
+          annual_ghi_kwh_m2: 1693.556
+          source_interval_energy_preserved: true
+          daylight_only_required: true
+          artificial_night_irradiance_allowed: false
+      - benchmark_id: WX-DERIVED-01
+        case_id: OSPV-H-TO-01
+        status: planned
+        native_resolution_seconds: 3600
+        simulation_resolution_seconds: 60
+        configuration:
+          target_resolution_seconds: 60
+        targets:
+          annual_ghi_kwh_m2: 1693.556
+          source_interval_energy_preserved: true
+          daylight_only_required: true
+          artificial_night_irradiance_allowed: false

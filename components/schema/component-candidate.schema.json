@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/component-candidate.schema.json",
+  "title": "OpenSIMPV ComponentCandidate v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "candidate_id",
+    "component_type",
+    "canonical_data",
+    "derivations",
+    "validation_findings",
+    "capability_flags",
+    "definition_schema_ready",
+    "status"
+  ],
+  "properties": {
+    "schema_name": {"const": "ComponentCandidate"},
+    "schema_version": {"const": "0.1"},
+    "candidate_id": {"type": "string", "minLength": 1},
+    "component_type": {"enum": ["module", "inverter"]},
+    "source_id": {"type": ["string", "null"]},
+    "canonical_data": {"type": "object"},
+    "derivations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target_path", "method", "inputs", "value", "unit"],
+        "properties": {
+          "target_path": {"type": "string"},
+          "method": {"type": "string"},
+          "algorithm_version": {"type": ["string", "null"]},
+          "inputs": {"type": "object"},
+          "value": {},
+          "unit": {"type": ["string", "null"]},
+          "estimated": {"type": "boolean"},
+          "notes": {"type": ["string", "null"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "validation_findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rule_id", "severity", "category", "message"],
+        "properties": {
+          "rule_id": {"type": "string"},
+          "severity": {"enum": ["info", "recommendation", "warning", "error", "blocking_error"]},
+          "category": {"type": "string"},
+          "field_path": {"type": ["string", "null"]},
+          "message": {"type": "string"},
+          "measured_value": {},
+          "limit_value": {},
+          "unit": {"type": ["string", "null"]},
+          "context": {"type": "object"}
+        },
+        "additionalProperties": true
+      }
+    },
+    "capability_flags": {"type": "object", "additionalProperties": {"type": "boolean"}},
+    "definition_schema_ready": {"type": "boolean"},
+    "status": {"enum": ["needs_review", "schema_ready", "validated", "rejected"]}
+  },
+  "additionalProperties": false
+}

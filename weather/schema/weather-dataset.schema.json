@@ -1,0 +1,508 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/weather-dataset.schema.json",
+  "title": "OpenSIMPV WeatherDataset v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "weather_dataset_id",
+    "revision_id",
+    "name",
+    "site_id",
+    "source_format",
+    "native_resolution_seconds",
+    "series_resolution_seconds",
+    "timezone",
+    "timestamp_convention",
+    "source_timestamp_convention",
+    "start_time",
+    "end_time",
+    "weather_series_reference",
+    "time_semantics"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "WeatherDataset"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "weather_dataset_id": {
+      "type": "string"
+    },
+    "revision_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "source_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "site_id": {
+      "type": "string"
+    },
+    "native_resolution_seconds": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "timezone": {
+      "type": "string"
+    },
+    "start_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "calendar_type": {
+      "type": "string"
+    },
+    "leap_year_handling": {
+      "type": "string"
+    },
+    "data_quality_status": {
+      "type": "string"
+    },
+    "weather_series_reference": {
+      "type": "string"
+    },
+    "variables": {
+      "type": "object",
+      "additionalProperties": {
+        "type": [
+          "object",
+          "null"
+        ]
+      }
+    },
+    "transformations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "transformation_type",
+          "algorithm",
+          "algorithm_version"
+        ],
+        "properties": {
+          "transformation_type": {
+            "enum": [
+              "unit_conversion",
+              "timezone_normalization",
+              "interpolation",
+              "resampling",
+              "daily_to_hourly_disaggregation",
+              "hourly_to_subhourly_disaggregation",
+              "gap_fill",
+              "decomposition"
+            ]
+          },
+          "algorithm": {
+            "type": "string"
+          },
+          "algorithm_version": {
+            "type": "string"
+          },
+          "parameters": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "source_format": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "file_id",
+          "filename",
+          "byte_size",
+          "sha256"
+        ],
+        "properties": {
+          "file_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "filename": {
+            "type": "string",
+            "minLength": 1
+          },
+          "media_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "byte_size": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "source_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "attribution": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "license_spdx": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "license_url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "series_resolution_seconds": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "timestamp_convention": {
+      "const": "interval_start"
+    },
+    "source_timestamp_convention": {
+      "type": "string",
+      "minLength": 1
+    },
+    "location": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "latitude_deg": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude_deg": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -180,
+          "maximum": 180
+        },
+        "elevation_m": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "derived_subhourly": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "qc_summary": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "passed",
+            "warning",
+            "failed",
+            "not_run_after_transformation",
+            null
+          ]
+        },
+        "base_simulation_input_ready": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "finding_counts": {
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "source_metadata": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "acquisition": {
+          "description": "How these bytes entered the adapter and their evidenced origin, independent of the selected source product. Optional for legacy provider datasets to preserve canonical fingerprints.",
+          "type": "object",
+          "required": ["method", "network_retrieval", "data_origin", "evidence", "evidence_detail"],
+          "properties": {
+            "method": {
+              "enum": ["provider_transport", "supplied_payload"]
+            },
+            "network_retrieval": {
+              "type": "boolean"
+            },
+            "data_origin": {
+              "enum": ["provider_generated", "synthetic_test_fixture", "unknown"]
+            },
+            "evidence": {
+              "enum": ["provider_transport", "user_declared", "unknown"]
+            },
+            "evidence_detail": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "oneOf": [
+            {
+              "properties": {
+                "method": {"const": "provider_transport"},
+                "network_retrieval": {"const": true},
+                "data_origin": {"const": "provider_generated"},
+                "evidence": {"const": "provider_transport"}
+              }
+            },
+            {
+              "properties": {
+                "method": {"const": "supplied_payload"},
+                "network_retrieval": {"const": false},
+                "data_origin": {"const": "synthetic_test_fixture"},
+                "evidence": {"const": "user_declared"}
+              }
+            },
+            {
+              "properties": {
+                "method": {"const": "supplied_payload"},
+                "network_retrieval": {"const": false},
+                "data_origin": {"const": "unknown"},
+                "evidence": {"const": "unknown"}
+              }
+            }
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "native_series_origin": {
+      "description": "Use unknown for supplied synthetic test data; upstream_generation.synthetic and source_metadata.acquisition describe its explicit test origin.",
+      "enum": [
+        "measured",
+        "provider_generated",
+        "opensimpv_derived",
+        "unknown"
+      ]
+    },
+    "series_origin": {
+      "enum": [
+        "measured",
+        "provider_generated",
+        "opensimpv_derived",
+        "unknown"
+      ]
+    },
+    "upstream_generation": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "provider": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "synthetic": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "base_resolution_seconds": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "method": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence": {
+          "enum": [
+            "source_metadata",
+            "source_structure",
+            "user_declared",
+            "opensimpv_transformation",
+            "unknown",
+            null
+          ]
+        },
+        "evidence_detail": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "time_semantics": {
+      "type": "object",
+      "required": [
+        "origin_source",
+        "canonical",
+        "representative_time"
+      ],
+      "properties": {
+        "origin_source": {
+          "type": "object",
+          "required": [
+            "timezone",
+            "utc_offset_hours",
+            "timestamp_convention",
+            "interval_seconds",
+            "reference"
+          ],
+          "properties": {
+            "timezone": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "utc_offset_hours": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "timestamp_convention": {
+              "type": "string",
+              "minLength": 1
+            },
+            "interval_seconds": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "reference": {
+              "type": "object",
+              "required": [
+                "kind",
+                "offset_minutes",
+                "applied_to_canonical_timestamp",
+                "applied_to_solar_evaluation"
+              ],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "none",
+                    "provider_declared_time_reference",
+                    "unknown"
+                  ]
+                },
+                "offset_minutes": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "applied_to_canonical_timestamp": {
+                  "type": "boolean"
+                },
+                "applied_to_solar_evaluation": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "canonical": {
+          "type": "object",
+          "required": [
+            "timezone",
+            "timestamp_convention",
+            "interval_seconds"
+          ],
+          "properties": {
+            "timezone": {
+              "type": "string",
+              "minLength": 1
+            },
+            "timestamp_convention": {
+              "const": "interval_start"
+            },
+            "interval_seconds": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "representative_time": {
+          "type": "object",
+          "required": [
+            "policy",
+            "solar_evaluation_offset_minutes",
+            "solar_evaluation_offset_source"
+          ],
+          "properties": {
+            "policy": {
+              "const": "interval_midpoint"
+            },
+            "solar_evaluation_offset_minutes": {
+              "type": "number"
+            },
+            "solar_evaluation_offset_source": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

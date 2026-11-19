@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/import-record.schema.json",
+  "title": "OpenSIMPV ImportRecord v0.1",
+  "type": "object",
+  "required": ["schema_name", "schema_version", "import_record_id", "source_id", "format", "parser_version", "raw_field_map", "mapped_fields", "unmapped_fields", "mapping_warnings"],
+  "properties": {
+    "schema_name": {"const": "ImportRecord"},
+    "schema_version": {"const": "0.1"},
+    "import_record_id": {"type": "string"},
+    "source_id": {"type": "string"},
+    "format": {"enum": ["pan", "ond", "tmy3", "epw", "pvsyst_met", "csv", "geometry", "other"]},
+    "format_version": {"type": ["string", "null"]},
+    "parser_version": {"type": "string"},
+    "imported_at": {"type": ["string", "null"], "format": "date-time"},
+    "imported_by": {"type": ["string", "null"]},
+    "raw_field_map": {
+      "type": "array",
+      "description": "Ordered records rather than a JSON object so duplicate source keys and source order are not lost.",
+      "items": {"$ref": "#/$defs/raw_field"}
+    },
+    "mapped_fields": {"type": "array", "items": {"$ref": "#/$defs/field_mapping"}},
+    "unmapped_fields": {"type": "array", "items": {"$ref": "#/$defs/raw_field"}},
+    "mapping_warnings": {"type": "array", "items": {"type": "string"}},
+    "validation_summary": {"type": ["object", "null"]},
+    "target_component_id": {"type": ["string", "null"]}
+  },
+  "$defs": {
+    "raw_field": {
+      "type": "object",
+      "required": ["line_number", "path", "key", "value_raw"],
+      "properties": {
+        "line_number": {"type": "integer", "minimum": 1},
+        "path": {"type": "array", "items": {"type": "string"}},
+        "key": {"type": "string"},
+        "value_raw": {"type": ["string", "null"]},
+        "indent_spaces": {"type": "integer", "minimum": 0},
+        "indent_valid": {"type": "boolean"}
+      },
+      "additionalProperties": true
+    },
+    "field_mapping": {
+      "type": "object",
+      "required": ["source_path", "source_value", "canonical_path", "canonical_value", "mapping_confidence"],
+      "properties": {
+        "source_path": {"type": "array", "items": {"type": "string"}},
+        "source_value": {},
+        "source_unit": {"type": ["string", "null"]},
+        "canonical_path": {"type": "string"},
+        "canonical_value": {},
+        "canonical_unit": {"type": ["string", "null"]},
+        "conversion": {"type": ["string", "null"]},
+        "mapping_confidence": {"enum": ["confirmed", "documented", "empirically_verified", "inferred", "unknown"]},
+        "notes": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

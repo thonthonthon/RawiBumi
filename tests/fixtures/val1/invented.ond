@@ -1,0 +1,43 @@
+PVObject_=pvGInverter
+  Comment=Wholly fictional test component; no manufacturer data
+  Version=7.4.8
+  PVObject_Commercial=pvCommercial
+    Manufacturer=Fictional Laboratory
+    Model=FICT-10
+  End of PVObject pvCommercial
+  Transfo=Without
+  Converter=TConverter
+    PNomConv=10
+    PMaxOUT=11
+    VOutConv=400
+    VMppMin=200
+    VMPPMax=1000
+    VmppNom=600
+    VAbsMax=1100
+    PSeuil=10
+    EfficMax=97
+    EfficEuro=96
+    ModeOper=MPPT
+    CompPMax=Lim
+    CompVMax=Lim
+    MonoTri=Tri
+    ModeAffEnum=POutf_PIn
+    UnitAffEnum=kW
+    PNomDC=12
+    PMaxDC=12
+    IMaxDC=40
+    INomAC=15
+    IMaxAC=17
+    ProfilPIO=TCubicProfile
+      NPtsMax=4
+      NPtsEff=4
+      Mode=1
+      Point_1=0,0
+      Point_2=1000,920
+      Point_3=5000,4800
+      Point_4=12000,11520
+    End of TCubicProfile
+  End of TConverter
+  NbMPPT=2
+  NbInputs=4
+End of PVObject pvGInverter

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/weather-qc-report.schema.json",
+  "title": "OpenSIMPV WeatherQCReport v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "weather_dataset_id",
+    "weather_revision_id",
+    "status",
+    "base_simulation_input_ready",
+    "finding_counts",
+    "findings"
+  ],
+  "properties": {
+    "schema_name": {"const": "WeatherQCReport"},
+    "schema_version": {"const": "0.1"},
+    "weather_dataset_id": {"type": "string", "minLength": 1},
+    "weather_revision_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["passed", "warning", "failed"]},
+    "base_simulation_input_ready": {"type": "boolean"},
+    "finding_counts": {
+      "type": "object",
+      "required": ["blocking_error", "error", "warning", "info"],
+      "properties": {
+        "blocking_error": {"type": "integer", "minimum": 0},
+        "error": {"type": "integer", "minimum": 0},
+        "warning": {"type": "integer", "minimum": 0},
+        "info": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "rule_id",
+          "severity",
+          "category",
+          "message",
+          "variable",
+          "count",
+          "examples",
+          "context"
+        ],
+        "properties": {
+          "rule_id": {"type": "string", "minLength": 1},
+          "severity": {"enum": ["info", "warning", "error", "blocking_error"]},
+          "category": {"type": "string", "minLength": 1},
+          "message": {"type": "string", "minLength": 1},
+          "variable": {"type": ["string", "null"]},
+          "count": {"type": ["integer", "null"], "minimum": 0},
+          "examples": {"type": "array", "items": {"type": "string"}},
+          "context": {"type": "object"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

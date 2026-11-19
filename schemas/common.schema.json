@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/common.schema.json",
+  "title": "OpenSIMPV Common Types v0.1",
+  "$defs": {
+    "entity_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "revision_status": {
+      "enum": [
+        "draft",
+        "active",
+        "superseded",
+        "archived",
+        "deprecated",
+        "withdrawn"
+      ]
+    },
+    "verification_state": {
+      "enum": [
+        "unverified",
+        "source_attached",
+        "auto_validated",
+        "reviewed",
+        "manufacturer_verified"
+      ]
+    },
+    "source_type": {
+      "enum": [
+        "manufacturer_datasheet",
+        "manufacturer_submission",
+        "manufacturer_api",
+        "pan",
+        "ond",
+        "tmy3",
+        "epw",
+        "pvsyst_met",
+        "csv",
+        "test_report",
+        "user_input",
+        "field_measurement",
+        "map_measurement",
+        "imported_geometry",
+        "open_database",
+        "community_submission",
+        "derived",
+        "calculated",
+        "unknown",
+        "map_provider",
+        "orthophoto"
+      ]
+    },
+    "source_reference": {
+      "type": "object",
+      "required": [
+        "source_id",
+        "source_type"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "#/$defs/entity_id"
+        },
+        "source_type": {
+          "$ref": "#/$defs/source_type"
+        },
+        "title": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "organization": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "filename": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "file_hash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "external_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "license_note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenanced_value": {
+      "type": "object",
+      "required": [
+        "value",
+        "unit"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "number",
+            "integer",
+            "string",
+            "boolean",
+            "null"
+          ]
+        },
+        "unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_field": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "importer_version": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "confidence": {
+          "enum": [
+            "exact",
+            "mapped",
+            "inferred",
+            "estimated",
+            "unknown",
+            null
+          ]
+        },
+        "user_override": {
+          "type": "boolean",
+          "default": false
+        },
+        "original_value": {},
+        "original_unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

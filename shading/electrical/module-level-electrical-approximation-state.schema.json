@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/module-level-electrical-approximation-state.schema.json",
+  "title": "OpenSIMPV ModuleLevelElectricalApproximationState v0.1",
+  "description": "One whole-module electrical state for Phase-6 Level-1 electrical shading. Spatial nonuniformity is collapsed to a uniform-equivalent module input; substring, bypass, string and MPPT interaction are not modeled.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "contract_version",
+    "state_id",
+    "source_scene_revision_id",
+    "source_electrical_revision_id",
+    "source_module_instance_id",
+    "source_module_definition_revision_id",
+    "source_shading_result_id",
+    "source_shading_physical_result_hash",
+    "interval_start",
+    "evaluation_time",
+    "aggregation_method",
+    "irradiance_mapping_order",
+    "thermal_state_scope",
+    "module_temperature_c",
+    "unshaded_poa",
+    "post_geometry_poa",
+    "optical_modifier",
+    "post_optical_poa",
+    "equivalent_incident_poa_global_w_m2",
+    "equivalent_effective_irradiance_w_m2",
+    "module_mpp",
+    "model_manifest",
+    "internal_nonuniformity_scope",
+    "bypass_scope",
+    "quality_flags",
+    "state_payload_sha256"
+  ],
+  "properties": {
+    "schema_name": {"const": "ModuleLevelElectricalApproximationState"},
+    "schema_version": {"const": "0.1"},
+    "contract_version": {"const": "0.1"},
+    "state_id": {"type": "string", "minLength": 1},
+    "source_scene_revision_id": {"type": "string", "minLength": 1},
+    "source_electrical_revision_id": {"type": "string", "minLength": 1},
+    "source_module_instance_id": {"type": "string", "minLength": 1},
+    "source_module_definition_revision_id": {"type": "string", "minLength": 1},
+    "source_shading_result_id": {"type": "string", "minLength": 1},
+    "source_shading_physical_result_hash": {"$ref": "#/$defs/sha256"},
+    "source_local_irradiance_state_id": {"type": ["string", "null"]},
+    "source_local_irradiance_state_hash": {
+      "anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+    },
+    "source_electrical_region_map_id": {"type": ["string", "null"]},
+    "source_electrical_region_map_hash": {
+      "anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]
+    },
+    "source_module_topology_revision_id": {"type": ["string", "null"]},
+    "interval_start": {"type": "string", "format": "date-time"},
+    "evaluation_time": {"type": "string", "format": "date-time"},
+    "aggregation_method": {
+      "enum": [
+        "module_receiver_channel_visibility_uniform_equivalent",
+        "area_weighted_complete_region_collapse_uniform_equivalent"
+      ]
+    },
+    "irradiance_mapping_order": {
+      "const": "unshaded_poa_by_channel_then_geometry_visibility_then_optical_treatment"
+    },
+    "thermal_state_scope": {"const": "single_module_temperature"},
+    "module_temperature_c": {"type": "number"},
+    "unshaded_poa": {"$ref": "#/$defs/three_channel_irradiance"},
+    "post_geometry_poa": {"$ref": "#/$defs/three_channel_irradiance"},
+    "optical_modifier": {"$ref": "#/$defs/optical_modifier"},
+    "post_optical_poa": {"$ref": "#/$defs/three_channel_irradiance"},
+    "equivalent_incident_poa_global_w_m2": {"type": "number", "minimum": 0},
+    "equivalent_effective_irradiance_w_m2": {"type": "number", "minimum": 0},
+    "mapped_region_area_fraction": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "module_mpp": {
+      "type": "object",
+      "required": ["isc_a", "voc_v", "imp_a", "vmp_v", "pmp_w", "active"],
+      "properties": {
+        "isc_a": {"type": "number", "minimum": 0},
+        "voc_v": {"type": "number", "minimum": 0},
+        "imp_a": {"type": "number", "minimum": 0},
+        "vmp_v": {"type": "number", "minimum": 0},
+        "pmp_w": {"type": "number", "minimum": 0},
+        "active": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "model_manifest": {
+      "type": "object",
+      "required": [
+        "module_electrical_model_id",
+        "module_electrical_model_solver",
+        "resolved_component_model_resolution_id",
+        "level1_solver_id",
+        "level1_solver_version"
+      ],
+      "properties": {
+        "module_electrical_model_id": {"const": "module.pvsyst_singlediode.v6"},
+        "module_electrical_model_solver": {"type": "string", "minLength": 1},
+        "resolved_component_model_resolution_id": {"type": "string", "minLength": 1},
+        "level1_solver_id": {"const": "opensimpv.electrical_shading.level1.module_equivalent_sdm"},
+        "level1_solver_version": {"const": "0.1"}
+      },
+      "additionalProperties": false
+    },
+    "internal_nonuniformity_scope": {"const": "collapsed_uniform_equivalent"},
+    "bypass_scope": {"const": "not_modeled"},
+    "quality_flags": {
+      "type": "array",
+      "items": {"type": "string"},
+      "uniqueItems": true
+    },
+    "state_payload_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "three_channel_irradiance": {
+      "type": "object",
+      "required": ["beam_w_m2", "sky_diffuse_w_m2", "ground_reflected_w_m2"],
+      "properties": {
+        "beam_w_m2": {"type": "number", "minimum": 0},
+        "sky_diffuse_w_m2": {"type": "number", "minimum": 0},
+        "ground_reflected_w_m2": {"type": "number", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "optical_modifier": {
+      "type": "object",
+      "required": ["beam", "sky_diffuse", "ground_reflected"],
+      "properties": {
+        "beam": {"type": "number", "minimum": 0, "maximum": 1},
+        "sky_diffuse": {"type": "number", "minimum": 0, "maximum": 1},
+        "ground_reflected": {"type": "number", "minimum": 0, "maximum": 1}
+      },
+      "additionalProperties": false
+    }
+  }
+}

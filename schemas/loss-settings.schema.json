@@ -1,0 +1,397 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/loss-settings.schema.json",
+  "title": "LossSettings",
+  "description": "Versioned loss overrides. Fractions dimensionless, power W. Missing leaves inherit Recommended defaults.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "defaults_id",
+    "overrides"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "LossSettings"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "defaults_id": {
+      "enum": ["recommended_defaults.v1", "recommended_defaults.v2"]
+    },
+    "overrides": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "lid_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 1
+        },
+        "module_mismatch_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 1
+        },
+        "string_mismatch_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 1
+        },
+        "dc_wiring_stc_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 1
+        },
+        "ac_wiring_nominal_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 1
+        },
+        "annual_degradation_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 1
+        },
+        "operating_year": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "unavailability_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "soiling": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "annual_fraction": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "monthly_fractions": {
+              "type": "array",
+              "minItems": 12,
+              "maxItems": 12,
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          },
+          "not": {
+            "required": [
+              "annual_fraction",
+              "monthly_fractions"
+            ]
+          }
+        },
+        "transformer": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "reference_power_w": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "iron_fraction": {
+              "type": "number",
+              "minimum": 0,
+              "exclusiveMaximum": 1
+            },
+            "copper_fraction": {
+              "type": "number",
+              "minimum": 0,
+              "exclusiveMaximum": 1
+            }
+          }
+        },
+        "circuit_overrides": {
+          "type": "object",
+          "properties": {
+            "binding": {
+              "type": "object",
+              "properties": {
+                "electrical_revision_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "topology_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "electrical_revision_id"
+              ],
+              "additionalProperties": false
+            },
+            "inverters": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "dc_wiring_stc_fraction": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMaximum": 1
+                  },
+                  "module_quality_fraction": {
+                    "type": "number",
+                    "exclusiveMinimum": -1,
+                    "exclusiveMaximum": 1
+                  },
+                  "ac_wiring": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "mode": {
+                            "const": "percent"
+                          },
+                          "loss_fraction": {
+                            "type": "number",
+                            "minimum": 0,
+                            "exclusiveMaximum": 1
+                          },
+                          "reference": {
+                            "const": "rated_ac"
+                          }
+                        },
+                        "required": [
+                          "mode",
+                          "loss_fraction",
+                          "reference"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "mode": {
+                            "const": "percent"
+                          },
+                          "loss_fraction": {
+                            "type": "number",
+                            "minimum": 0,
+                            "exclusiveMaximum": 1
+                          },
+                          "reference": {
+                            "const": "custom"
+                          },
+                          "reference_power_w": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          }
+                        },
+                        "required": [
+                          "mode",
+                          "loss_fraction",
+                          "reference",
+                          "reference_power_w"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "mode": {
+                            "const": "cable"
+                          },
+                          "length_one_way_m": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          },
+                          "cross_section_per_phase_mm2": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          },
+                          "material": {
+                            "enum": [
+                              "copper",
+                              "aluminium"
+                            ]
+                          },
+                          "line_voltage_v": {
+                            "type": "number",
+                            "exclusiveMinimum": 0
+                          },
+                          "conductor_temperature_c": {
+                            "type": "number",
+                            "minimum": 0,
+                            "maximum": 100
+                          },
+                          "phase_system": {
+                            "const": "balanced_three_phase"
+                          },
+                          "power_factor": {
+                            "const": 1
+                          }
+                        },
+                        "required": [
+                          "mode",
+                          "length_one_way_m",
+                          "cross_section_per_phase_mm2",
+                          "material",
+                          "line_voltage_v",
+                          "conductor_temperature_c",
+                          "phase_system",
+                          "power_factor"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                },
+                "required": [],
+                "additionalProperties": false,
+                "minProperties": 1
+              },
+              "propertyNames": {
+                "minLength": 1
+              }
+            },
+            "mppts": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "dc_wiring_stc_fraction": {
+                    "type": "number",
+                    "minimum": 0,
+                    "exclusiveMaximum": 1
+                  },
+                  "module_quality_fraction": {
+                    "type": "number",
+                    "exclusiveMinimum": -1,
+                    "exclusiveMaximum": 1
+                  }
+                },
+                "required": [],
+                "additionalProperties": false,
+                "minProperties": 1
+              },
+              "propertyNames": {
+                "minLength": 1
+              }
+            }
+          },
+          "required": [
+            "binding"
+          ],
+          "additionalProperties": false
+        },
+        "plant_ac_wiring": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "mode": {
+                  "const": "percent"
+                },
+                "loss_fraction": {
+                  "type": "number",
+                  "minimum": 0,
+                  "exclusiveMaximum": 1
+                },
+                "reference": {
+                  "const": "rated_ac"
+                }
+              },
+              "required": [
+                "mode",
+                "loss_fraction",
+                "reference"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "mode": {
+                  "const": "percent"
+                },
+                "loss_fraction": {
+                  "type": "number",
+                  "minimum": 0,
+                  "exclusiveMaximum": 1
+                },
+                "reference": {
+                  "const": "custom"
+                },
+                "reference_power_w": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                }
+              },
+              "required": [
+                "mode",
+                "loss_fraction",
+                "reference",
+                "reference_power_w"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "mode": {
+                  "const": "cable"
+                },
+                "length_one_way_m": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "cross_section_per_phase_mm2": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "material": {
+                  "enum": [
+                    "copper",
+                    "aluminium"
+                  ]
+                },
+                "line_voltage_v": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "conductor_temperature_c": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "phase_system": {
+                  "const": "balanced_three_phase"
+                },
+                "power_factor": {
+                  "const": 1
+                }
+              },
+              "required": [
+                "mode",
+                "length_one_way_m",
+                "cross_section_per_phase_mm2",
+                "material",
+                "line_voltage_v",
+                "conductor_temperature_c",
+                "phase_system",
+                "power_factor"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      }
+    }
+  }
+}

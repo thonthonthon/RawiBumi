@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/pv-field-layout-impact-report.schema.json",
+  "title": "OpenSIMPV PVFieldLayoutImpactReport v0.1",
+  "description": "Read-only report describing generated PV field identity changes and resulting stale electrical string references after an explicit rebuild.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "impact_version",
+    "module_identity_version",
+    "pv_field_id",
+    "before_scene_revision_id",
+    "after_scene_revision_id",
+    "retained_module_ids",
+    "moved_modules",
+    "removed_module_ids",
+    "added_module_ids",
+    "invalidated_module_ids",
+    "affected_strings",
+    "topology_status",
+    "electrical_design_mutated",
+    "impact_hash"
+  ],
+  "properties": {
+    "schema_name": {"const": "PVFieldLayoutImpactReport"},
+    "schema_version": {"const": "0.1"},
+    "impact_version": {"type": "string", "minLength": 1},
+    "module_identity_version": {"type": "string", "minLength": 1},
+    "pv_field_id": {"type": "string", "minLength": 1},
+    "before_scene_revision_id": {"type": "string"},
+    "after_scene_revision_id": {"type": "string"},
+    "retained_module_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "moved_modules": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "slot_key",
+          "old_module_instance_id",
+          "new_module_instance_id",
+          "old_position_xy_m",
+          "new_position_xy_m",
+          "identity_preserved"
+        ],
+        "properties": {
+          "slot_key": {"type": ["string", "null"]},
+          "old_module_instance_id": {"type": "string", "minLength": 1},
+          "new_module_instance_id": {"type": "string", "minLength": 1},
+          "old_position_xy_m": {
+            "type": "array",
+            "prefixItems": [{"type": "number"}, {"type": "number"}],
+            "items": false,
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "new_position_xy_m": {
+            "type": "array",
+            "prefixItems": [{"type": "number"}, {"type": "number"}],
+            "items": false,
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "identity_preserved": {"type": "boolean"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "removed_module_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "added_module_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "invalidated_module_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "affected_strings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "string_id",
+          "referenced_invalidated_module_ids",
+          "unresolved_module_instance_ids",
+          "membership_status"
+        ],
+        "properties": {
+          "string_id": {"type": "string", "minLength": 1},
+          "referenced_invalidated_module_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "unresolved_module_instance_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "membership_status": {"const": "stale_reference"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "topology_status": {"enum": ["unchanged", "review_required"]},
+    "electrical_design_mutated": {"const": false},
+    "impact_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

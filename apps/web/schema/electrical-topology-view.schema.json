@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/electrical-topology-view.schema.json",
+  "title": "OpenSIMPV ElectricalTopologyView v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "electrical_revision_id",
+    "pcc_definition",
+    "inverters",
+    "unassigned_strings"
+  ],
+  "properties": {
+    "schema_name": {"const": "ElectricalTopologyView"},
+    "schema_version": {"const": "0.1"},
+    "electrical_revision_id": {"type": "string"},
+    "pcc_definition": {"type": "object"},
+    "inverters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "inverter_instance_id",
+          "name",
+          "inverter_definition_revision_id",
+          "enabled",
+          "mppts"
+        ],
+        "properties": {
+          "inverter_instance_id": {"type": "string"},
+          "name": {"type": "string"},
+          "inverter_definition_revision_id": {"type": "string"},
+          "enabled": {"type": "boolean"},
+          "mppts": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "mppt_instance_id",
+                "index",
+                "enabled",
+                "input_count",
+                "strings"
+              ],
+              "properties": {
+                "mppt_instance_id": {"type": "string"},
+                "index": {"type": "integer", "minimum": 1},
+                "enabled": {"type": "boolean"},
+                "input_count": {"type": ["integer", "null"], "minimum": 1},
+                "strings": {
+                  "type": "array",
+                  "items": {"$ref": "#/$defs/string_summary"}
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "unassigned_strings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/string_summary"}
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "string_summary": {
+      "type": "object",
+      "required": ["string_id", "name", "module_count", "enabled"],
+      "properties": {
+        "string_id": {"type": "string"},
+        "name": {"type": "string"},
+        "module_count": {"type": "integer", "minimum": 1},
+        "enabled": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

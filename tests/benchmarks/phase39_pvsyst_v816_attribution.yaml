@@ -1,0 +1,458 @@
+schema_version: "0.1"
+campaign_id: P39-PVSYST-V816-001
+title: PVsyst 8.1.6 unshaded attribution campaign
+status: framework_ready_acceptance_blocked_external_inputs
+
+reference_family:
+  family_id: SYS-PVSYST-V816-UNSHADED
+  software: PVsyst
+  software_version: "8.1.6"
+  project: Sampel for OpenSimPV
+  site_name: Home
+  timezone: UTC+07:00
+  weather_source: Meteonorm 9.0 dll, Sat=100% - Synthetic
+  report_date: "2026-09-23"
+  source_basis: user_supplied_pvsyst_reports
+  source_pages_verified:
+    main_results: 4
+    loss_diagram: 5
+  interval_weather_export_available: false
+  detailed_timestep_result_export_available: false
+
+comparison_policy:
+  external_agreement_is_evidence_not_truth: true
+  stage_order:
+    - weather
+    - poa_transposition
+    - iam_effective_irradiance
+    - module_nominal
+    - irradiance_level
+    - temperature
+    - module_quality
+    - mismatch
+    - dc_wiring
+    - array_virtual_mpp
+    - inverter_conversion
+    - inverter_clipping
+    - grid_energy
+    - performance_ratio
+  first_divergence_controls_attribution: true
+  later_stage_total_cannot_override_earlier_failure: true
+  pvsyst_e_array_is_acceptance_target: false
+  pvsyst_e_array_reason: >
+    PVsyst EArray includes inverter operating-point displacement. The present
+    OpenSIMPV chain keeps array virtual MPP and AC clipping explicit and does not
+    back-propagate inverter clipping into a synthetic DC operating point.
+  pvsyst_e_arr_mpp_mapping:
+    opensimpv_metric: array_virtual_mpp_kwh
+    status: comparable
+  pvsyst_e_grid_mapping:
+    opensimpv_metric: e_grid_kwh
+    status: comparable
+  performance_ratio_formula: E_Grid / (GlobInc * PNomArray)
+
+  acceptance_tolerances:
+    weather_annual:
+      relative: 0.001
+      absolute_kwh_m2: 0.2
+    poa_annual:
+      relative: 0.01
+      absolute_kwh_m2: 1.0
+    effective_irradiance_annual:
+      relative: 0.01
+      absolute_kwh_m2: 1.0
+    array_nominal_energy:
+      relative: 0.01
+      absolute_kwh: 25.0
+    stage_loss_percentage_points:
+      absolute: 0.50
+    array_virtual_mpp:
+      relative: 0.02
+      absolute_kwh: 50.0
+    grid_energy:
+      relative: 0.03
+      absolute_kwh: 50.0
+    performance_ratio:
+      absolute: 0.03
+    specific_yield:
+      relative: 0.03
+      absolute_kwh_kwp: 10.0
+    monthly_grid:
+      rms_relative: 0.03
+      maximum_absolute_relative: 0.05
+
+readiness_policy:
+  hourly:
+    requires_same_interval_weather_series: true
+    requires_verified_subhourly_perez_coefficients: false
+  minute:
+    requires_same_interval_weather_series: true
+    requires_verified_subhourly_perez_coefficients: true
+  interval_attribution:
+    requires_pvsyst_detailed_timestep_export: true
+  source_report_verification_required: true
+
+known_differences:
+  - difference_id: KD-PEREZ-SUBHOURLY-COEFFICIENTS
+    applies_to: minute
+    classification: external_coefficient_data_blocker
+    status: unresolved
+    description: >
+      Exact PVsyst 8.1 production Perez coefficients are timestep-specific and
+      are not publicly available in the current documentation.
+  - difference_id: KD-IAM-TCUBIC
+    applies_to: all
+    classification: known_implementation_difference
+    status: attribute_separately
+    description: >
+      OpenSIMPV executes the PAN tabulated IAM through its versioned cubic
+      interpolation path and does not claim exact PVsyst TCubicProfile internals.
+  - difference_id: KD-OND-TCUBIC
+    applies_to: all
+    classification: known_implementation_approximation
+    status: attribute_separately
+    description: >
+      OpenSIMPV inverter efficiency interpolation is versioned and bounded but
+      is not claimed to reproduce PVsyst OND TCubicProfile exactly.
+  - difference_id: KD-THERMAL-HISTORY-EDGE
+    applies_to: all
+    classification: compatibility_uncertainty
+    status: attribute_separately
+    description: >
+      Exact PVsyst handling when the documented 3*tau_max thermal history
+      cutoff is shorter than the simulation step is not publicly specified.
+  - difference_id: KD-EARRAY-DC-FEEDBACK
+    applies_to: all
+    classification: architectural_model_difference
+    status: excluded_from_acceptance_target
+    description: >
+      PVsyst EArray includes inverter operating-point displacement, while the
+      present OpenSIMPV chain does not back-propagate inverter clipping into DC.
+  - difference_id: KD-PVSYST-MN9-SERIES
+    applies_to: all
+    classification: external_input_blocker
+    status: unresolved
+    description: >
+      The PVsyst reports identify integrated Meteonorm 9.0 weather but do not
+      contain the interval weather series needed for same-input execution.
+
+cases:
+  VC0:
+    benchmark_id: SYS-PVSYST-U01-H
+    report_filename: Sampel for OpenSimPV_Project.VC0-Report.pdf
+    variant: NoLoss-Hourly
+    simulation_timestep_seconds: 3600
+    strings: 12
+    modules_total: 216
+    dc_nameplate_kwp_exact: 118.8
+    dc_ac_ratio: 1.19
+    report_verified: true
+    targets:
+      annual:
+        glob_hor_kwh_m2: 1749.8
+        diff_hor_kwh_m2: 860.20
+        ambient_temp_c: 28.04
+        glob_inc_kwh_m2: 1754.9
+        glob_eff_kwh_m2: 1748.7
+        e_array_kwh: 183903
+        e_grid_kwh: 181376
+        specific_yield_kwh_kwp: 1527
+        pr: 0.8700
+      monthly_e_array_kwh: [12274, 11692, 14930, 15339, 16723, 16772, 17383, 18284, 18064, 16959, 13421, 12063]
+      monthly_e_grid_kwh: [12099, 11528, 14726, 15129, 16497, 16547, 17149, 18038, 17823, 16722, 13227, 11891]
+      loss_diagram:
+        array_nominal_energy_kwh: 207868
+        irradiance_level_loss_pct: -0.04
+        temperature_loss_pct: -9.44
+        module_quality_effect_pct: 0.75
+        mismatch_loss_pct: -2.00
+        dc_wiring_loss_pct: -1.01
+        array_virtual_mpp_kwh: 183905
+        inverter_conversion_loss_pct: -1.37
+        inverter_clipping_loss_pct: 0.00
+        max_input_current_loss_pct: 0.00
+        over_nominal_voltage_loss_pct: 0.00
+        power_threshold_loss_pct: 0.00
+        voltage_threshold_loss_pct: 0.00
+        night_consumption_loss_pct: 0.00
+        inverter_output_kwh: 181376
+
+  VC1:
+    benchmark_id: SYS-PVSYST-U01-M
+    report_filename: Sampel for OpenSimPV_Project.VC1-Report.pdf
+    variant: NoLoss-Minutely
+    simulation_timestep_seconds: 60
+    strings: 12
+    modules_total: 216
+    dc_nameplate_kwp_exact: 118.8
+    dc_ac_ratio: 1.19
+    report_verified: true
+    targets:
+      annual:
+        glob_hor_kwh_m2: 1749.9
+        diff_hor_kwh_m2: 860.17
+        ambient_temp_c: 28.04
+        glob_inc_kwh_m2: 1759.4
+        glob_eff_kwh_m2: 1753.8
+        e_array_kwh: 183962
+        e_grid_kwh: 181442
+        specific_yield_kwh_kwp: 1527
+        pr: 0.8681
+      monthly_e_array_kwh: [12356, 11623, 14878, 15255, 16687, 16699, 17521, 18374, 18074, 16997, 13444, 12053]
+      monthly_e_grid_kwh: [12180, 11458, 14671, 15045, 16461, 16474, 17286, 18128, 17833, 16770, 13257, 11880]
+      loss_diagram:
+        array_nominal_energy_kwh: 208470
+        irradiance_level_loss_pct: -0.05
+        temperature_loss_pct: -9.61
+        module_quality_effect_pct: 0.75
+        mismatch_loss_pct: -2.00
+        dc_wiring_loss_pct: -1.05
+        array_virtual_mpp_kwh: 184003
+        inverter_conversion_loss_pct: -1.36
+        inverter_clipping_loss_pct: -0.02
+        max_input_current_loss_pct: 0.00
+        over_nominal_voltage_loss_pct: 0.00
+        power_threshold_loss_pct: 0.00
+        voltage_threshold_loss_pct: 0.00
+        night_consumption_loss_pct: 0.00
+        inverter_output_kwh: 181442
+
+  VC2:
+    benchmark_id: SYS-PVSYST-U02-H
+    report_filename: Sampel for OpenSimPV_Project.VC2-Report.pdf
+    variant: NoLoss-Hourly
+    simulation_timestep_seconds: 3600
+    strings: 14
+    modules_total: 252
+    dc_nameplate_kwp_exact: 138.6
+    dc_ac_ratio: 1.39
+    report_verified: true
+    targets:
+      annual:
+        glob_hor_kwh_m2: 1749.8
+        diff_hor_kwh_m2: 860.20
+        ambient_temp_c: 28.04
+        glob_inc_kwh_m2: 1754.9
+        glob_eff_kwh_m2: 1748.7
+        e_array_kwh: 214271
+        e_grid_kwh: 211341
+        specific_yield_kwh_kwp: 1525
+        pr: 0.8689
+      monthly_e_array_kwh: [14317, 13638, 17339, 17847, 19489, 19545, 20249, 21288, 21046, 19780, 15658, 14073]
+      monthly_e_grid_kwh: [14116, 13450, 17103, 17604, 19226, 19282, 19976, 21000, 20764, 19506, 15436, 13878]
+      loss_diagram:
+        array_nominal_energy_kwh: 242512
+        irradiance_level_loss_pct: -0.04
+        temperature_loss_pct: -9.44
+        module_quality_effect_pct: 0.75
+        mismatch_loss_pct: -2.00
+        dc_wiring_loss_pct: -1.01
+        array_virtual_mpp_kwh: 214555
+        inverter_conversion_loss_pct: -1.36
+        inverter_clipping_loss_pct: -0.13
+        max_input_current_loss_pct: 0.00
+        over_nominal_voltage_loss_pct: 0.00
+        power_threshold_loss_pct: 0.00
+        voltage_threshold_loss_pct: 0.00
+        night_consumption_loss_pct: 0.00
+        inverter_output_kwh: 211341
+
+  VC3:
+    benchmark_id: SYS-PVSYST-U02-M
+    report_filename: Sampel for OpenSimPV_Project.VC3-Report.pdf
+    variant: NoLoss-Minutely
+    simulation_timestep_seconds: 60
+    strings: 14
+    modules_total: 252
+    dc_nameplate_kwp_exact: 138.6
+    dc_ac_ratio: 1.39
+    report_verified: true
+    targets:
+      annual:
+        glob_hor_kwh_m2: 1749.9
+        diff_hor_kwh_m2: 860.17
+        ambient_temp_c: 28.04
+        glob_inc_kwh_m2: 1759.4
+        glob_eff_kwh_m2: 1753.8
+        e_array_kwh: 213896
+        e_grid_kwh: 210976
+        specific_yield_kwh_kwp: 1522
+        pr: 0.8652
+      monthly_e_array_kwh: [14395, 13506, 17234, 17650, 19398, 19436, 20394, 21356, 21009, 19790, 15676, 14053]
+      monthly_e_grid_kwh: [14193, 13318, 16996, 17407, 19135, 19172, 20118, 21069, 20727, 19525, 15461, 13855]
+      loss_diagram:
+        array_nominal_energy_kwh: 243215
+        irradiance_level_loss_pct: -0.05
+        temperature_loss_pct: -9.61
+        module_quality_effect_pct: 0.75
+        mismatch_loss_pct: -2.00
+        dc_wiring_loss_pct: -1.05
+        array_virtual_mpp_kwh: 214671
+        inverter_conversion_loss_pct: -1.36
+        inverter_clipping_loss_pct: -0.37
+        max_input_current_loss_pct: 0.00
+        over_nominal_voltage_loss_pct: 0.00
+        power_threshold_loss_pct: 0.00
+        voltage_threshold_loss_pct: 0.00
+        night_consumption_loss_pct: 0.00
+        inverter_output_kwh: 210976
+
+  VC4:
+    benchmark_id: SYS-PVSYST-U03-H
+    report_filename: Sampel for OpenSimPV_Project.VC4-Report.pdf
+    variant: NoLoss-Hourly
+    simulation_timestep_seconds: 3600
+    strings: 16
+    modules_total: 288
+    dc_nameplate_kwp_exact: 158.4
+    dc_ac_ratio: 1.58
+    report_verified: true
+    targets:
+      annual:
+        glob_hor_kwh_m2: 1749.8
+        diff_hor_kwh_m2: 860.20
+        ambient_temp_c: 28.04
+        glob_inc_kwh_m2: 1754.9
+        glob_eff_kwh_m2: 1748.7
+        e_array_kwh: 240492
+        e_grid_kwh: 237207
+        specific_yield_kwh_kwp: 1498
+        pr: 0.8534
+      monthly_e_array_kwh: [16280, 15478, 19382, 19925, 21846, 21886, 22522, 23526, 23490, 22261, 17851, 16046]
+      monthly_e_grid_kwh: [16053, 15266, 19119, 19654, 21550, 21590, 22217, 23206, 23173, 21952, 17601, 15825]
+      loss_diagram:
+        array_nominal_energy_kwh: 277157
+        irradiance_level_loss_pct: -0.04
+        temperature_loss_pct: -9.44
+        module_quality_effect_pct: 0.75
+        mismatch_loss_pct: -2.05
+        dc_wiring_loss_pct: -1.01
+        array_virtual_mpp_kwh: 245081
+        inverter_conversion_loss_pct: -1.34
+        inverter_clipping_loss_pct: -1.90
+        max_input_current_loss_pct: 0.00
+        over_nominal_voltage_loss_pct: 0.00
+        power_threshold_loss_pct: 0.00
+        voltage_threshold_loss_pct: 0.00
+        night_consumption_loss_pct: 0.00
+        inverter_output_kwh: 237207
+
+  VC5:
+    benchmark_id: SYS-PVSYST-U03-M
+    report_filename: Sampel for OpenSimPV_Project.VC5-Report.pdf
+    variant: NoLoss-Minutely
+    simulation_timestep_seconds: 60
+    strings: 16
+    modules_total: 288
+    dc_nameplate_kwp_exact: 158.4
+    dc_ac_ratio: 1.58
+    report_verified: true
+    targets:
+      annual:
+        glob_hor_kwh_m2: 1749.9
+        diff_hor_kwh_m2: 860.17
+        ambient_temp_c: 28.04
+        glob_inc_kwh_m2: 1759.4
+        glob_eff_kwh_m2: 1753.8
+        e_array_kwh: 239232
+        e_grid_kwh: 235970
+        specific_yield_kwh_kwp: 1490
+        pr: 0.8467
+      monthly_e_array_kwh: [16259, 15183, 19163, 19492, 21604, 21688, 22821, 23737, 23355, 22157, 17792, 15983]
+      monthly_e_grid_kwh: [16034, 14973, 18899, 19225, 21311, 21393, 22511, 23417, 23040, 21859, 17549, 15760]
+      loss_diagram:
+        array_nominal_energy_kwh: 277960
+        irradiance_level_loss_pct: -0.05
+        temperature_loss_pct: -9.61
+        module_quality_effect_pct: 0.75
+        mismatch_loss_pct: -2.05
+        dc_wiring_loss_pct: -1.05
+        array_virtual_mpp_kwh: 245213
+        inverter_conversion_loss_pct: -1.33
+        inverter_clipping_loss_pct: -2.47
+        max_input_current_loss_pct: 0.00
+        over_nominal_voltage_loss_pct: 0.00
+        power_threshold_loss_pct: 0.00
+        voltage_threshold_loss_pct: 0.00
+        night_consumption_loss_pct: 0.00
+        inverter_output_kwh: 235970
+
+  VC6:
+    benchmark_id: SYS-PVSYST-U04-H
+    report_filename: Sampel for OpenSimPV_Project.VC6-Report.pdf
+    variant: NoLoss-Hourly
+    simulation_timestep_seconds: 3600
+    strings: 18
+    modules_total: 324
+    dc_nameplate_kwp_exact: 178.2
+    dc_ac_ratio: 1.78
+    report_verified: true
+    targets:
+      annual:
+        glob_hor_kwh_m2: 1749.8
+        diff_hor_kwh_m2: 860.20
+        ambient_temp_c: 28.04
+        glob_inc_kwh_m2: 1754.9
+        glob_eff_kwh_m2: 1748.7
+        e_array_kwh: 261488
+        e_grid_kwh: 257919
+        specific_yield_kwh_kwp: 1447
+        pr: 0.8248
+      monthly_e_array_kwh: [17963, 17148, 21095, 21623, 23576, 23674, 24217, 25169, 25208, 24183, 19754, 17879]
+      monthly_e_grid_kwh: [17714, 16913, 20809, 21328, 23257, 23353, 23889, 24827, 24867, 23848, 19480, 17635]
+      loss_diagram:
+        array_nominal_energy_kwh: 311802
+        irradiance_level_loss_pct: -0.04
+        temperature_loss_pct: -9.44
+        module_quality_effect_pct: 0.75
+        mismatch_loss_pct: -2.05
+        dc_wiring_loss_pct: -1.01
+        array_virtual_mpp_kwh: 275716
+        inverter_conversion_loss_pct: -1.29
+        inverter_clipping_loss_pct: -5.23
+        max_input_current_loss_pct: 0.00
+        over_nominal_voltage_loss_pct: 0.00
+        power_threshold_loss_pct: 0.00
+        voltage_threshold_loss_pct: 0.00
+        night_consumption_loss_pct: 0.00
+        inverter_output_kwh: 257919
+
+  VC7:
+    benchmark_id: SYS-PVSYST-U04-M
+    report_filename: Sampel for OpenSimPV_Project.VC7-Report.pdf
+    variant: NoLoss-Minutely
+    simulation_timestep_seconds: 60
+    strings: 18
+    modules_total: 324
+    dc_nameplate_kwp_exact: 178.2
+    dc_ac_ratio: 1.78
+    report_verified: true
+    targets:
+      annual:
+        glob_hor_kwh_m2: 1749.9
+        diff_hor_kwh_m2: 860.17
+        ambient_temp_c: 28.04
+        glob_inc_kwh_m2: 1759.4
+        glob_eff_kwh_m2: 1753.8
+        e_array_kwh: 258559
+        e_grid_kwh: 255039
+        specific_yield_kwh_kwp: 1431
+        pr: 0.8135
+      monthly_e_array_kwh: [17827, 16575, 20693, 20899, 23211, 23280, 24545, 25481, 24999, 23893, 19504, 17652]
+      monthly_e_grid_kwh: [17582, 16347, 20409, 20614, 22896, 22964, 24212, 25136, 24662, 23571, 19238, 17408]
+      loss_diagram:
+        array_nominal_energy_kwh: 312705
+        irradiance_level_loss_pct: -0.05
+        temperature_loss_pct: -9.61
+        module_quality_effect_pct: 0.75
+        mismatch_loss_pct: -2.05
+        dc_wiring_loss_pct: -1.05
+        array_virtual_mpp_kwh: 275864
+        inverter_conversion_loss_pct: -1.27
+        inverter_clipping_loss_pct: -6.35
+        max_input_current_loss_pct: 0.00
+        over_nominal_voltage_loss_pct: 0.00
+        power_threshold_loss_pct: 0.00
+        voltage_threshold_loss_pct: 0.00
+        night_consumption_loss_pct: 0.00
+        inverter_output_kwh: 255039

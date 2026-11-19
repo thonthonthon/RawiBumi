@@ -1,0 +1,9 @@
+pytest>=8,<10
+pikepdf==10.18.1
+jsonschema>=4.22,<5
+PyYAML>=6,<7
+pvlib==0.15.2
+pyarrow>=18,<23
+shapely==2.1.2
+packaging==26.3
+pytest-xdist==3.8.0

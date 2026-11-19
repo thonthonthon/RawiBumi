@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/circuit-loss-resolution.schema.json",
+  "title": "Circuit loss inputs and resolved run evidence",
+  "type": "object",
+  "properties": {
+    "schema_name": {
+      "const": "CircuitLossResolution"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "active": {
+      "type": "boolean"
+    },
+    "requested_overrides": {
+      "type": "object"
+    },
+    "binding": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "circuits": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object"
+      }
+    },
+    "inverters": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object"
+      }
+    },
+    "plant_ac_wiring": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "ac_summary": {
+      "type": "object"
+    }
+  },
+  "required": [
+    "schema_name",
+    "schema_version",
+    "active",
+    "requested_overrides",
+    "binding",
+    "circuits",
+    "inverters",
+    "plant_ac_wiring"
+  ],
+  "additionalProperties": false
+}

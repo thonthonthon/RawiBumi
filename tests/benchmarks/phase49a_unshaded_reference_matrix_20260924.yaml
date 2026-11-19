@@ -1,0 +1,167 @@
+schema_version: '0.1'
+oracle_id: P49A-UNSHADED-PVSYST816-20260924
+status: source_verified_external_files_design_reconstruction_partial
+software:
+  name: PVsyst
+  version: 8.1.6
+  simulation_step_seconds: 3600
+source_project:
+  project: Sampel for OpenSimPV_Project_Var2.PRJ
+  site: Home_MN90.SIT
+  weather: Home_MN90_SYN_1MIN.MET
+  weather_description: Home;Meteonorm 9.0 dll, Sat=100%;Synthetic
+  source_files_committed: false
+baseline_reuse:
+  site:
+    lat: -6.4245
+    lon: 106.8307
+    elevation_m: 82
+    timezone: UTC+07:00
+  module:
+    model: JKM550M-72HL4-V
+    unit_wp: 550
+    modules_per_string: 18
+  inverter:
+    model: SUN2000-100KTL-M1
+    nominal_ac_kw: 100
+  basis: Phase-3 accepted benchmark contract
+provenance:
+  case_family: user_declared
+  size_ladder: inferred from shared Phase-3 components plus EArrNom/GlobEff scaling
+  orientation_angles: not recoverable from aggregate CSV
+  orientation_string_mppt_allocation: not recoverable from aggregate CSV
+  external_agreement_is_evidence_not_truth: true
+  redistribute_uploaded_csv: false
+  external_csv_balance_tolerance_kw: 0.02
+  external_csv_balance_tolerance_basis: maximum observed source rounding residual below 0.016 kW after accounting for MixLoss where present
+invariants:
+  same_horizontal_weather_all_cases: true
+  vc0_vc3_same_aggregate_poa: true
+  vc4_vc7_same_aggregate_poa: false
+  vc4_vc7_poa_range_kwh_m2: 1.3284094
+  vc4_vc7_interpretation: orientation weighting changes slightly across the loading ladder; do not attribute all inter-case energy change to DC/AC ratio
+  vc4_vc8_same_aggregate_poa: true
+  vc8_e_arr_mpp_equals_4x_vc4_within_kwh: 0.001
+  vc8_vc4_divergence_stage: after EArrMPP at inverter operating-point/clipping boundary
+  vc8_ground_use:
+    opensimpv_role: exercise ground support-surface semantics plus multi-inverter topology
+    pvsyst_oracle_scope: unshaded electrical/yield reference; no 3D scene-dependent ground-vs-roof physics claim
+    condition: roof/ground distinction is intentionally isolated from shading and structural geometry in this tranche
+cases:
+  VC0:
+    file: Sampel for OpenSimPV_Project_Var2_VC0_HourlyRes_0.CSV
+    sha256: 24049f7aa25e33e0f6e578a2000ee1b16ddef2fd5ee4766285932c78524321aa
+    bytes: 3785836
+    rows: 8760
+    columns: 97
+    simulation_date: 24/09/26 09h47
+    family: two_orientation_one_inverter
+    configuration: {modules: 216, strings_at_18_modules: 12, inverters: 1, dc_kwp: 118.8, ac_nominal_kw: 100.0, dc_ac: 1.188, reconstruction: partial_pending_orientation_topology_metadata}
+    channels: {MixLoss: true, ILPmxSH: true}
+    annual: {glob_hor_kwh_m2: 1749.8706369, diff_hor_kwh_m2: 860.176867, glob_inc_kwh_m2: 1687.513331, glob_eff_kwh_m2: 1681.1827969, e_arr_nom_kwh: 199841.856, mix_loss_kwh: 955.2841, e_arr_mpp_kwh: 176530.5781, e_array_kwh: 176492.5821, inv_loss_kwh: 2441.2981, il_pmax_kwh: 0.0, ilpmxsh_kwh: 38.001, e_grid_kwh: 174089.2632, specific_yield_kwh_kwp: 1465.3978, pr: 0.868377, max_grid_kw: 106.47}
+    monthly_e_grid_kwh: [13177.8771, 11938.657, 14420.5409, 13853.98, 14324.0329, 13867.7504, 14757.9168, 16224.9339, 17015.5797, 17111.4198, 14258.1883, 13138.3864]
+    monthly_e_arr_mpp_kwh: [13371.1755, 12117.2137, 14631.026, 14048.3805, 14521.6651, 14057.7585, 14958.4819, 16443.3439, 17243.8699, 17345.1384, 14462.0585, 13330.4662]
+  VC1:
+    file: Sampel for OpenSimPV_Project_Var2_VC1_HourlyRes_0.CSV
+    sha256: 9c30af39444561d39c63c4c628123e0b2112e96482c13a64149c7fdfd4606dfe
+    bytes: 3787045
+    rows: 8760
+    columns: 97
+    simulation_date: 24/09/26 09h46
+    family: two_orientation_one_inverter
+    configuration: {modules: 252, strings_at_18_modules: 14, inverters: 1, dc_kwp: 138.6, ac_nominal_kw: 100.0, dc_ac: 1.386, reconstruction: partial_pending_orientation_topology_metadata}
+    channels: {MixLoss: true, ILPmxSH: true}
+    annual: {glob_hor_kwh_m2: 1749.8706369, diff_hor_kwh_m2: 860.176867, glob_inc_kwh_m2: 1687.513331, glob_eff_kwh_m2: 1681.1827969, e_arr_nom_kwh: 233148.7957, mix_loss_kwh: 1114.4983, e_arr_mpp_kwh: 205952.4036, e_array_kwh: 205486.9766, inv_loss_kwh: 3249.7858, il_pmax_kwh: 75.6451, ilpmxsh_kwh: 389.778, e_grid_kwh: 202702.5727, specific_yield_kwh_kwp: 1462.5005, pr: 0.8666601, max_grid_kw: 110.0}
+    monthly_e_grid_kwh: [15308.224, 13853.3522, 16739.329, 16140.1974, 16708.6426, 16176.6116, 17215.1235, 18910.1046, 19829.419, 19915.9365, 16610.4947, 15295.1376]
+    monthly_e_arr_mpp_kwh: [15599.7216, 14136.74, 17069.5639, 16389.776, 16941.9332, 16400.7135, 17451.5614, 19183.9079, 20117.8381, 20236.0179, 16872.4183, 15552.2118]
+  VC2:
+    file: Sampel for OpenSimPV_Project_Var2_VC2_HourlyRes_0.CSV
+    sha256: 14152fd5bda9c109cf12c3e07ceec1c4be95ac1203ab880e88504643dabd05b9
+    bytes: 3790209
+    rows: 8760
+    columns: 97
+    simulation_date: 24/09/26 09h44
+    family: two_orientation_one_inverter
+    configuration: {modules: 288, strings_at_18_modules: 16, inverters: 1, dc_kwp: 158.4, ac_nominal_kw: 100.0, dc_ac: 1.584, reconstruction: partial_pending_orientation_topology_metadata}
+    channels: {MixLoss: true, ILPmxSH: true}
+    annual: {glob_hor_kwh_m2: 1749.8706369, diff_hor_kwh_m2: 860.176867, glob_inc_kwh_m2: 1687.513331, glob_eff_kwh_m2: 1681.1827969, e_arr_nom_kwh: 266455.8338, mix_loss_kwh: 1273.0618, e_arr_mpp_kwh: 235253.9679, e_array_kwh: 231611.6359, inv_loss_kwh: 6780.1221, il_pmax_kwh: 2020.5103, ilpmxsh_kwh: 1622.0555, e_grid_kwh: 228473.8665, specific_yield_kwh_kwp: 1442.3855, pr: 0.8547402, max_grid_kw: 110.0}
+    monthly_e_grid_kwh: [17102.9687, 15497.0058, 18711.2125, 18166.0984, 19023.6165, 18458.8129, 19634.7522, 21467.0517, 22287.6638, 22247.0177, 18675.931, 17201.7353]
+    monthly_e_arr_mpp_kwh: [17819.1265, 16148.0094, 19498.0805, 18721.5996, 19352.3235, 18734.1151, 19934.46, 21913.2573, 22980.1207, 23115.0547, 19272.9339, 17764.8867]
+  VC3:
+    file: Sampel for OpenSimPV_Project_Var2_VC3_HourlyRes_0.CSV
+    sha256: 0b0adc5ee98ffe71b9adae55f87278fc7c84860aae7df1db348d5767fa7ed51c
+    bytes: 3792818
+    rows: 8760
+    columns: 97
+    simulation_date: 24/09/26 09h43
+    family: two_orientation_one_inverter
+    configuration: {modules: 324, strings_at_18_modules: 18, inverters: 1, dc_kwp: 178.2, ac_nominal_kw: 100.0, dc_ac: 1.782, reconstruction: partial_pending_orientation_topology_metadata}
+    channels: {MixLoss: true, ILPmxSH: true}
+    annual: {glob_hor_kwh_m2: 1749.8706369, diff_hor_kwh_m2: 860.176867, glob_inc_kwh_m2: 1687.513331, glob_eff_kwh_m2: 1681.1827969, e_arr_nom_kwh: 299762.7562, mix_loss_kwh: 1432.1964, e_arr_mpp_kwh: 264660.8192, e_array_kwh: 252766.6172, inv_loss_kwh: 15318.5567, il_pmax_kwh: 8582.8457, ilpmxsh_kwh: 3311.4433, e_grid_kwh: 249342.2567, specific_yield_kwh_kwp: 1399.227, pr: 0.829165, max_grid_kw: 110.0}
+    monthly_e_grid_kwh: [18624.355, 16863.6825, 20277.8337, 19715.442, 20997.8228, 20514.1164, 21803.6263, 23475.9053, 24069.1075, 23972.0531, 20283.7263, 18744.5858]
+    monthly_e_arr_mpp_kwh: [20046.5315, 18166.5585, 21935.3783, 21061.8691, 21771.37, 21075.9243, 22426.2763, 24652.4464, 25852.5876, 26004.4016, 21682.0217, 19985.4539]
+  VC4:
+    file: Sampel for OpenSimPV_Project_Var2_VC4_HourlyRes_0.CSV
+    sha256: 5202f5dbda3ddb3e947a9cb6dbe87aff0d0c35441293846c9369f23ef0e965e6
+    bytes: 3767626
+    rows: 8760
+    columns: 96
+    simulation_date: 24/09/26 09h56
+    family: multi_orientation_one_inverter
+    configuration: {modules: 216, strings_at_18_modules: 12, inverters: 1, dc_kwp: 118.8, ac_nominal_kw: 100.0, dc_ac: 1.188, reconstruction: partial_pending_orientation_topology_metadata}
+    channels: {MixLoss: false, ILPmxSH: true}
+    annual: {glob_hor_kwh_m2: 1749.8706369, diff_hor_kwh_m2: 860.176867, glob_inc_kwh_m2: 1692.8271174, glob_eff_kwh_m2: 1686.5000847, e_arr_nom_kwh: 200473.9195, mix_loss_kwh: null, e_arr_mpp_kwh: 177835.5518, e_array_kwh: 171746.5808, inv_loss_kwh: 8469.6499, il_pmax_kwh: 5013.568, ilpmxsh_kwh: 1075.3836, e_grid_kwh: 169365.8941, specific_yield_kwh_kwp: 1425.6388, pr: 0.8421645, max_grid_kw: 93.853}
+    monthly_e_grid_kwh: [12798.7734, 11568.1235, 13914.8705, 13451.0997, 14112.6209, 13722.9558, 14592.2281, 15862.6243, 16395.9163, 16452.2862, 13775.0896, 12719.3058]
+    monthly_e_arr_mpp_kwh: [13483.8553, 12179.5752, 14695.6842, 14180.6454, 14697.8614, 14242.1179, 15147.8135, 16618.5794, 17338.8106, 17413.0098, 14480.6369, 13356.9622]
+  VC5:
+    file: Sampel for OpenSimPV_Project_Var2_VC5_HourlyRes_0.CSV
+    sha256: 16bc40580ed8eab3b6d53af821b5aa868422bc5ab61408e1bfe64d000f74e02f
+    bytes: 3768788
+    rows: 8760
+    columns: 96
+    simulation_date: 24/09/26 09h57
+    family: multi_orientation_one_inverter
+    configuration: {modules: 252, strings_at_18_modules: 14, inverters: 1, dc_kwp: 138.6, ac_nominal_kw: 100.0, dc_ac: 1.386, reconstruction: partial_pending_orientation_topology_metadata}
+    channels: {MixLoss: false, ILPmxSH: true}
+    annual: {glob_hor_kwh_m2: 1749.8706369, diff_hor_kwh_m2: 860.176867, glob_inc_kwh_m2: 1692.0680356, glob_eff_kwh_m2: 1685.7405604, e_arr_nom_kwh: 233780.8154, mix_loss_kwh: null, e_arr_mpp_kwh: 207416.3629, e_array_kwh: 195866.8269, inv_loss_kwh: 14244.1754, il_pmax_kwh: 9479.2854, ilpmxsh_kwh: 2070.2412, e_grid_kwh: 193172.1612, specific_yield_kwh_kwp: 1393.7385, pr: 0.8236894, max_grid_kw: 97.898}
+    monthly_e_grid_kwh: [14576.4596, 13185.2282, 15824.3375, 15316.7315, 16172.9449, 15728.7173, 16734.753, 18116.8861, 18629.1313, 18666.1289, 15707.5188, 14513.3241]
+    monthly_e_arr_mpp_kwh: [15727.2971, 14206.6685, 17141.6347, 16537.5446, 17140.057, 16607.7288, 17665.1043, 19381.6007, 20224.643, 20311.4357, 16892.3315, 15580.317]
+  VC6:
+    file: Sampel for OpenSimPV_Project_Var2_VC6_HourlyRes_0.CSV
+    sha256: 71d81e46f49fa7e31233fc53ddf8d9368a6c173693966380503c7fb33aca8e70
+    bytes: 3768689
+    rows: 8760
+    columns: 96
+    simulation_date: 24/09/26 10h07
+    family: multi_orientation_one_inverter
+    configuration: {modules: 288, strings_at_18_modules: 16, inverters: 1, dc_kwp: 158.4, ac_nominal_kw: 100.0, dc_ac: 1.584, reconstruction: partial_pending_orientation_topology_metadata}
+    channels: {MixLoss: false, ILPmxSH: true}
+    annual: {glob_hor_kwh_m2: 1749.8706369, diff_hor_kwh_m2: 860.176867, glob_inc_kwh_m2: 1691.498708, glob_eff_kwh_m2: 1685.1706436, e_arr_nom_kwh: 267087.9371, mix_loss_kwh: null, e_arr_mpp_kwh: 236921.6435, e_array_kwh: 219940.3785, inv_loss_kwh: 19989.3528, il_pmax_kwh: 13918.5106, ilpmxsh_kwh: 3062.8241, e_grid_kwh: 216932.3145, specific_yield_kwh_kwp: 1369.5222, pr: 0.8096502, max_grid_kw: 101.93}
+    monthly_e_grid_kwh: [16350.5148, 14799.0454, 17730.1479, 17178.8279, 18229.2252, 17730.435, 18873.0152, 20367.0185, 20858.5968, 20876.0331, 17635.6193, 16303.8354]
+    monthly_e_arr_mpp_kwh: [17965.0282, 16228.5742, 19581.3464, 18888.4615, 19576.0224, 18967.3212, 20175.9663, 22137.5642, 23103.1185, 23202.4311, 19297.8641, 17797.9454]
+  VC7:
+    file: Sampel for OpenSimPV_Project_Var2_VC7_HourlyRes_0.CSV
+    sha256: 69506f699ff4f1e467c7a3282a3f28e78fae7c7a6159b7940ea5a3aab96c0929
+    bytes: 3768655
+    rows: 8760
+    columns: 96
+    simulation_date: 24/09/26 10h08
+    family: multi_orientation_one_inverter
+    configuration: {modules: 324, strings_at_18_modules: 18, inverters: 1, dc_kwp: 178.2, ac_nominal_kw: 100.0, dc_ac: 1.782, reconstruction: partial_pending_orientation_topology_metadata}
+    channels: {MixLoss: false, ILPmxSH: true}
+    annual: {glob_hor_kwh_m2: 1749.8706369, diff_hor_kwh_m2: 860.176867, glob_inc_kwh_m2: 1692.2367449, glob_eff_kwh_m2: 1685.9094843, e_arr_nom_kwh: 300605.5323, mix_loss_kwh: null, e_arr_mpp_kwh: 266558.6975, e_array_kwh: 243520.2335, inv_loss_kwh: 26354.069, il_pmax_kwh: 18903.0965, ilpmxsh_kwh: 4135.4324, e_grid_kwh: 240204.7578, specific_yield_kwh_kwp: 1347.9504, pr: 0.7965495, max_grid_kw: 105.95}
+    monthly_e_grid_kwh: [18076.5677, 16364.0219, 19572.6547, 18984.6936, 20271.0495, 19757.6825, 21022.2903, 22569.8792, 22999.4911, 23014.2342, 19516.7792, 18055.4139]
+    monthly_e_arr_mpp_kwh: [20211.6001, 18257.1921, 22028.8847, 21253.5492, 22028.0979, 21344.2024, 22702.7913, 24908.4226, 25990.9392, 26102.4509, 21708.1579, 20022.4092]
+  VC8:
+    file: Sampel for OpenSimPV_Project_Var2_VC8_HourlyRes_0.CSV
+    sha256: 620c2fe8e55c426d99783352ce261733f1d411cb8c974b7b7518229ef11dd039
+    bytes: 3752712
+    rows: 8760
+    columns: 96
+    simulation_date: 24/09/26 10h11
+    family: multi_orientation_multi_inverter_ground_semantic
+    configuration: {modules: 864, strings_at_18_modules: 48, inverters: 4, dc_kwp: 475.2, ac_nominal_kw: 400.0, dc_ac: 1.188, reconstruction: partial_pending_orientation_topology_metadata}
+    channels: {MixLoss: false, ILPmxSH: true}
+    annual: {glob_hor_kwh_m2: 1749.8706369, diff_hor_kwh_m2: 860.176867, glob_inc_kwh_m2: 1692.8271174, glob_eff_kwh_m2: 1686.5000847, e_arr_nom_kwh: 801895.3637, mix_loss_kwh: null, e_arr_mpp_kwh: 711342.2077, e_array_kwh: 711096.4677, inv_loss_kwh: 9992.0911, il_pmax_kwh: 11.185, ilpmxsh_kwh: 234.6169, e_grid_kwh: 701350.1026, specific_yield_kwh_kwp: 1475.9051, pr: 0.8718581, max_grid_kw: 423.61}
+    monthly_e_grid_kwh: [53133.7661, 47986.6677, 57919.414, 55922.2639, 57980.1374, 56183.4464, 59767.0962, 65576.7255, 68429.6956, 68703.1827, 57099.197, 52648.5101]
+    monthly_e_arr_mpp_kwh: [53935.4356, 48718.2564, 58782.7015, 56722.5801, 58791.4442, 56968.4691, 60591.2579, 66474.3263, 69355.2819, 69652.0652, 57922.5769, 53427.8126]

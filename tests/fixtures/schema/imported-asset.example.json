@@ -1,0 +1,18 @@
+{
+  "schema_name": "ImportedAsset",
+  "schema_version": "0.1",
+  "asset_id": "asset-pan-001",
+  "project_id": "proj-ref-001",
+  "filename": "synthetic.pan",
+  "media_type": "text/plain",
+  "asset_type": "pan",
+  "size_bytes": 123,
+  "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "storage_location": "private://asset-pan-001",
+  "uploaded_at": "2026-09-22T00:00:00Z",
+  "uploaded_by": "test",
+  "source_id": "src-pan-001",
+  "parser_version": "0.1",
+  "parse_status": "parsed",
+  "parse_log": []
+}

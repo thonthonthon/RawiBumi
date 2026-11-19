@@ -1,0 +1,110 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.python-version
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Node / TypeScript
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/
+.yarn-cache/
+.next/
+.nuxt/
+.svelte-kit/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# Environment / credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# IDE / editor
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.example.json
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs / runtime
+# All user data (projects, runs, imagery, weather, component library); never committed.
+var/
+# Unlicensed third-party climate data; never used, committed or published.
+# Windows download markers from copying files in.
+*:Zone.Identifier
+*.log
+logs/
+tmp/
+temp/
+.cache/
+
+# Python notebooks
+.ipynb_checkpoints/
+
+# Local databases
+*.sqlite
+*.sqlite3
+*.db
+
+# Simulation / generated results
+/results/
+simulation-output/
+simulation_outputs/
+*.parquet.tmp
+
+# User/project imports and potentially proprietary source data
+uploads/
+private-data/
+local-data/
+user-data/
+
+# Local object storage / service state
+data/
+storage/
+minio-data/
+postgres-data/
+redis-data/
+
+# Docker/local overrides
+docker-compose.override.yml
+
+# Test artifacts
+.pytest_cache/
+test-results/
+playwright-report/
+
+# Packaging
+*.tgz
+!apps/web/.env.demo
+!apps/web/ui-a/.env.demo
+
+# Local AI orchestration workspace
+.ai/

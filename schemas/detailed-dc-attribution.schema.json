@@ -1,0 +1,726 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "attribution_model_id",
+    "attribution_model_version",
+    "accounting_basis",
+    "application",
+    "sign_convention",
+    "geometric_shading_accounting",
+    "scientific_input_sha256",
+    "source_numerical_result_sha256",
+    "source_electrical_design_sha256",
+    "source_module_input_hashes",
+    "region_solvers",
+    "numerical_policy",
+    "sample_count",
+    "intervals",
+    "energy"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "DetailedDCAttributionResult"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "attribution_model_id": {
+      "const": "rawibumi.phase69b.detailed_dc_attribution.v0.1"
+    },
+    "attribution_model_version": {
+      "const": "0.1"
+    },
+    "accounting_basis": {
+      "const": "detailed_selected_mppt_dc_before_residual_losses"
+    },
+    "application": {
+      "const": "explanatory_only_never_applied_to_actual_ledger"
+    },
+    "sign_convention": {
+      "const": "reference_minus_evaluated_positive_loss_negative_recovery"
+    },
+    "geometric_shading_accounting": {
+      "const": "already_in_actual_effective_irradiance_not_rebooked"
+    },
+    "scientific_input_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_numerical_result_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_electrical_design_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "source_module_input_hashes": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    },
+    "region_solvers": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "numerical_policy": {
+      "type": "object"
+    },
+    "sample_count": {
+      "type": "integer",
+      "minimum": 101
+    },
+    "intervals": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/interval"
+      }
+    },
+    "energy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "regional_mismatch",
+        "bypass_interaction",
+        "series_interaction",
+        "parallel_interaction",
+        "tracker_interaction",
+        "total_detailed_dc_delta"
+      ],
+      "properties": {
+        "regional_mismatch": {
+          "$ref": "#/$defs/energy_channel"
+        },
+        "bypass_interaction": {
+          "$ref": "#/$defs/energy_channel"
+        },
+        "series_interaction": {
+          "$ref": "#/$defs/energy_channel"
+        },
+        "parallel_interaction": {
+          "$ref": "#/$defs/energy_channel"
+        },
+        "tracker_interaction": {
+          "$ref": "#/$defs/energy_channel"
+        },
+        "total_detailed_dc_delta": {
+          "$ref": "#/$defs/energy_channel"
+        }
+      }
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/detailed-dc-attribution.schema.json",
+  "title": "Detailed explanatory DC attribution v0.1",
+  "$defs": {
+    "basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "power_w",
+        "reason_codes"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "available",
+            "unavailable",
+            "not_applicable"
+          ]
+        },
+        "power_w": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "available"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "power_w": {
+                "type": "number",
+                "minimum": 0
+              },
+              "reason_codes": {
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "power_w": {
+                "type": "null"
+              },
+              "reason_codes": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "channel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "value_w",
+        "reason_codes"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "available",
+            "unavailable",
+            "not_applicable"
+          ]
+        },
+        "value_w": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "available"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value_w": {
+                "type": "number"
+              },
+              "reason_codes": {
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value_w": {
+                "type": "null"
+              },
+              "reason_codes": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "telescope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "residual_w",
+        "reason_codes"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "complete",
+            "partial",
+            "not_applicable"
+          ]
+        },
+        "residual_w": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "complete"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "residual_w": {
+                "type": "number"
+              },
+              "reason_codes": {
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "residual_w": {
+                "type": "null"
+              },
+              "reason_codes": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ledger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bases",
+        "channels",
+        "telescope"
+      ],
+      "properties": {
+        "bases": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "U",
+            "N",
+            "B",
+            "S",
+            "C",
+            "T"
+          ],
+          "properties": {
+            "U": {
+              "$ref": "#/$defs/basis"
+            },
+            "N": {
+              "$ref": "#/$defs/basis"
+            },
+            "B": {
+              "$ref": "#/$defs/basis"
+            },
+            "S": {
+              "$ref": "#/$defs/basis"
+            },
+            "C": {
+              "$ref": "#/$defs/basis"
+            },
+            "T": {
+              "$ref": "#/$defs/basis"
+            }
+          }
+        },
+        "channels": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "regional_mismatch",
+            "bypass_interaction",
+            "series_interaction",
+            "parallel_interaction",
+            "tracker_interaction",
+            "total_detailed_dc_delta"
+          ],
+          "properties": {
+            "regional_mismatch": {
+              "$ref": "#/$defs/channel"
+            },
+            "bypass_interaction": {
+              "$ref": "#/$defs/channel"
+            },
+            "series_interaction": {
+              "$ref": "#/$defs/channel"
+            },
+            "parallel_interaction": {
+              "$ref": "#/$defs/channel"
+            },
+            "tracker_interaction": {
+              "$ref": "#/$defs/channel"
+            },
+            "total_detailed_dc_delta": {
+              "$ref": "#/$defs/channel"
+            }
+          }
+        },
+        "telescope": {
+          "$ref": "#/$defs/telescope"
+        }
+      }
+    },
+    "module": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "module_instance_id",
+        "bases",
+        "source_local_state_sha256",
+        "source_parameterization_sha256",
+        "counterfactual_curve_hashes"
+      ],
+      "properties": {
+        "module_instance_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bases": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "U",
+            "N",
+            "B"
+          ],
+          "properties": {
+            "U": {
+              "$ref": "#/$defs/basis"
+            },
+            "N": {
+              "$ref": "#/$defs/basis"
+            },
+            "B": {
+              "$ref": "#/$defs/basis"
+            }
+          }
+        },
+        "source_local_state_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_parameterization_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "counterfactual_curve_hashes": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "U": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "N": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "B": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        }
+      }
+    },
+    "string": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "string_id",
+        "module_ids",
+        "basis",
+        "source_curve_sha256"
+      ],
+      "properties": {
+        "string_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "module_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "basis": {
+          "$ref": "#/$defs/basis"
+        },
+        "source_curve_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "mppt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mppt_instance_id",
+        "mppt_index",
+        "string_ids",
+        "module_ids",
+        "actual_dc_power_w",
+        "tracker_model_id",
+        "bases",
+        "channels",
+        "telescope"
+      ],
+      "properties": {
+        "mppt_instance_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mppt_index": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "string_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "module_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "minItems": 1
+        },
+        "actual_dc_power_w": {
+          "type": "number",
+          "minimum": 0
+        },
+        "tracker_model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bases": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "U",
+            "N",
+            "B",
+            "S",
+            "C",
+            "T"
+          ],
+          "properties": {
+            "U": {
+              "$ref": "#/$defs/basis"
+            },
+            "N": {
+              "$ref": "#/$defs/basis"
+            },
+            "B": {
+              "$ref": "#/$defs/basis"
+            },
+            "S": {
+              "$ref": "#/$defs/basis"
+            },
+            "C": {
+              "$ref": "#/$defs/basis"
+            },
+            "T": {
+              "$ref": "#/$defs/basis"
+            }
+          }
+        },
+        "channels": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "regional_mismatch",
+            "bypass_interaction",
+            "series_interaction",
+            "parallel_interaction",
+            "tracker_interaction",
+            "total_detailed_dc_delta"
+          ],
+          "properties": {
+            "regional_mismatch": {
+              "$ref": "#/$defs/channel"
+            },
+            "bypass_interaction": {
+              "$ref": "#/$defs/channel"
+            },
+            "series_interaction": {
+              "$ref": "#/$defs/channel"
+            },
+            "parallel_interaction": {
+              "$ref": "#/$defs/channel"
+            },
+            "tracker_interaction": {
+              "$ref": "#/$defs/channel"
+            },
+            "total_detailed_dc_delta": {
+              "$ref": "#/$defs/channel"
+            }
+          }
+        },
+        "telescope": {
+          "$ref": "#/$defs/telescope"
+        }
+      }
+    },
+    "interval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "interval_start",
+        "interval_end",
+        "evaluation_time",
+        "duration_seconds",
+        "modules",
+        "strings",
+        "mppts",
+        "ledger",
+        "aggregation_scope"
+      ],
+      "properties": {
+        "interval_start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "interval_end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "evaluation_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "duration_seconds": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "modules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/module"
+          }
+        },
+        "strings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/string"
+          }
+        },
+        "mppts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/mppt"
+          }
+        },
+        "ledger": {
+          "$ref": "#/$defs/ledger"
+        },
+        "aggregation_scope": {
+          "const": "applicable_generating_scopes_only_dark_has_no_mpp"
+        }
+      }
+    },
+    "energy_channel": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "energy_wh",
+        "available_subtotal_wh",
+        "available_duration_seconds",
+        "unavailable_duration_seconds",
+        "not_applicable_duration_seconds",
+        "reason_codes"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "available",
+            "unavailable",
+            "not_applicable"
+          ]
+        },
+        "energy_wh": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "available_subtotal_wh": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "available_duration_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "unavailable_duration_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "not_applicable_duration_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}

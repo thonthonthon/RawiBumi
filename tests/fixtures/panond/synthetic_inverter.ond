@@ -1,0 +1,22 @@
+PVObject_=pvGInverter
+  Version=6.81
+
+  PVObject_Commercial=pvCommercial
+    Manufacturer=OpenSIMPV Synthetic
+    Model=SYN-INV-250K
+  End of PVObject pvCommercial
+
+  Converter=TConverter
+    PNomConv=250.000
+    PMaxOUT=250.000
+    VMppMin=500
+    VMPPMax=1500
+    VAbsMax=1500
+    PSeuil=500.0
+    MonoTri=Tri
+  End of TConverter
+
+  NbInputs=36
+  NbMPPT=12
+  UnknownFutureField=preserve-me
+End of PVObject pvGInverter

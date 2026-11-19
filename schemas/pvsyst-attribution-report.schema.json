@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/pvsyst-attribution-report.schema.json",
+  "title": "OpenSIMPV PVsystAttributionReport v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "campaign_id",
+    "case_id",
+    "benchmark_id",
+    "reference_software",
+    "reference_report",
+    "simulation_timestep_seconds",
+    "readiness_status",
+    "acceptance_admissible",
+    "acceptance_status",
+    "blockers",
+    "metric_comparisons",
+    "monthly_grid_comparison",
+    "first_nonpassing_stage",
+    "attribution_status",
+    "known_difference_candidates",
+    "excluded_reference_metrics"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "PVsystAttributionReport"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "campaign_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "case_id": {
+      "type": "string",
+      "pattern": "^VC[0-7]$"
+    },
+    "benchmark_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reference_software": {
+      "const": "PVsyst 8.1.6"
+    },
+    "reference_report": {
+      "type": "string",
+      "minLength": 1
+    },
+    "simulation_timestep_seconds": {
+      "enum": [
+        60,
+        3600
+      ]
+    },
+    "readiness_status": {
+      "enum": [
+        "acceptance_ready_with_interval_attribution",
+        "acceptance_ready_annual_monthly_only",
+        "blocked_external_input",
+        "blocked_external_model_data",
+        "blocked_multiple_external_dependencies"
+      ]
+    },
+    "acceptance_admissible": {
+      "type": "boolean"
+    },
+    "acceptance_status": {
+      "enum": [
+        "pass",
+        "fail",
+        "not_admissible",
+        "not_executed"
+      ]
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "blocker_id",
+          "classification",
+          "message"
+        ],
+        "properties": {
+          "blocker_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "classification": {
+            "type": "string",
+            "minLength": 1
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "metric_comparisons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "stage",
+          "metric",
+          "reference_value",
+          "observed_value",
+          "delta",
+          "relative_error",
+          "tolerance_id",
+          "tolerance",
+          "admissible",
+          "status"
+        ],
+        "properties": {
+          "stage": {
+            "type": "string",
+            "minLength": 1
+          },
+          "metric": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reference_value": {
+            "type": "number"
+          },
+          "observed_value": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "delta": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "relative_error": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "tolerance_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tolerance": {
+            "type": "object"
+          },
+          "admissible": {
+            "type": "boolean"
+          },
+          "status": {
+            "enum": [
+              "pass",
+              "fail",
+              "not_admissible",
+              "not_comparable"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "monthly_grid_comparison": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "pass",
+                "fail",
+                "not_admissible",
+                "not_comparable"
+              ]
+            },
+            "reason": {
+              "type": "string"
+            },
+            "rms_relative_error": {
+              "type": "number"
+            },
+            "maximum_absolute_relative_error": {
+              "type": "number"
+            },
+            "relative_errors": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "tolerance": {
+              "type": "object"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "first_nonpassing_stage": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "attribution_status": {
+      "enum": [
+        "unresolved_requires_evidence",
+        "no_causal_claim"
+      ]
+    },
+    "known_difference_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "excluded_reference_metrics": {
+      "type": "object",
+      "required": [
+        "e_array_kwh",
+        "reason",
+        "dc_operating_displacement_kwh"
+      ],
+      "properties": {
+        "e_array_kwh": {
+          "type": "number"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dc_operating_displacement_kwh": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

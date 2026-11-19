@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/component-revision-impact.schema.json",
+  "title": "OpenSIMPV ComponentRevisionImpactReport v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "integration_version",
+    "component_type",
+    "target_id",
+    "current_revision_id",
+    "proposed_revision_id",
+    "status",
+    "mutation_performed",
+    "current_properties",
+    "proposed_properties",
+    "changed_properties",
+    "consequences",
+    "available_actions",
+    "impact_hash"
+  ],
+  "properties": {
+    "schema_name": {"const": "ComponentRevisionImpactReport"},
+    "schema_version": {"const": "0.1"},
+    "integration_version": {"type": "string", "minLength": 1},
+    "component_type": {"enum": ["module", "inverter"]},
+    "target_id": {"type": "string", "minLength": 1},
+    "current_revision_id": {"type": ["string", "null"]},
+    "proposed_revision_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["no_change", "compatible", "warning", "conflict"]},
+    "mutation_performed": {"const": false},
+    "current_properties": {"type": ["object", "null"]},
+    "proposed_properties": {"type": "object"},
+    "changed_properties": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["path", "current_value", "proposed_value"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "current_value": {},
+          "proposed_value": {}
+        },
+        "additionalProperties": false
+      }
+    },
+    "consequences": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "severity",
+          "count",
+          "entity_ids",
+          "related_entity_ids",
+          "row_indices",
+          "message"
+        ],
+        "properties": {
+          "code": {"type": "string", "minLength": 1},
+          "severity": {"enum": ["info", "warning", "conflict"]},
+          "count": {"type": "integer", "minimum": 0},
+          "entity_ids": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "related_entity_ids": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "row_indices": {
+            "type": "array",
+            "items": {"type": "integer", "minimum": 0}
+          },
+          "message": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "available_actions": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "keep_current_revision",
+          "apply_revision_keep_current_layout",
+          "apply_revision_and_rebuild_field",
+          "apply_revision_keep_current_topology"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "impact_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "rebuild_preview": {
+      "type": "object",
+      "required": [
+        "available",
+        "reason",
+        "module_count",
+        "module_count_delta",
+        "packing_input_hash"
+      ],
+      "properties": {
+        "available": {"type": "boolean"},
+        "reason": {"type": ["string", "null"]},
+        "module_count": {"type": ["integer", "null"], "minimum": 0},
+        "module_count_delta": {"type": ["integer", "null"]},
+        "packing_input_hash": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "topology_summary": {
+      "type": "object",
+      "required": [
+        "current_mppt_instance_count",
+        "connected_string_count",
+        "proposed_mppt_count",
+        "automatic_topology_rebuild_available"
+      ],
+      "properties": {
+        "current_mppt_instance_count": {"type": "integer", "minimum": 0},
+        "connected_string_count": {"type": "integer", "minimum": 0},
+        "proposed_mppt_count": {"type": "integer", "minimum": 0},
+        "automatic_topology_rebuild_available": {"const": false}
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {"component_type": {"const": "module"}}
+      },
+      "then": {"required": ["rebuild_preview"]}
+    },
+    {
+      "if": {
+        "properties": {"component_type": {"const": "inverter"}}
+      },
+      "then": {"required": ["topology_summary"]}
+    }
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/detailed-execution-identity.schema.json",
+  "title": "DetailedExecutionIdentity v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "requested_fidelity",
+    "resolved_fidelity",
+    "fallback_policy",
+    "fallback_applied",
+    "fallback_reason",
+    "failure_reasons",
+    "runtime_support_result",
+    "execution_scope",
+    "limitations",
+    "scientific_input_sha256",
+    "execution_identity_sha256"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "DetailedExecutionIdentity"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "requested_fidelity": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "resolved_fidelity": {
+      "enum": [
+        null,
+        "level_0_geometric_only",
+        "level_2_bypass_substring"
+      ]
+    },
+    "fallback_policy": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "fallback_applied": {
+      "type": "boolean"
+    },
+    "fallback_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "failure_reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "runtime_support_result": {
+      "enum": [
+        "blocked",
+        "backend_not_connected",
+        "fallback_to_geometry_only",
+        "geometry_only",
+        "mppt_complete",
+        "constraint_blocked",
+        "numerical_failed",
+        "pcc_complete",
+        "downstream_failed"
+      ]
+    },
+    "execution_scope": {
+      "const": "fixed_tilt_detailed_electrical_phase69a.v0.1"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "scientific_input_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "execution_identity_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "numerical_result_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "compact_result_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "additionalProperties": false
+}

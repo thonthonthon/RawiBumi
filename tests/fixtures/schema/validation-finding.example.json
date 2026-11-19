@@ -1,0 +1,18 @@
+{
+  "schema_name": "ValidationFinding",
+  "schema_version": "0.1",
+  "finding_id": "finding-001",
+  "project_revision_id": "proj-ref-001-r1",
+  "entity_id": "string-001",
+  "rule_id": "STRING_VOC_ABOVE_INVERTER_MAX",
+  "severity": "warning",
+  "category": "electrical_design",
+  "message": "Synthetic finding.",
+  "measured_value": 1110.0,
+  "limit_value": 1100.0,
+  "unit": "V",
+  "context": {},
+  "generated_at": "2026-09-22T00:00:00Z",
+  "resolved_at": null,
+  "resolution_note": null
+}

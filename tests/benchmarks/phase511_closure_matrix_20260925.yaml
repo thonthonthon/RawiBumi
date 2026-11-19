@@ -1,0 +1,126 @@
+schema_version: "0.1"
+closure_matrix_id: "P511-PHASE5-CLOSURE-20260925"
+date: "2026-09-25"
+phase: "5.11 Closure Hardening"
+status: accepted
+
+regression_family:
+  simple_unobstructed_rooftop:
+    case: R1
+    inherited_evidence:
+      - phase49c_save_reload
+      - phase55_clear_geometry_path
+      - phase59_full_year_clear_no_loss
+  multi_roof:
+    case: R2
+    inherited_evidence:
+      - phase49c_save_reload
+      - phase511_scene_compile_roundtrip
+  ground_mounted_fixed_tilt:
+    case: R3
+    inherited_evidence:
+      - phase49c_save_reload
+      - phase511_scene_compile_roundtrip
+  rooftop_obstacle_shading:
+    case: R4
+    inherited_evidence:
+      - phase49b_vc5_geometry_reconstruction
+      - phase58h_exact_reference_parity
+      - phase59_full_year_geometry_aware_run
+      - phase511_save_reload_compile_shade_run
+  multiple_orientation:
+    case: R5
+    inherited_evidence:
+      - phase49c_save_reload
+      - phase511_scene_compile_roundtrip
+      - explicit_phase6_electrical_coupling_boundary
+  pvsyst_vc0_vc5_external_family:
+    cases: [VC0, VC1, VC2, VC3, VC4, VC5]
+    inherited_evidence:
+      - phase49b_frozen_external_oracle
+      - phase510_decomposed_external_validation
+  analytical_shadow_microcases:
+    inherited_evidence:
+      - phase53_polygon_projection_truth_family
+      - phase510_authority_A_registration
+
+reproducibility_gate:
+  save_reload_compile_shade_run_chain: true
+  scene_hash: true
+  compiled_geometry_hash: true
+  configuration_identity: true
+  shading_result_identity: true
+  simulation_run_input_hash: true
+  annual_output_deterministic_tolerance: true
+  annual_reference: R1
+  nontrivial_shaded_reference: R4
+  tolerance_policy:
+    exact_hash_where_defined: true
+    annual_energy_absolute_wh: 1.0e-6
+    explanation: >
+      Identity-bearing deterministic artifacts use exact content hashes. Floating
+      annual energy comparison additionally permits an absolute 1e-6 Wh guardrail.
+
+performance_evidence:
+  environment_policy:
+    universal_hardware_target_frozen: false
+    compare_only_within_defined_benchmark_environment: true
+    environment_metadata_recorded: true
+    required_metadata:
+      - python_version
+      - platform
+      - machine
+      - logical_cpu_count
+      - github_actions
+      - runner_os
+      - runner_arch
+  compile_time:
+    recorded: true
+    universal_threshold: false
+    benchmark: tools/benchmark_phase511.py
+  beam_query_cost:
+    recorded: true
+    universal_threshold: false
+    benchmark: tools/benchmark_phase511.py
+  sky_view_cost:
+    recorded: true
+    universal_threshold: false
+    benchmark: tools/benchmark_phase511.py
+  annual_shading_runtime:
+    recorded: true
+    universal_threshold: false
+    benchmark: tools/benchmark_phase511.py
+  cache_hit_behavior:
+    recorded: true
+    universal_threshold: false
+    benchmark: tools/benchmark_phase511.py
+  memory_use:
+    recorded: true
+    universal_threshold: false
+    benchmark: tools/benchmark_phase511.py
+
+physics_boundary:
+  new_shading_physics: false
+  phase6_electrical_mismatch: false
+  bypass_substring_model: false
+  heterogeneous_same_mppt_iv_coupling: false
+  bifacial_rear_irradiance: false
+  arbitrary_mesh_required_for_exit: false
+
+phase5_exit_gate:
+  geometry_deterministic: true
+  module_receiver_identity_preserved: true
+  beam_sky_ground_distinguishable: true
+  geometry_modifies_annual_simulation: true
+  unshaded_reference_stable: true
+  explicit_loss_stages: true
+  reconciliation_closed: true
+  unsupported_electrical_heterogeneity_explicit: true
+  no_false_phase6_claim: true
+  cache_invalidation_deterministic: true
+  analytical_validation_passed: true
+  controlled_validation_passed: true
+  external_validation_decomposed: true
+  combined_obstacles_not_additive: true
+  unexplained_material_residual_hidden: false
+  status: closed_for_current_scope

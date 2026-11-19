@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/result-dataset-reference.schema.json",
+  "title": "OpenSIMPV ResultDatasetReference v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "format",
+    "uri",
+    "media_type",
+    "byte_size",
+    "sha256",
+    "logical_content_sha256",
+    "row_count",
+    "column_count",
+    "columns",
+    "timestamp_convention"
+  ],
+  "properties": {
+    "schema_name": {"const": "ResultDatasetReference"},
+    "schema_version": {"const": "0.1"},
+    "format": {"enum": ["parquet"]},
+    "uri": {"type": "string", "minLength": 1},
+    "media_type": {"const": "application/vnd.apache.parquet"},
+    "byte_size": {"type": "integer", "minimum": 0},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "logical_content_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "physical_content_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "Optional physical-content identity for datasets whose stored logical rows include execution/config-derived identifiers."
+    },
+    "row_count": {"type": "integer", "minimum": 0},
+    "column_count": {"type": "integer", "minimum": 1},
+    "columns": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+    "timestamp_convention": {"const": "interval_start"},
+    "parquet_engine": {"type": ["string", "null"]},
+    "parquet_engine_version": {"type": ["string", "null"]}
+  },
+  "additionalProperties": false
+}

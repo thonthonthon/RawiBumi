@@ -1,0 +1,708 @@
+{
+  "schema_version": "0.1",
+  "oracle_id": "P49B-SHADED-PVSYST816-20260924",
+  "status": "source_verified_external_csv_shd_geometry_resolved",
+  "software": {
+    "name": "PVsyst",
+    "version": "8.1.6",
+    "simulation_step_seconds": 3600
+  },
+  "source_project": {
+    "project": "Sampel for OpenSimPV_Project_Var3.PRJ",
+    "site": "Home_MN90.SIT",
+    "weather": "Home_MN90_SYN_1MIN.MET",
+    "source_files_committed": false
+  },
+  "baseline": {
+    "module_model": "JKM550M-72HL4-V",
+    "module_width_m": 1.134,
+    "module_height_m": 2.278,
+    "module_count": 216,
+    "dc_kwp": 118.8,
+    "inverter_count": 1,
+    "module_orientation": "portrait",
+    "field_tilt_deg": 20,
+    "field_azimuth_deg": 0,
+    "table_count": 12,
+    "modules_per_table": 18,
+    "table_spacing_x_m": 0.02,
+    "table_spacing_y_m": 0.02,
+    "table_long_shed_m": 20.752,
+    "table_width_shed_m": 2.278
+  },
+  "provenance": {
+    "case_labels_are_semantic_not_symmetry_claims": true,
+    "geometry_authority": "user-supplied PVsyst SHD",
+    "hourly_oracle_authority": "user-supplied PVsyst detailed hourly CSV",
+    "redistribute_uploaded_sources": false,
+    "derived_geometry_is_frozen_not_reverse_engineered_from_hourly_output": true,
+    "geometric_shading_oracle_does_not_implement_opensimpv_phase5_solver": true
+  },
+  "invariants": {
+    "critical_pre_shading_series_identical_all_cases": true,
+    "critical_pre_shading_columns": [
+      "date",
+      "HSol",
+      "AzSol",
+      "AngInc",
+      "AngProf",
+      "GlobHor",
+      "DiffHor",
+      "BeamHor",
+      "T_Amb",
+      "WindVel",
+      "GlobInc",
+      "BeamInc",
+      "CircInc",
+      "DifSInc",
+      "Alb_Inc"
+    ],
+    "common_glob_inc_kwh_m2": 1758.0986391,
+    "channel_sets_identical": true,
+    "channel_set_sha256": "ef7af5185b6b238bd9ce88b2fafa19d363301a9029229651fe38f9e59d86b251",
+    "column_order_identical": false,
+    "vc0_column_order_differs_from_vc1_vc5": true,
+    "vc1_vc5_column_order_identical": true,
+    "north_south_not_assumed_symmetric": true,
+    "east_west_not_assumed_symmetric": true,
+    "combined_cases_not_assumed_additive": true,
+    "external_source_balance_tolerance_kw": 0.01,
+    "max_observed_source_balance_residual_kw": 0.0097,
+    "dc_operating_displacement_excludes_il_pmin": true,
+    "il_pmin_semantics": "inverter low-power loss; included in InvLoss, not EArrMPP-to-EArray operating-point displacement"
+  },
+  "cases": {
+    "VC0": {
+      "label": "north",
+      "scene_comment": "North shade",
+      "csv": {
+        "file": "Sampel for OpenSimPV_Project_Var3_VC0_HourlyRes_0.CSV",
+        "sha256": "704154a89eb5512fcba605fe725e7ad6f67baf29b481a48539c0a8cf15c89e33",
+        "bytes": 4128659
+      },
+      "shd": {
+        "file": "Sampel for OpenSimPV_Project_Var3VC0.SHD",
+        "sha256": "7848f9df3bae53252003311ce0dd4bf7c69e6ad8e734a5e2f5098844f49af3f4",
+        "bytes": 12260
+      },
+      "simulation_date": "24/09/26 12h05",
+      "rows": 8760,
+      "columns": 107,
+      "channel_set_sha256": "ef7af5185b6b238bd9ce88b2fafa19d363301a9029229651fe38f9e59d86b251",
+      "header_order_sha256": "60baf3dfa6c2203f8f0c425d6fab9e55543c99b67409c2c2a8cda57cb54ae398",
+      "geometry": {
+        "table_origin_x_m": [
+          0,
+          23
+        ],
+        "table_origin_y_m": [
+          -21,
+          -18,
+          -15,
+          -12,
+          -9,
+          -6
+        ],
+        "obstacles": [
+          {
+            "type": "parallelepiped",
+            "origin_m": [
+              -8.256538,
+              -5,
+              0
+            ],
+            "size_xyz_m": [
+              40,
+              10,
+              5
+            ]
+          }
+        ]
+      },
+      "annual": {
+        "glob_inc_kwh_m2": 1758.0986391,
+        "glob_shd_kwh_m2": 1592.8387334,
+        "shading_loss_kwh_m2": 165.2601076,
+        "shading_loss_fraction_of_glob_inc": 0.093999338,
+        "beam_shading_loss_kwh_m2": 49.0665218,
+        "circumsolar_shading_loss_kwh_m2": 16.7256343,
+        "diffuse_shading_loss_kwh_m2": 89.5695616,
+        "albedo_shading_loss_kwh_m2": 9.8983374,
+        "array_virtual_mpp_kwh": 168026.6258,
+        "inverter_min_power_loss_kwh": 6.0065,
+        "inverter_subhourly_clipping_correction_kwh": 14.5142,
+        "e_grid_kwh": 165674.0187
+      },
+      "directional_signature": {
+        "window_definition": "local CSV clock; morning 06:00-11:59, afternoon 12:00-17:59",
+        "beam_plus_circ_morning_kwh_m2": 33.0997009,
+        "beam_plus_circ_afternoon_kwh_m2": 32.6924552
+      },
+      "monthly_shading_loss_kwh_m2": [
+        9.2086121,
+        8.3851077,
+        9.3748941,
+        12.8206896,
+        21.2063884,
+        24.9358698,
+        24.1724971,
+        17.6421879,
+        9.9861417,
+        9.1351927,
+        9.4269987,
+        8.9655278
+      ],
+      "monthly_e_grid_kwh": [
+        11245.8948,
+        10628.8415,
+        13770.716,
+        13864.8549,
+        14448.6525,
+        14117.316,
+        14993.5486,
+        16483.5516,
+        16890.4929,
+        15904.1759,
+        12335.093,
+        10990.881
+      ],
+      "source_balance_max_abs_kw": {
+        "array_mpp": 0.0062,
+        "inverter_total": 0.0089,
+        "dc_operating_displacement_excluding_il_pmin": 0.0008,
+        "grid_boundary": 0
+      }
+    },
+    "VC1": {
+      "label": "south",
+      "scene_comment": "South Shade",
+      "csv": {
+        "file": "Sampel for OpenSimPV_Project_Var3_VC1_HourlyRes_0.CSV",
+        "sha256": "3398e76fb906ff99926852ac2f5770199f019209059793a93825efa200687197",
+        "bytes": 4124497
+      },
+      "shd": {
+        "file": "Sampel for OpenSimPV_Project_Var3VC1.SHD",
+        "sha256": "e69562bb88d174a75e0825780b41da298c5f8d0db2041159a009f9a2aa92f708",
+        "bytes": 12262
+      },
+      "simulation_date": "24/09/26 12h05",
+      "rows": 8760,
+      "columns": 107,
+      "channel_set_sha256": "ef7af5185b6b238bd9ce88b2fafa19d363301a9029229651fe38f9e59d86b251",
+      "header_order_sha256": "5f902e0a33835eec759a10f24730a75411a56786cbcc122399abdd2b5818d5de",
+      "geometry": {
+        "table_origin_x_m": [
+          0,
+          23
+        ],
+        "table_origin_y_m": [
+          8,
+          11,
+          14,
+          17,
+          20,
+          23
+        ],
+        "obstacles": [
+          {
+            "type": "parallelepiped",
+            "origin_m": [
+              -8.256538,
+              -5,
+              0
+            ],
+            "size_xyz_m": [
+              40,
+              10,
+              5
+            ]
+          }
+        ]
+      },
+      "annual": {
+        "glob_inc_kwh_m2": 1758.0986391,
+        "glob_shd_kwh_m2": 1684.9883647,
+        "shading_loss_kwh_m2": 73.1104655,
+        "shading_loss_fraction_of_glob_inc": 0.041584962,
+        "beam_shading_loss_kwh_m2": 12.9462743,
+        "circumsolar_shading_loss_kwh_m2": 4.6889684,
+        "diffuse_shading_loss_kwh_m2": 47.5827447,
+        "albedo_shading_loss_kwh_m2": 7.8924729,
+        "array_virtual_mpp_kwh": 177137.511,
+        "inverter_min_power_loss_kwh": 3.8006,
+        "inverter_subhourly_clipping_correction_kwh": 30.515,
+        "e_grid_kwh": 174666.5388
+      },
+      "directional_signature": {
+        "window_definition": "local CSV clock; morning 06:00-11:59, afternoon 12:00-17:59",
+        "beam_plus_circ_morning_kwh_m2": 9.5570505,
+        "beam_plus_circ_afternoon_kwh_m2": 8.0781922
+      },
+      "monthly_shading_loss_kwh_m2": [
+        8.4490953,
+        5.6018653,
+        5.2932861,
+        4.6793347,
+        5.3413147,
+        5.3111121,
+        5.4214329,
+        5.0776822,
+        4.8960541,
+        5.785305,
+        7.9005873,
+        9.3533958
+      ],
+      "monthly_e_grid_kwh": [
+        11353.667,
+        10925.466,
+        14184.4416,
+        14653.6159,
+        15974.3087,
+        15994.9865,
+        16789.1604,
+        17682.5524,
+        17383.9113,
+        16237.4162,
+        12506.792,
+        10980.2208
+      ],
+      "source_balance_max_abs_kw": {
+        "array_mpp": 0.0068,
+        "inverter_total": 0.0068,
+        "dc_operating_displacement_excluding_il_pmin": 0.0009,
+        "grid_boundary": 0
+      }
+    },
+    "VC2": {
+      "label": "east",
+      "scene_comment": "east shade",
+      "csv": {
+        "file": "Sampel for OpenSimPV_Project_Var3_VC2_HourlyRes_0.CSV",
+        "sha256": "cb5b5e7b42f7b258a85d16eeb9d6b24dd77c4650dfc0ed14a1331bc1145e26b9",
+        "bytes": 4118390
+      },
+      "shd": {
+        "file": "Sampel for OpenSimPV_Project_Var3VC2.SHD",
+        "sha256": "d6871825c2b321bfd514a68cfedc89fbd0bf1b2ebb4394feab47fa8be388573f",
+        "bytes": 12272
+      },
+      "simulation_date": "24/09/26 12h04",
+      "rows": 8760,
+      "columns": 107,
+      "channel_set_sha256": "ef7af5185b6b238bd9ce88b2fafa19d363301a9029229651fe38f9e59d86b251",
+      "header_order_sha256": "5f902e0a33835eec759a10f24730a75411a56786cbcc122399abdd2b5818d5de",
+      "geometry": {
+        "table_origin_x_m": [
+          0,
+          23
+        ],
+        "table_origin_y_m": [
+          -21,
+          -18,
+          -15,
+          -12,
+          -9,
+          -6
+        ],
+        "obstacles": [
+          {
+            "type": "parallelepiped",
+            "origin_m": [
+              35.794541,
+              -24.427654,
+              0
+            ],
+            "size_xyz_m": [
+              10,
+              20,
+              5
+            ]
+          }
+        ]
+      },
+      "annual": {
+        "glob_inc_kwh_m2": 1758.0986391,
+        "glob_shd_kwh_m2": 1680.271352,
+        "shading_loss_kwh_m2": 77.8276791,
+        "shading_loss_fraction_of_glob_inc": 0.044268096,
+        "beam_shading_loss_kwh_m2": 20.9084477,
+        "circumsolar_shading_loss_kwh_m2": 7.0532364,
+        "diffuse_shading_loss_kwh_m2": 41.7153033,
+        "albedo_shading_loss_kwh_m2": 8.1506865,
+        "array_virtual_mpp_kwh": 176561.8844,
+        "inverter_min_power_loss_kwh": 1.921,
+        "inverter_subhourly_clipping_correction_kwh": 32.5884,
+        "e_grid_kwh": 174094.5553
+      },
+      "directional_signature": {
+        "window_definition": "local CSV clock; morning 06:00-11:59, afternoon 12:00-17:59",
+        "beam_plus_circ_morning_kwh_m2": 25.3049903,
+        "beam_plus_circ_afternoon_kwh_m2": 2.6566938
+      },
+      "monthly_shading_loss_kwh_m2": [
+        5.7752886,
+        5.4563528,
+        6.2151815,
+        6.547643,
+        6.9645638,
+        7.3552343,
+        7.4477741,
+        7.2259003,
+        6.74315,
+        6.6344372,
+        5.9705936,
+        5.4915599
+      ],
+      "monthly_e_grid_kwh": [
+        11612.1941,
+        10937.7978,
+        14087.5505,
+        14458.8194,
+        15802.6236,
+        15780.1371,
+        16574.1581,
+        17454.1628,
+        17190.0968,
+        16147.1069,
+        12692.5718,
+        11357.3364
+      ],
+      "source_balance_max_abs_kw": {
+        "array_mpp": 0.0055,
+        "inverter_total": 0.0072,
+        "dc_operating_displacement_excluding_il_pmin": 0.0009,
+        "grid_boundary": 0
+      }
+    },
+    "VC3": {
+      "label": "west",
+      "scene_comment": "west shade",
+      "csv": {
+        "file": "Sampel for OpenSimPV_Project_Var3_VC3_HourlyRes_0.CSV",
+        "sha256": "0b5329ded29806fbaa4718da3137c4b3ac7e02f7995017e51a496a2f87dc96fb",
+        "bytes": 4120510
+      },
+      "shd": {
+        "file": "Sampel for OpenSimPV_Project_Var3VC3.SHD",
+        "sha256": "185b6dbec835833f09aed6cf624d0537ccee71a3c5b43424ca1f02bfe6c42a29",
+        "bytes": 12273
+      },
+      "simulation_date": "24/09/26 12h03",
+      "rows": 8760,
+      "columns": 107,
+      "channel_set_sha256": "ef7af5185b6b238bd9ce88b2fafa19d363301a9029229651fe38f9e59d86b251",
+      "header_order_sha256": "5f902e0a33835eec759a10f24730a75411a56786cbcc122399abdd2b5818d5de",
+      "geometry": {
+        "table_origin_x_m": [
+          0,
+          23
+        ],
+        "table_origin_y_m": [
+          -21,
+          -18,
+          -15,
+          -12,
+          -9,
+          -6
+        ],
+        "obstacles": [
+          {
+            "type": "parallelepiped",
+            "origin_m": [
+              -21.702076,
+              -24.427654,
+              0
+            ],
+            "size_xyz_m": [
+              10,
+              20,
+              5
+            ]
+          }
+        ]
+      },
+      "annual": {
+        "glob_inc_kwh_m2": 1758.0986391,
+        "glob_shd_kwh_m2": 1667.36385,
+        "shading_loss_kwh_m2": 90.7345854,
+        "shading_loss_fraction_of_glob_inc": 0.051609496,
+        "beam_shading_loss_kwh_m2": 28.0628294,
+        "circumsolar_shading_loss_kwh_m2": 9.0916489,
+        "diffuse_shading_loss_kwh_m2": 45.4082614,
+        "albedo_shading_loss_kwh_m2": 8.1718438,
+        "array_virtual_mpp_kwh": 175329.5315,
+        "inverter_min_power_loss_kwh": 3.818,
+        "inverter_subhourly_clipping_correction_kwh": 31.002,
+        "e_grid_kwh": 172875.0182
+      },
+      "directional_signature": {
+        "window_definition": "local CSV clock; morning 06:00-11:59, afternoon 12:00-17:59",
+        "beam_plus_circ_morning_kwh_m2": 2.6667887,
+        "beam_plus_circ_afternoon_kwh_m2": 34.4876896
+      },
+      "monthly_shading_loss_kwh_m2": [
+        6.3530615,
+        5.9205663,
+        7.4553291,
+        7.726514,
+        8.8900715,
+        8.4154348,
+        8.5749468,
+        8.8680224,
+        8.1388908,
+        7.7449549,
+        6.5699817,
+        6.0768116
+      ],
+      "monthly_e_grid_kwh": [
+        11556.2515,
+        10893.5175,
+        13967.9003,
+        14348.8628,
+        15615.0379,
+        15681.3848,
+        16472.4539,
+        17303.9297,
+        17062.3363,
+        16041.5094,
+        12634.9737,
+        11296.8604
+      ],
+      "source_balance_max_abs_kw": {
+        "array_mpp": 0.0097,
+        "inverter_total": 0.0058,
+        "dc_operating_displacement_excluding_il_pmin": 0.0009,
+        "grid_boundary": 0
+      }
+    },
+    "VC4": {
+      "label": "east_west",
+      "scene_comment": "east-west shade",
+      "csv": {
+        "file": "Sampel for OpenSimPV_Project_Var3_VC4_HourlyRes_0.CSV",
+        "sha256": "2c21bfc2514a747a109704d9a3eb631668de44b65de8984de7a05537f1d181b9",
+        "bytes": 4145515
+      },
+      "shd": {
+        "file": "Sampel for OpenSimPV_Project_Var3VC4.SHD",
+        "sha256": "1fb691388327128571922e4d00adf47014a08d676ae0a0a75952dfcfd3745fc1",
+        "bytes": 12718
+      },
+      "simulation_date": "24/09/26 12h02",
+      "rows": 8760,
+      "columns": 107,
+      "channel_set_sha256": "ef7af5185b6b238bd9ce88b2fafa19d363301a9029229651fe38f9e59d86b251",
+      "header_order_sha256": "5f902e0a33835eec759a10f24730a75411a56786cbcc122399abdd2b5818d5de",
+      "geometry": {
+        "table_origin_x_m": [
+          0,
+          23
+        ],
+        "table_origin_y_m": [
+          -21,
+          -18,
+          -15,
+          -12,
+          -9,
+          -6
+        ],
+        "obstacles": [
+          {
+            "type": "parallelepiped",
+            "origin_m": [
+              -21.702076,
+              -24.427654,
+              0
+            ],
+            "size_xyz_m": [
+              10,
+              20,
+              5
+            ]
+          },
+          {
+            "type": "parallelepiped",
+            "origin_m": [
+              35.024096,
+              -24.141728,
+              0
+            ],
+            "size_xyz_m": [
+              10,
+              20,
+              5
+            ]
+          }
+        ]
+      },
+      "annual": {
+        "glob_inc_kwh_m2": 1758.0986391,
+        "glob_shd_kwh_m2": 1624.6898628,
+        "shading_loss_kwh_m2": 133.4087328,
+        "shading_loss_fraction_of_glob_inc": 0.075882394,
+        "beam_shading_loss_kwh_m2": 49.7922476,
+        "circumsolar_shading_loss_kwh_m2": 16.2434979,
+        "diffuse_shading_loss_kwh_m2": 58.922309,
+        "albedo_shading_loss_kwh_m2": 8.4506927,
+        "array_virtual_mpp_kwh": 170982.5805,
+        "inverter_min_power_loss_kwh": 3.7778,
+        "inverter_subhourly_clipping_correction_kwh": 27.4172,
+        "e_grid_kwh": 168576.9789
+      },
+      "directional_signature": {
+        "window_definition": "local CSV clock; morning 06:00-11:59, afternoon 12:00-17:59",
+        "beam_plus_circ_morning_kwh_m2": 31.5481499,
+        "beam_plus_circ_afternoon_kwh_m2": 34.4875956
+      },
+      "monthly_shading_loss_kwh_m2": [
+        9.1142486,
+        8.6942833,
+        10.8381426,
+        11.6858062,
+        12.6403076,
+        12.4993696,
+        12.7633441,
+        13.2243712,
+        12.366811,
+        11.5761146,
+        9.4100118,
+        8.5959222
+      ],
+      "monthly_e_grid_kwh": [
+        11275.9178,
+        10613.1034,
+        13628.2041,
+        13951.4057,
+        15237.0185,
+        15270.3669,
+        16049.315,
+        16864.6706,
+        16639.6582,
+        15658.5363,
+        12346.9759,
+        11041.8065
+      ],
+      "source_balance_max_abs_kw": {
+        "array_mpp": 0.0078,
+        "inverter_total": 0.0062,
+        "dc_operating_displacement_excluding_il_pmin": 0.0009,
+        "grid_boundary": 0
+      }
+    },
+    "VC5": {
+      "label": "north_south",
+      "scene_comment": "north-south shade",
+      "csv": {
+        "file": "Sampel for OpenSimPV_Project_Var3_VC5_HourlyRes_0.CSV",
+        "sha256": "b98dd8c91219a5c97627ae8c8add9ded75cf99fe53bd4500834568c3c6ba332e",
+        "bytes": 4149103
+      },
+      "shd": {
+        "file": "Sampel for OpenSimPV_Project_Var3VC5.SHD",
+        "sha256": "e7253569fa6b826d0d6a33de0254fc57256daaff92e126a4df5a1fc6ffcec617",
+        "bytes": 12707
+      },
+      "simulation_date": "24/09/26 12h01",
+      "rows": 8760,
+      "columns": 107,
+      "channel_set_sha256": "ef7af5185b6b238bd9ce88b2fafa19d363301a9029229651fe38f9e59d86b251",
+      "header_order_sha256": "5f902e0a33835eec759a10f24730a75411a56786cbcc122399abdd2b5818d5de",
+      "geometry": {
+        "table_origin_x_m": [
+          0,
+          23
+        ],
+        "table_origin_y_m": [
+          8,
+          11,
+          14,
+          17,
+          20,
+          23
+        ],
+        "obstacles": [
+          {
+            "type": "parallelepiped",
+            "origin_m": [
+              -8.256538,
+              -5,
+              0
+            ],
+            "size_xyz_m": [
+              40,
+              10,
+              5
+            ]
+          },
+          {
+            "type": "parallelepiped",
+            "origin_m": [
+              -8.24263,
+              24.358715,
+              0
+            ],
+            "size_xyz_m": [
+              40,
+              10,
+              5
+            ]
+          }
+        ]
+      },
+      "annual": {
+        "glob_inc_kwh_m2": 1758.0986391,
+        "glob_shd_kwh_m2": 1581.2145708,
+        "shading_loss_kwh_m2": 176.8839615,
+        "shading_loss_fraction_of_glob_inc": 0.100610943,
+        "beam_shading_loss_kwh_m2": 48.5991913,
+        "circumsolar_shading_loss_kwh_m2": 16.550716,
+        "diffuse_shading_loss_kwh_m2": 101.8462649,
+        "albedo_shading_loss_kwh_m2": 9.8877975,
+        "array_virtual_mpp_kwh": 166811.257,
+        "inverter_min_power_loss_kwh": 6.4655,
+        "inverter_subhourly_clipping_correction_kwh": 14.4007,
+        "e_grid_kwh": 164467.1335
+      },
+      "directional_signature": {
+        "window_definition": "local CSV clock; morning 06:00-11:59, afternoon 12:00-17:59",
+        "beam_plus_circ_morning_kwh_m2": 33.5136688,
+        "beam_plus_circ_afternoon_kwh_m2": 31.6362385
+      },
+      "monthly_shading_loss_kwh_m2": [
+        13.6138657,
+        10.3521957,
+        10.4930156,
+        12.1154649,
+        19.760971,
+        23.3358974,
+        22.4992171,
+        15.9830758,
+        10.3326113,
+        10.8761973,
+        13.1509805,
+        14.3704692
+      ],
+      "monthly_e_grid_kwh": [
+        10810.2896,
+        10432.1876,
+        13659.7597,
+        13924.5737,
+        14580.7051,
+        14266.1095,
+        15149.2249,
+        16633.8626,
+        16855.2128,
+        15733.1199,
+        11965.9391,
+        10456.149
+      ],
+      "source_balance_max_abs_kw": {
+        "array_mpp": 0.0057,
+        "inverter_total": 0.0081,
+        "dc_operating_displacement_excluding_il_pmin": 0.0009,
+        "grid_boundary": 0
+      }
+    }
+  }
+}

@@ -1,0 +1,76 @@
+# OpenSIMPV advanced inverter overlay template v0.1
+component_type: inverter
+source:
+  source_id: replace-me
+  source_kind: manufacturer_datasheet
+  source_url: null
+  priority: 100
+  license_spdx: null
+  license_url: null
+  attribution: null
+  notes: null
+
+# Use canonical OpenSIMPV field names. Delete fields you do not have.
+# Null values are ignored by the overlay importer.
+data:
+  manufacturer: null
+  model: null
+  family: null
+  inverter_type: string
+  phase_configuration: three_phase
+
+  dc_limits:
+    max_dc_voltage_v: null
+    nominal_dc_voltage_v: null
+    startup_voltage_v: null
+    shutdown_voltage_v: null
+    min_voltage_for_nominal_power_v: null
+
+  ac_limits:
+    nominal_ac_power_w: null
+    max_ac_power_w: null
+    nominal_ac_voltage_v: null
+    nominal_frequency_hz: null
+    nominal_ac_current_a: null
+    max_ac_current_a: null
+    max_ac_apparent_power_va: null
+
+  mppt_template:
+    count: null
+    total_input_count: null
+    input_count_per_mppt: null
+    min_operating_voltage_v: null
+    max_operating_voltage_v: null
+    nominal_voltage_v: null
+    max_operating_current_a: null
+    max_short_circuit_current_a: null
+
+  operating_thresholds:
+    minimum_input_power_w: null
+    startup_power_w: null
+    shutdown_power_w: null
+    standby_loss_w: null
+    night_loss_w: null
+
+  array_sizing_limits:
+    nominal_pv_array_power_w: null
+    max_pv_array_power_w: null
+    max_pv_current_a: null
+
+  efficiency_model:
+    # Prefer the separate inverter-efficiency-curve.csv for curve data.
+    model_type: null
+    efficiency_fraction: null
+    reference_metrics:
+      max_efficiency_fraction: null
+      european_efficiency_fraction: null
+      cec_efficiency_fraction: null
+
+  temperature_derating_model:
+    temperature_basis: unknown
+    max_power_temperature_c: null
+    nominal_power_temperature_c: null
+    limit1_temperature_c: null
+    limit1_power_w: null
+    absolute_limit_temperature_c: null
+    source_model: user_supplied

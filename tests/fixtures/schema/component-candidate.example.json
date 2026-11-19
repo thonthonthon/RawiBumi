@@ -1,0 +1,37 @@
+{
+  "schema_name": "ComponentCandidate",
+  "schema_version": "0.1",
+  "candidate_id": "candidate-module-001",
+  "component_type": "module",
+  "source_id": "src-pan-001",
+  "canonical_data": {
+    "schema_name": "ModuleDefinition",
+    "schema_version": "0.1",
+    "module_definition_id": "module-001",
+    "revision_id": "module-001-r1",
+    "manufacturer": "OpenSIMPV Synthetic",
+    "model": "SYN-MOD-550"
+  },
+  "derivations": [
+    {
+      "target_path": "stc.pmp_w",
+      "method": "multiply_vmp_by_imp",
+      "algorithm_version": "0.1",
+      "inputs": {"stc.vmp_v": 41.96, "stc.imp_a": 13.11},
+      "value": 550.0956,
+      "unit": "W",
+      "estimated": false,
+      "notes": "Synthetic example."
+    }
+  ],
+  "validation_findings": [],
+  "capability_flags": {
+    "layout_ready": true,
+    "basic_yield_ready": false,
+    "detailed_sdm_ready": false,
+    "bifacial_ready": false,
+    "detailed_shading_ready": false
+  },
+  "definition_schema_ready": false,
+  "status": "needs_review"
+}

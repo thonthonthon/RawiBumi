@@ -1,0 +1,85 @@
+schema_version: "0.1"
+validation_matrix_id: "P510-GEOMETRY-AWARE-VALIDATION-20260925"
+status: accepted
+date: "2026-09-25"
+phase: "5.10 Analytical and External Validation Matrix"
+
+governing_hierarchy:
+  A: analytical_geometry_truth
+  B: controlled_synthetic_opensimpv
+  C: independent_open_implementation
+  D: external_cross_software
+  E: regression_only
+
+binding_rules:
+  pvsyst_is_reference_not_definition: true
+  solar_position_must_not_be_tuned_to_pvsyst: true
+  compare_upstream_before_final_energy: true
+  preserve_directional_asymmetry: true
+  combined_obstacles_are_not_assumed_additive: true
+  unmatched_inputs_prohibit_quantitative_agreement_verdict: true
+  phase6_electrical_mismatch_not_claimed: true
+
+analytical_truth:
+  authority_class: A
+  inherited_gates:
+    - test_phase53_no_occluder_is_fully_visible
+    - test_phase53_full_rectangular_block_is_zero_visibility
+    - test_phase53_half_rectangular_overlap_is_exactly_half_shaded
+    - test_phase53_diagonal_triangle_has_analytical_half_area
+    - test_phase53_overlapping_occluders_are_unioned_not_double_counted
+    - test_phase53_rotated_horizontal_receiver_preserves_area_and_full_shadow
+    - test_phase53_tilted_receiver_full_shadow_uses_receiver_plane_projection
+    - test_phase53_low_solar_altitude_projects_shadow_laterally
+    - test_phase53_occluder_behind_receiver_cannot_cast_forward_shadow
+    - test_phase53_boundary_touch_has_zero_shadow_area
+    - test_phase53_sun_below_horizon_returns_no_direct_beam_status
+
+controlled_opensimpv:
+  authority_class: B
+  inherited_gates:
+    - phase58h_full_channel_reference_and_exact_are_physically_identical
+    - phase59_R1_full_year_clear_no_loss
+    - phase59_R4_full_year_nontrivial_geometry
+    - phase59_cold_warm_exact_equivalence
+    - phase59_none_exact_physical_equivalence
+
+external_pvsyst:
+  authority_class: D
+  oracle_id: "P49B-SHADED-PVSYST816-20260924"
+  software: "PVsyst 8.1.6"
+  cases: [VC0, VC1, VC2, VC3, VC4, VC5]
+  source_files_redistributed: false
+  frozen_evidence:
+    - exact_shd_derived_geometry
+    - source_file_sha256_and_size
+    - common_pre_shading_series_identity
+    - beam_shading_loss
+    - circumsolar_shading_loss
+    - diffuse_shading_loss
+    - albedo_shading_loss
+    - monthly_shading_loss
+    - annual_shading_loss
+    - grid_energy
+    - directional_hourly_signatures
+  phase510_current_external_gate:
+    source_channel_reconciliation: pass
+    east_west_directional_signature: pass
+    combined_case_nonadditivity: pass
+    direct_matched_input_opensimpv_residual_matrix: not_claimed_without_source_series
+  interpretation: >
+    Frozen PVsyst evidence is used for source-side decomposition and directional
+    cross-software attribution. Quantitative OpenSIMPV-vs-PVsyst residuals require
+    explicit matched weather, geometry, timestep, solar-time semantics,
+    pre-shading irradiance, and channel semantics. The validator fails closed
+    rather than manufacturing a final-energy agreement score.
+
+phase510_acceptance:
+  analytical_geometry_truth_registered: true
+  controlled_synthetic_integration_registered: true
+  external_oracle_internal_reconciliation: true
+  external_directional_evidence_preserved: true
+  external_combined_case_nonadditivity_preserved: true
+  explicit_cross_software_comparison_contract: true
+  unmatched_basis_fails_closed: true
+  no_shading_physics_changed: true

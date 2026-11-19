@@ -1,0 +1,9 @@
+{
+  "schema_name": "PVFieldCommand",
+  "schema_version": "0.1",
+  "command_id": "cmd-fill-001",
+  "command_type": "fill_area",
+  "pv_field_id": "field-1",
+  "parameters": {},
+  "issued_at": "2026-09-24T00:00:00Z"
+}

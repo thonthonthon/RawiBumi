@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/component-binding-manifest.schema.json",
+  "title": "OpenSIMPV ComponentBindingManifest v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "integration_version",
+    "scene_id",
+    "scene_revision_id",
+    "electrical_revision_id",
+    "module_bindings",
+    "inverter_bindings",
+    "manifest_hash"
+  ],
+  "properties": {
+    "schema_name": {"const": "ComponentBindingManifest"},
+    "schema_version": {"const": "0.1"},
+    "integration_version": {"type": "string", "minLength": 1},
+    "scene_id": {"type": "string", "minLength": 1},
+    "scene_revision_id": {"type": "string", "minLength": 1},
+    "electrical_revision_id": {"type": ["string", "null"]},
+    "module_bindings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/binding"}
+    },
+    "inverter_bindings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/binding"}
+    },
+    "manifest_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "binding": {
+      "type": "object",
+      "required": [
+        "target_type",
+        "target_id",
+        "revision_id",
+        "resolved",
+        "design_properties"
+      ],
+      "properties": {
+        "target_type": {
+          "enum": ["pv_field", "inverter_instance"]
+        },
+        "target_id": {"type": "string", "minLength": 1},
+        "revision_id": {"type": "string", "minLength": 1},
+        "resolved": {"type": "boolean"},
+        "design_properties": {"type": ["object", "null"]}
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,335 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/electrical-iv-curve.schema.json",
+  "title": "OpenSIMPV ElectricalIVCurve v0.1",
+  "description": "Canonical sampled IV representation for submodule/module/string/MPPT electrical aggregation. global_mpp and local_mpp_candidates are solver-declared metadata. Contract validation independently checks only properties supported by the represented samples unless an explicit solver continuous-curve guarantee is recorded.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "contract_version",
+    "curve_id",
+    "curve_scope",
+    "representation",
+    "sample_order",
+    "sign_convention",
+    "points",
+    "isc_a",
+    "voc_v",
+    "mpp_semantics",
+    "global_mpp",
+    "local_mpp_candidates",
+    "scientific_model_manifest",
+    "execution_manifest",
+    "scientific_input_sha256",
+    "physical_result_sha256"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "ElectricalIVCurve"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "contract_version": {
+      "const": "0.1"
+    },
+    "curve_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "curve_scope": {
+      "enum": [
+        "submodule",
+        "module",
+        "string",
+        "mppt_combined"
+      ]
+    },
+    "representation": {
+      "const": "sampled_voltage_grid"
+    },
+    "sample_order": {
+      "const": "ascending_voltage"
+    },
+    "sign_convention": {
+      "const": "pv_delivery_current_positive_power_equals_v_times_i",
+      "description": "Voltage is positive from PV + to PV -. Current is positive when delivered by the PV source. power_w = voltage_v * current_a; positive power is generation. Signed reverse-bias states remain representable."
+    },
+    "source_module_instance_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_string_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_mppt_instance_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "points": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "voltage_v",
+          "current_a",
+          "power_w"
+        ],
+        "properties": {
+          "voltage_v": {
+            "type": "number"
+          },
+          "current_a": {
+            "type": "number"
+          },
+          "power_w": {
+            "type": "number"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "isc_a": {
+      "type": "number"
+    },
+    "voc_v": {
+      "type": "number"
+    },
+    "global_mpp": {
+      "$ref": "#/$defs/mpp",
+      "description": "Solver-declared global MPP. The contract independently checks consistency against the represented sampled curve but does not infer continuous-curve optimality unless mpp_semantics explicitly records a solver guarantee."
+    },
+    "local_mpp_candidates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/mpp"
+      },
+      "description": "Solver-declared local-MPP candidates. Each candidate must correspond to a represented sampled-curve local power extremum within the declared sampling tolerances."
+    },
+    "scientific_model_manifest": {
+      "type": "object",
+      "required": [
+        "model_id",
+        "model_version"
+      ],
+      "properties": {
+        "model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parameterization_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "topology_revision_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "bypass_model_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "execution_manifest": {
+      "type": "object",
+      "required": [
+        "solver_id",
+        "solver_version"
+      ],
+      "properties": {
+        "solver_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "solver_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "voltage_grid_strategy": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "point_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 2
+        },
+        "cache_mode": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "parallelization": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "scientific_input_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "physical_result_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "execution_payload_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "quality_flags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "mpp_semantics": {
+      "type": "object",
+      "required": [
+        "declaration_authority",
+        "sample_verification_scope",
+        "voltage_tolerance_v",
+        "power_tolerance_w",
+        "continuous_curve_guarantee",
+        "continuous_curve_guarantee_basis"
+      ],
+      "properties": {
+        "declaration_authority": {
+          "const": "solver_declared",
+          "description": "global_mpp and local_mpp_candidates are declarations emitted by the selected solver, not conclusions inferred solely from the stored samples."
+        },
+        "sample_verification_scope": {
+          "const": "represented_samples_only",
+          "description": "Independent contract checks apply only to the represented sampled points and candidate/sample correspondence."
+        },
+        "voltage_tolerance_v": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Maximum absolute voltage difference for associating a declared local-MPP candidate with a represented sampled local extremum."
+        },
+        "power_tolerance_w": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Absolute power tolerance used for represented-curve global/candidate consistency and local-extremum correspondence."
+        },
+        "continuous_curve_guarantee": {
+          "enum": [
+            "none",
+            "solver_guaranteed"
+          ],
+          "description": "Whether the selected solver explicitly guarantees continuous-curve global-MPP optimality beyond the stored samples."
+        },
+        "continuous_curve_guarantee_basis": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Explicit solver/model basis for a continuous-curve guarantee; null when no such guarantee is claimed."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "continuous_curve_guarantee": {
+                "const": "none"
+              }
+            },
+            "required": [
+              "continuous_curve_guarantee"
+            ]
+          },
+          "then": {
+            "properties": {
+              "continuous_curve_guarantee_basis": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "continuous_curve_guarantee": {
+                "const": "solver_guaranteed"
+              }
+            },
+            "required": [
+              "continuous_curve_guarantee"
+            ]
+          },
+          "then": {
+            "properties": {
+              "continuous_curve_guarantee_basis": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "mpp": {
+      "type": "object",
+      "required": [
+        "voltage_v",
+        "current_a",
+        "power_w"
+      ],
+      "properties": {
+        "voltage_v": {
+          "type": "number"
+        },
+        "current_a": {
+          "type": "number"
+        },
+        "power_w": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

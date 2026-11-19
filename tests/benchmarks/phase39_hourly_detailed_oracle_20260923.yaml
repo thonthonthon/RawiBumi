@@ -1,0 +1,149 @@
+schema_version: "0.1"
+oracle_id: P39-HR1-PVSYST816-20260923
+status: source_verified_external_files
+software: PVsyst
+software_version: "8.1.6"
+simulation_step_seconds: 3600
+timestamp_convention: interval_start
+solar_representative_time: interval_midpoint
+site:
+  latitude_deg: -6.4245
+  longitude_deg: 106.8307
+  elevation_m: 82
+  timezone: UTC+07:00
+source_weather:
+  filename: Home_MN90_SYN_1MIN.MET
+  description: Home; Meteonorm 9.0 dll, Sat=100%; Synthetic
+  underlying_resolution_seconds: 60
+  source_files_committed: false
+common_weather_geometry_optical_logical_sha256: 894a678a78de755352a5acb2d3433466c473ba221ad888412611d256f91e0ea4
+
+notes:
+  - The four CSV exports are later simulation snapshots than the previously supplied PDF reports and must not be mixed as one oracle.
+  - The CSV exports are the authoritative timestep oracle for P39-HR1.
+  - VC0 directly exports ILPmxSH. VC2/VC4/VC6 omit the column, but it is recoverable from the exact PVsyst inverter-loss identity.
+  - Economics variables are intentionally irrelevant to the physics attribution campaign.
+
+cases:
+  VC0:
+    filename: Sampel for OpenSimPV_Project_VC0_HourlyRes_0.CSV
+    sha256: 68e1f281d48500585a8f35da90a23e08db354a7b4468b95e0e8f79ff2d40439b
+    byte_size: 3739398
+    row_count: 8760
+    column_count: 96
+    simulation_date: "23/09/26 20h03"
+    direct_ilpmxsh: true
+    annual:
+      glob_hor_kwh_m2: 1749.8706369
+      diff_hor_kwh_m2: 860.1768670
+      beam_hor_kwh_m2: 889.6933902
+      glob_inc_kwh_m2: 1758.0986391
+      glob_iam_kwh_m2: 1752.0930667
+      glob_eff_kwh_m2: 1752.0930667
+      e_arr_ref_kwh: 208862.0871
+      e_arr_nom_kwh: 208270.8820
+      ginc_loss_kwh: 61.0412
+      temp_loss_kwh: 19586.7051
+      module_quality_kwh: -1414.6752
+      mismatch_loss_kwh: 3800.7582
+      ohmic_loss_kwh: 1878.5698
+      e_arr_mpp_kwh: 184358.5211
+      e_array_kwh: 184309.2231
+      il_oper_kwh: 2504.6778
+      il_pmax_kwh: 0.0
+      ilpmxsh_kwh: 49.3015
+      e_grid_kwh: 181795.8099
+
+  VC2:
+    filename: Sampel for OpenSimPV_Project_VC2_HourlyRes_0.CSV
+    sha256: a7dbd60c80bf4c9483f17ccd82aa963a3d11e64150f24db1190bc49184c8687f
+    byte_size: 3721667
+    row_count: 8760
+    column_count: 95
+    simulation_date: "23/09/26 20h04"
+    direct_ilpmxsh: false
+    annual:
+      glob_hor_kwh_m2: 1749.8706369
+      diff_hor_kwh_m2: 860.1768670
+      beam_hor_kwh_m2: 889.6933902
+      glob_inc_kwh_m2: 1758.0986391
+      glob_iam_kwh_m2: 1752.0930667
+      glob_eff_kwh_m2: 1752.0930667
+      e_arr_ref_kwh: 243672.4883
+      e_arr_nom_kwh: 242982.6798
+      ginc_loss_kwh: 71.2207
+      temp_loss_kwh: 22851.1603
+      module_quality_kwh: -1650.4560
+      mismatch_loss_kwh: 4434.2174
+      ohmic_loss_kwh: 2191.6649
+      e_arr_mpp_kwh: 215084.9204
+      e_array_kwh: 214323.7304
+      il_oper_kwh: 2903.6526
+      il_pmax_kwh: 224.4617
+      ilpmxsh_inferred_kwh: 536.7011
+      e_grid_kwh: 211411.4185
+
+  VC4:
+    filename: Sampel for OpenSimPV_Project_VC4_HourlyRes_0.CSV
+    sha256: b5814bd641ffcf8f8df541b5c51389bba820b3f21e4dbb54e7b7fd84cdc46143
+    byte_size: 3722943
+    row_count: 8760
+    column_count: 95
+    simulation_date: "23/09/26 20h05"
+    direct_ilpmxsh: false
+    annual:
+      glob_hor_kwh_m2: 1749.8706369
+      diff_hor_kwh_m2: 860.1768670
+      beam_hor_kwh_m2: 889.6933902
+      glob_inc_kwh_m2: 1758.0986391
+      glob_iam_kwh_m2: 1752.0930667
+      glob_eff_kwh_m2: 1752.0930667
+      e_arr_ref_kwh: 278482.7892
+      e_arr_nom_kwh: 277694.5468
+      ginc_loss_kwh: 81.3936
+      temp_loss_kwh: 26115.5937
+      module_quality_kwh: -1886.2294
+      mismatch_loss_kwh: 5194.3675
+      ohmic_loss_kwh: 2503.4952
+      e_arr_mpp_kwh: 245685.8895
+      e_array_kwh: 239773.9415
+      il_oper_kwh: 3248.0224
+      il_pmax_kwh: 3898.8000
+      ilpmxsh_inferred_kwh: 2013.2653
+      e_grid_kwh: 236517.1105
+
+  VC6:
+    filename: Sampel for OpenSimPV_Project_VC6_HourlyRes_0.CSV
+    sha256: 53377a31e66193cd6ad2b656f2e294612aa5c2727e61467ae1b31abb451bba3e
+    byte_size: 3724323
+    row_count: 8760
+    column_count: 95
+    simulation_date: "23/09/26 20h06"
+    direct_ilpmxsh: false
+    annual:
+      glob_hor_kwh_m2: 1749.8706369
+      diff_hor_kwh_m2: 860.1768670
+      beam_hor_kwh_m2: 889.6933902
+      glob_inc_kwh_m2: 1758.0986391
+      glob_iam_kwh_m2: 1752.0930667
+      glob_eff_kwh_m2: 1752.0930667
+      e_arr_ref_kwh: 313293.2832
+      e_arr_nom_kwh: 312406.5856
+      ginc_loss_kwh: 91.5622
+      temp_loss_kwh: 29380.0544
+      module_quality_kwh: -2122.0090
+      mismatch_loss_kwh: 5843.6649
+      ohmic_loss_kwh: 2816.4361
+      e_arr_mpp_kwh: 276396.8013
+      e_array_kwh: 259310.5773
+      il_oper_kwh: 3510.2920
+      il_pmax_kwh: 13261.5364
+      ilpmxsh_inferred_kwh: 3824.6276
+      e_grid_kwh: 255791.5126
+
+historical_pdf_snapshot_difference:
+  status: distinct_simulation_snapshots
+  explanation: >
+    Earlier PDF reports were simulated around 11:50-11:59 and contain different
+    POA/DC/grid totals. These detailed CSVs were simulated around 20:03-20:06.
+    The two source families remain separately versioned.

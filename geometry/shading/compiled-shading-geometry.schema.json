@@ -1,0 +1,354 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/compiled-shading-geometry.schema.json",
+  "title": "OpenSIMPV CompiledShadingGeometry v0.1",
+  "description": "Deterministic, non-authoritative numerical geometry compiled from one canonical Scene revision for Phase-5 shading physics.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "contract_version",
+    "authority",
+    "editable",
+    "source_scene_id",
+    "source_scene_revision_id",
+    "coordinate_system_id",
+    "coordinate_basis",
+    "source_scene_hash",
+    "compiler_id",
+    "compiler_version",
+    "compilation_input_hash",
+    "compiled_geometry_id",
+    "geometry_payload_sha256",
+    "receivers",
+    "occluders",
+    "bounds_3d",
+    "finding_count",
+    "findings"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "CompiledShadingGeometry"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "contract_version": {
+      "const": "0.1"
+    },
+    "authority": {
+      "const": "derived_numerical_only"
+    },
+    "editable": {
+      "const": false
+    },
+    "source_scene_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_scene_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "coordinate_system_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "coordinate_basis": {
+      "const": "scene_local_east_north_up_m"
+    },
+    "source_scene_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "compiler_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "compiler_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "compilation_input_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "compiled_geometry_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "geometry_payload_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "receivers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/receiver"
+      }
+    },
+    "occluders": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/occluder"
+      }
+    },
+    "bounds_3d": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/bounds3d"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "finding_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "point3": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "items": false,
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "bounds3d": {
+      "type": "object",
+      "required": [
+        "min_xyz",
+        "max_xyz"
+      ],
+      "properties": {
+        "min_xyz": {
+          "$ref": "#/$defs/point3"
+        },
+        "max_xyz": {
+          "$ref": "#/$defs/point3"
+        }
+      },
+      "additionalProperties": false
+    },
+    "source_entity_type": {
+      "enum": [
+        "module_instance",
+        "pv_field",
+        "surface",
+        "obstacle",
+        "imported_mesh"
+      ]
+    },
+    "face": {
+      "type": "object",
+      "required": [
+        "face_id",
+        "vertices_3d",
+        "normal_xyz"
+      ],
+      "properties": {
+        "face_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "vertices_3d": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "$ref": "#/$defs/point3"
+          }
+        },
+        "normal_xyz": {
+          "$ref": "#/$defs/point3"
+        }
+      },
+      "additionalProperties": false
+    },
+    "receiver": {
+      "type": "object",
+      "required": [
+        "receiver_id",
+        "source_entity_type",
+        "source_entity_id",
+        "receiver_type",
+        "vertices_3d",
+        "center_xyz",
+        "normal_xyz",
+        "area_m2",
+        "enabled",
+        "pv_field_id",
+        "support_surface_id",
+        "module_instance_id"
+      ],
+      "properties": {
+        "receiver_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_entity_type": {
+          "enum": [
+            "module_instance",
+            "pv_field",
+            "surface"
+          ]
+        },
+        "source_entity_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "receiver_type": {
+          "enum": [
+            "module_plane",
+            "aggregate_plane"
+          ]
+        },
+        "vertices_3d": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "$ref": "#/$defs/point3"
+          }
+        },
+        "center_xyz": {
+          "$ref": "#/$defs/point3"
+        },
+        "normal_xyz": {
+          "$ref": "#/$defs/point3"
+        },
+        "area_m2": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "pv_field_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "support_surface_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "module_instance_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "metadata": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "occluder": {
+      "type": "object",
+      "required": [
+        "occluder_id",
+        "source_entity_type",
+        "source_entity_id",
+        "geometry_type",
+        "faces",
+        "bounds_3d",
+        "shading_enabled"
+      ],
+      "properties": {
+        "occluder_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_entity_type": {
+          "$ref": "#/$defs/source_entity_type"
+        },
+        "source_entity_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "geometry_type": {
+          "enum": [
+            "polygon_faces",
+            "triangle_mesh"
+          ]
+        },
+        "faces": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/face"
+          }
+        },
+        "bounds_3d": {
+          "$ref": "#/$defs/bounds3d"
+        },
+        "shading_enabled": {
+          "type": "boolean"
+        },
+        "metadata": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "finding": {
+      "type": "object",
+      "required": [
+        "severity",
+        "code",
+        "entity_id",
+        "message"
+      ],
+      "properties": {
+        "severity": {
+          "enum": [
+            "info",
+            "warning",
+            "error"
+          ]
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "entity_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "context": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

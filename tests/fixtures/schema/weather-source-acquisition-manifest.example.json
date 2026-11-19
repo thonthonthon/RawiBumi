@@ -1,0 +1,56 @@
+{
+  "schema_name": "WeatherSourceAcquisitionManifest",
+  "schema_version": "0.1",
+  "acquisition_id": "wx-acq-example-001",
+  "provider_id": "open_meteo",
+  "source_id": "open_meteo_era5",
+  "source_product_name": "ERA5 via Open-Meteo",
+  "source_product_version": null,
+  "adapter_id": "open_meteo_adapter",
+  "adapter_version": "0.1",
+  "requested_site": {
+    "latitude_deg": -6.2,
+    "longitude_deg": 106.8,
+    "elevation_m": 25.0,
+    "timezone": "Asia/Jakarta"
+  },
+  "request": {
+    "requested_at": "2026-09-25T01:00:00+00:00",
+    "start_time": "2025-01-01T00:00:00+07:00",
+    "end_time": "2026-01-01T00:00:00+07:00",
+    "endpoint_family": "historical",
+    "parameters": {
+      "source_product": "ERA5"
+    }
+  },
+  "provider_location": null,
+  "source_method": {
+    "projection_authority": "source_product",
+    "opensimpv_resource_projection_applied": false,
+    "method_id": null,
+    "method_version": null,
+    "evidence": "unknown",
+    "description": null,
+    "spatial_basis": null,
+    "temporal_basis": null,
+    "notes": "OpenSIMPV preserves source-owned resource semantics and does not invent unavailable method metadata."
+  },
+  "raw_response": {
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "byte_size": 0,
+    "media_type": "application/json",
+    "storage_reference": "fixture://weather-source-acquisition",
+    "retrieved_at": "2026-09-25T01:00:01+00:00"
+  },
+  "canonical_mapping": {
+    "mapping_id": "open_meteo_era5_to_weather_dataset",
+    "mapping_version": "0.1",
+    "source_projection_preserved": true,
+    "unit_conversion_applied": true,
+    "timestamp_normalization_applied": true,
+    "notes": null
+  },
+  "result": null,
+  "status": "retrieved",
+  "findings": []
+}

@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/shading-cache-manifest.schema.json",
+  "title": "OpenSIMPV ShadingCacheManifest v0.1",
+  "description": "Deterministic cache identity for derived Phase-5 shading results.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "contract_version",
+    "cache_manifest_id",
+    "source_scene_revision_id",
+    "compiled_geometry_hash",
+    "shading_configuration_hash",
+    "solver_manifest_hash",
+    "source_execution_plan_payload_sha256",
+    "fidelity_level",
+    "cache_policy",
+    "deterministic",
+    "entry_count",
+    "entries"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "ShadingCacheManifest"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "contract_version": {
+      "const": "0.1"
+    },
+    "cache_manifest_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_scene_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "compiled_geometry_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "shading_configuration_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "solver_manifest_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_execution_plan_payload_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "fidelity_level": {
+      "enum": [
+        "preview",
+        "fast",
+        "engineering",
+        "detailed",
+        "research"
+      ]
+    },
+    "cache_policy": {
+      "$ref": "#/$defs/cache_policy"
+    },
+    "deterministic": {
+      "const": true
+    },
+    "entry_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/cache_entry"
+      }
+    },
+    "invalidation_basis": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "source_scene_revision",
+          "compiled_geometry_hash",
+          "shading_configuration_hash",
+          "solver_manifest_hash",
+          "fidelity_level",
+          "sampling_resolution",
+          "receiver_set",
+          "sun_state",
+          "execution_plan"
+        ]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "cache_policy": {
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "none",
+            "exact",
+            "angular_bins"
+          ]
+        },
+        "sun_azimuth_bin_deg": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0,
+          "maximum": 360
+        },
+        "sun_altitude_bin_deg": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0,
+          "maximum": 180
+        }
+      },
+      "additionalProperties": false
+    },
+    "cache_entry": {
+      "type": "object",
+      "required": [
+        "cache_key_sha256",
+        "channel",
+        "receiver_set_sha256",
+        "sun_state_sha256",
+        "result_sha256"
+      ],
+      "properties": {
+        "cache_key_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "channel": {
+          "enum": [
+            "beam_visibility",
+            "sky_visibility",
+            "ground_visibility",
+            "directional_diffuse_visibility"
+          ]
+        },
+        "receiver_set_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "sun_state_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "result_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "entry_uri": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

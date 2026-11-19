@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/pv-field-conflict-report.schema.json",
+  "title": "OpenSIMPV PVFieldConflictReport v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "pv_field_id",
+    "status",
+    "module_count",
+    "stored_packing_input_hash",
+    "current_packing_input_hash",
+    "conflict_count",
+    "conflicts"
+  ],
+  "properties": {
+    "schema_name": {"const": "PVFieldConflictReport"},
+    "schema_version": {"const": "0.1"},
+    "pv_field_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["valid", "conflict"]},
+    "module_count": {"type": "integer", "minimum": 0},
+    "stored_packing_input_hash": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "current_packing_input_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "conflict_count": {"type": "integer", "minimum": 0},
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "module_instance_id",
+          "related_entity_id",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "enum": [
+              "packing_inputs_changed",
+              "module_outside_support_or_setback",
+              "module_exclusion_overlap",
+              "module_obstacle_overlap",
+              "module_obstacle_setback",
+              "module_module_overlap"
+            ]
+          },
+          "module_instance_id": {"type": ["string", "null"]},
+          "related_entity_id": {"type": ["string", "null"]},
+          "message": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,9 @@
+{
+  "schema_name": "ComponentRevisionCommand",
+  "schema_version": "0.1",
+  "command_id": "cmd-component-001",
+  "command_type": "analyze_revision_change",
+  "component_type": "module",
+  "target_id": "field-1",
+  "proposed_revision_id": "mod-family-a-r2"
+}

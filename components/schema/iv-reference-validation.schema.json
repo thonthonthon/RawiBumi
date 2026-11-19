@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/iv-reference-validation.schema.json",
+  "title": "OpenSIMPV IVReferenceValidationResult v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "validation_id",
+    "dataset_id",
+    "module_definition_id",
+    "model_type",
+    "status",
+    "passed",
+    "qualification",
+    "implementation",
+    "configuration",
+    "coverage",
+    "point_results",
+    "aggregate"
+  ],
+  "properties": {
+    "schema_name": {"const": "IVReferenceValidationResult"},
+    "schema_version": {"const": "0.1"},
+    "validation_id": {"type": "string", "minLength": 1},
+    "dataset_id": {"type": "string", "minLength": 1},
+    "dataset_revision_id": {"type": ["string", "null"]},
+    "dataset_source_id": {"type": ["string", "null"]},
+    "module_definition_id": {"type": "string", "minLength": 1},
+    "module_revision_id": {"type": ["string", "null"]},
+    "model_type": {"type": "string"},
+    "model_version": {"type": ["string", "null"]},
+    "status": {"enum": ["passed", "failed", "incomplete", "unavailable"]},
+    "passed": {"type": "boolean"},
+    "qualification": {
+      "enum": [
+        "independent_reference_validation",
+        "external_reference_validation",
+        "same_source_validation",
+        "synthetic_regression",
+        "unqualified"
+      ]
+    },
+    "implementation": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {"type": "string"},
+        "version": {"type": ["string", "null"]},
+        "solver": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "configuration": {"type": "object"},
+    "coverage": {
+      "type": "object",
+      "required": ["reference_point_count", "curve_count"],
+      "properties": {
+        "reference_point_count": {"type": "integer", "minimum": 0},
+        "curve_count": {"type": "integer", "minimum": 0},
+        "irradiance_min_w_m2": {"type": ["number", "null"]},
+        "irradiance_max_w_m2": {"type": ["number", "null"]},
+        "temperature_min_c": {"type": ["number", "null"]},
+        "temperature_max_c": {"type": ["number", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "point_results": {"type": "array", "items": {"type": "object"}},
+    "aggregate": {"type": "object"},
+    "findings": {"type": "array", "items": {"type": "object"}}
+  },
+  "additionalProperties": false
+}

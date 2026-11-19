@@ -1,0 +1,20 @@
+{
+  "schema_name": "DesignSuggestion",
+  "schema_version": "0.1",
+  "suggestion_id": "suggestion-001",
+  "project_revision_id": "proj-ref-001-r1",
+  "suggestion_type": "row_pitch",
+  "target_entity_id": "field-001",
+  "target_field_path": "row_pitch_m",
+  "actual_value": 1.2,
+  "actual_source": "user_input",
+  "suggested_value": 1.05,
+  "suggestion_source": "heuristic",
+  "override_state": "user_overridden",
+  "unit": "m",
+  "rationale": "Synthetic suggestion; accepting it must create an explicit project revision.",
+  "generated_by": "test",
+  "generated_at": "2026-09-22T00:00:00Z",
+  "status": "pending",
+  "accepted_in_project_revision_id": null
+}

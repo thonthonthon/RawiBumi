@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/string-series-iv-state.schema.json",
+  "title": "OpenSIMPV StringSeriesIVState v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "contract_version",
+    "state_id",
+    "source_string_id",
+    "source_project_revision_id",
+    "source_string_payload_sha256",
+    "source_module_instance_ids",
+    "module_sources",
+    "string_curve_id",
+    "isc_a",
+    "voc_v",
+    "current_samples",
+    "scientific_input_sha256",
+    "state_payload_sha256"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "StringSeriesIVState"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "contract_version": {
+      "const": "0.1"
+    },
+    "state_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_string_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_project_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_string_payload_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_module_instance_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "module_sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/module_source"
+      }
+    },
+    "string_curve_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "isc_a": {
+      "type": "number",
+      "minimum": 0
+    },
+    "voc_v": {
+      "type": "number",
+      "minimum": 0
+    },
+    "current_samples": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "$ref": "#/$defs/current_sample"
+      }
+    },
+    "scientific_input_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "state_payload_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "module_source": {
+      "type": "object",
+      "required": [
+        "series_order",
+        "module_instance_id",
+        "current_domain_ceiling_a",
+        "scientific_input_sha256",
+        "model_id",
+        "model_version"
+      ],
+      "properties": {
+        "series_order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "module_instance_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "current_domain_ceiling_a": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "scientific_input_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "protected_substring": {
+      "type": "object",
+      "required": [
+        "substring_id",
+        "terminal_voltage_v",
+        "bypass_active",
+        "bypass_current_a"
+      ],
+      "properties": {
+        "substring_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "terminal_voltage_v": {
+          "type": "number"
+        },
+        "bypass_active": {
+          "type": "boolean"
+        },
+        "bypass_current_a": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "module_sample": {
+      "type": "object",
+      "required": [
+        "series_order",
+        "module_instance_id",
+        "terminal_voltage_v",
+        "module_power_w",
+        "protected_substrings"
+      ],
+      "properties": {
+        "series_order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "module_instance_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "terminal_voltage_v": {
+          "type": "number"
+        },
+        "module_power_w": {
+          "type": "number"
+        },
+        "protected_substrings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/protected_substring"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "current_sample": {
+      "type": "object",
+      "required": [
+        "current_a",
+        "string_voltage_v",
+        "string_power_w",
+        "modules"
+      ],
+      "properties": {
+        "current_a": {
+          "type": "number",
+          "minimum": 0
+        },
+        "string_voltage_v": {
+          "type": "number"
+        },
+        "string_power_w": {
+          "type": "number"
+        },
+        "modules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/module_sample"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

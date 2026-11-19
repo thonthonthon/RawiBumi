@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/validation-finding.schema.json",
+  "title": "OpenSIMPV ValidationFinding v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "finding_id",
+    "project_revision_id",
+    "entity_id",
+    "rule_id",
+    "severity",
+    "category",
+    "message",
+    "generated_at"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "ValidationFinding"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "finding_id": {
+      "type": "string"
+    },
+    "project_revision_id": {
+      "type": "string"
+    },
+    "entity_id": {
+      "type": "string"
+    },
+    "rule_id": {
+      "type": "string"
+    },
+    "severity": {
+      "enum": [
+        "info",
+        "recommendation",
+        "warning",
+        "error",
+        "blocking_error"
+      ]
+    },
+    "category": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "measured_value": {},
+    "limit_value": {},
+    "unit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "context": {
+      "type": "object"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "resolved_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "resolution_note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "classification": {
+      "enum": [
+        "INFO",
+        "RECOMMENDATION",
+        "WARNING",
+        "INVALID"
+      ],
+      "description": "Human-facing Phase-4.7 classification. INVALID serializes with legacy severity=blocking_error for compatibility."
+    }
+  },
+  "additionalProperties": false
+}

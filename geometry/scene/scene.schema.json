@@ -1,0 +1,1426 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/scene.schema.json",
+  "title": "OpenSIMPV Scene v0.1 \u2014 logical SceneRevision",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "scene_id",
+    "project_id",
+    "revision_id",
+    "coordinate_system_id"
+  ],
+  "properties": {
+    "buildings": {
+      "type": "array", "uniqueItems": true,
+      "items": {
+        "type": "object", "required": ["building_id", "name"], "additionalProperties": false,
+        "properties": {"building_id": {"type": "string", "minLength": 1},
+                       "name": {"type": "string", "minLength": 1, "maxLength": 80}}
+      }
+    },
+    "schema_name": {
+      "const": "Scene"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "scene_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "coordinate_system_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "map_layer_configuration": {
+      "anyOf": [
+        {
+          "$ref": "https://opensimpv.org/schema/map-layer-configuration.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "surfaces": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/surface"
+      }
+    },
+    "obstacles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/obstacle"
+      }
+    },
+    "pv_fields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/pv_field"
+      }
+    },
+    "module_instances": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/module_instance"
+      }
+    },
+    "revision_number": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "created_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "supersedes_revision_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "active",
+        "superseded",
+        "archived",
+        null
+      ]
+    },
+    "change_summary": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reference_lines": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/reference_line"
+      }
+    }
+  },
+  "$defs": {
+    "transform": {
+      "type": "object",
+      "required": [
+        "position_x_m",
+        "position_y_m",
+        "position_z_m",
+        "rotation_x_deg",
+        "rotation_y_deg",
+        "rotation_z_deg",
+        "scale_x",
+        "scale_y",
+        "scale_z"
+      ],
+      "properties": {
+        "position_x_m": {
+          "type": "number",
+          "description": "Horizontal engineering-plan X coordinate in local metric coordinates."
+        },
+        "position_y_m": {
+          "type": "number",
+          "description": "Horizontal engineering-plan Y coordinate in local metric coordinates."
+        },
+        "position_z_m": {
+          "type": "number",
+          "description": "Canonical object-center elevation. For generated PV modules: support-plane elevation at XY plus vertical mounting height. For explicit-layout modules: the physical centre derived from the table anchor; never implicitly reheighted."
+        },
+        "rotation_x_deg": {
+          "type": "number"
+        },
+        "rotation_y_deg": {
+          "type": "number"
+        },
+        "rotation_z_deg": {
+          "type": "number"
+        },
+        "scale_x": {
+          "type": "number"
+        },
+        "scale_y": {
+          "type": "number"
+        },
+        "scale_z": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "scene_object": {
+      "type": "object",
+      "required": [
+        "scene_object_id",
+        "scene_id",
+        "object_type",
+        "name",
+        "transform",
+        "visible",
+        "locked",
+        "selectable",
+        "shading_enabled"
+      ],
+      "properties": {
+        "scene_object_id": {
+          "type": "string"
+        },
+        "scene_id": {
+          "type": "string"
+        },
+        "object_type": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "transform": {
+          "$ref": "#/$defs/transform"
+        },
+        "geometry_reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "locked": {
+          "type": "boolean"
+        },
+        "selectable": {
+          "type": "boolean"
+        },
+        "shading_enabled": {
+          "type": "boolean"
+        },
+        "metadata": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": true
+    },
+    "point2d": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "boundary_2d": {
+      "type": "object",
+      "required": [
+        "vertices",
+        "winding",
+        "closed"
+      ],
+      "properties": {
+        "vertices": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "$ref": "#/$defs/point2d"
+          }
+        },
+        "holes": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "minItems": 3,
+            "items": {
+              "$ref": "#/$defs/point2d"
+            }
+          }
+        },
+        "winding": {
+          "enum": [
+            "clockwise",
+            "counterclockwise"
+          ]
+        },
+        "closed": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Horizontal engineering-plan projection of the canonical boundary; Z is resolved from surface height semantics."
+    },
+    "surface": {
+      "type": "object",
+      "required": [
+        "surface_id",
+        "scene_object_id",
+        "surface_type",
+        "boundary_2d",
+        "base_elevation_m",
+        "slope_deg",
+        "azimuth_deg",
+        "usable_for_pv",
+        "shading_receiver"
+      ],
+      "properties": {
+        "reference_anchor": {
+          "type": "object", "additionalProperties": false, "required": ["u", "v"],
+          "properties": {
+            "u": {"enum": ["start", "center", "end"]},
+            "v": {"enum": ["start", "center", "end"]}
+          }
+        },
+        "surface_id": {
+          "type": "string"
+        },
+        "scene_object_id": {
+          "type": "string"
+        },
+        "surface_type": {
+          "enum": [
+            "ground",
+            "flat_roof",
+            "pitched_roof",
+            "custom_plane",
+            "exclusion_area",
+            "walkway",
+            "reference",
+            "building_footprint"
+          ]
+        },
+        "boundary_2d": {
+          "$ref": "#/$defs/boundary_2d"
+        },
+        "base_elevation_m": {
+          "type": "number",
+          "description": "Surface-plane elevation at elevation_reference. If elevation_reference is omitted, Phase 4.4 uses the boundary centroid."
+        },
+        "slope_deg": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 90,
+          "description": "Planar surface slope from horizontal. Vertical geometry belongs to obstacle/wall primitives."
+        },
+        "azimuth_deg": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 360,
+          "description": "Downhill/facing engineering azimuth: 0=N, 90=E, clockwise positive."
+        },
+        "parent_surface_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "material": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "albedo": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "usable_for_pv": {
+          "type": "boolean"
+        },
+        "shading_receiver": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "locked": {
+          "type": "boolean"
+        },
+        "selectable": {
+          "type": "boolean"
+        },
+        "group_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "geometry_source": {
+          "$ref": "#/$defs/dimension_source"
+        },
+        "edge_dimension_sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/edge_dimension_source"
+          }
+        },
+        "metadata": {
+          "type": "object"
+        },
+        "elevation_reference": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "description": "Datum point for base_elevation_m. Omitted/null is equivalent to boundary_centroid.",
+          "properties": {
+            "mode": {
+              "enum": [
+                "boundary_centroid",
+                "explicit_xy"
+              ]
+            },
+            "x_m": {
+              "type": [
+                "number",
+                "null"
+              ]
+            },
+            "y_m": {
+              "type": [
+                "number",
+                "null"
+              ]
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "mode": {
+                    "const": "explicit_xy"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "x_m",
+                  "y_m"
+                ],
+                "properties": {
+                  "x_m": {
+                    "type": "number"
+                  },
+                  "y_m": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "obstacle": {
+      "type": "object",
+      "properties": {
+        "reference_anchor": {
+          "type": "object", "additionalProperties": false, "required": ["u", "v"],
+          "properties": {
+            "u": {"enum": ["start", "center", "end"]},
+            "v": {"enum": ["start", "center", "end"]}
+          }
+        },
+        "obstacle_id": {
+          "type": "string"
+        },
+        "scene_object_id": {
+          "type": "string"
+        },
+        "obstacle_type": {
+          "enum": [
+            "box",
+            "cylinder",
+            "extruded_polygon",
+            "parapet",
+            "wall",
+            "pole",
+            "simplified_tree",
+            "imported_mesh"
+          ]
+        },
+        "footprint": {
+          "$ref": "#/$defs/boundary_2d"
+        },
+        "base_elevation_m": {
+          "type": "number"
+        },
+        "height_m": {
+          "type": "number",
+          "minimum": 0
+        },
+        "dimensions": {
+          "type": "object"
+        },
+        "shading_enabled": {
+          "type": "boolean"
+        },
+        "receiver_enabled": {
+          "type": "boolean"
+        },
+        "material": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "locked": {
+          "type": "boolean"
+        },
+        "selectable": {
+          "type": "boolean"
+        },
+        "group_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "geometry_source": {
+          "$ref": "#/$defs/dimension_source"
+        },
+        "edge_dimension_sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/edge_dimension_source"
+          }
+        },
+        "metadata": {
+          "type": "object"
+        },
+        "mesh": {
+          "$ref": "#/$defs/opaque_mesh_payload"
+        },
+        "role": {
+          "const": "opaque_occluder"
+        },
+        "provenance": {
+          "type": "object"
+        },
+        "mesh_validation": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "obstacle_id",
+        "scene_object_id",
+        "obstacle_type",
+        "shading_enabled",
+        "receiver_enabled"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "mesh"
+            ],
+            "properties": {
+              "obstacle_type": {
+                "const": "imported_mesh"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "mesh",
+              "role",
+              "provenance",
+              "name"
+            ],
+            "properties": {
+              "receiver_enabled": {
+                "const": false
+              }
+            }
+          },
+          "else": {
+            "required": [
+              "footprint",
+              "base_elevation_m",
+              "height_m"
+            ]
+          }
+        }
+      ]
+    },
+    "setback_configuration": {
+      "type": "object",
+      "properties": {
+        "perimeter_setback_m": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "edge_specific_setbacks": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "obstacle_setback_m": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "walkway_rules": {
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "pv_field": {
+      "type": "object",
+      "properties": {
+        "pv_field_id": {
+          "type": "string"
+        },
+        "scene_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "support_surface_id": {
+          "type": "string"
+        },
+        "module_definition_revision_id": {
+          "type": "string"
+        },
+        "orientation": {
+          "enum": [
+            "portrait",
+            "landscape",
+            "custom_rotation"
+          ]
+        },
+        "azimuth_deg": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 360
+        },
+        "tilt_deg": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 90
+        },
+        "mounting_height_m": {
+          "type": "number",
+          "description": "Vertical Z offset from the support surface plane at module center XY to the module center. This is not a surface-normal distance."
+        },
+        "layout_mode": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Layout mode label. Existing serialized values remain readable; Phase 4.3 generated fields use deterministic_grid."
+        },
+        "row_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "modules_per_row": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "module_gap_x_m": {
+          "type": "number",
+          "minimum": 0
+        },
+        "module_gap_y_m": {
+          "type": "number",
+          "minimum": 0
+        },
+        "row_pitch_m": {
+          "type": "number",
+          "minimum": 0
+        },
+        "table_configuration": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "rows_per_table": { "type": "integer", "minimum": 1 },
+            "leftover_depth": { "enum": ["smaller_table", "smaller_table_front", "leave_empty"] },
+            "modules_per_table_x": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "table_gap_x_m": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            }
+          },
+          "additionalProperties": true
+        },
+        "boundary_constraint_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "setback_configuration": {
+          "$ref": "#/$defs/setback_configuration"
+        },
+        "generated_module_instance_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "layout_source": {
+          "enum": [
+            "manual",
+            "fill_command",
+            "imported",
+            "generated_then_edited",
+            "explicit_layout"
+          ]
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "packing_parameters": {
+          "type": "object",
+          "properties": {
+            "row_alignment": {
+              "enum": [
+                "start",
+                "center",
+                "end"
+              ]
+            },
+            "depth_alignment": {
+              "description": "UXF1 across-row anchor: start = back (high) side, end = front (low) side. Absent: the row grid that fits the most modules. Never reduces the module count.",
+              "enum": [
+                "start",
+                "center",
+                "end"
+              ]
+            },
+            "requested_row_count": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "requested_modules_per_row": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "exclusion_rules": {
+          "type": "object",
+          "properties": {
+            "use_scene_exclusion_surfaces": {
+              "type": "boolean"
+            },
+            "surface_types": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "exclusion_area",
+                  "walkway",
+                  "reference",
+                  "ground",
+                  "flat_roof",
+                  "pitched_roof",
+                  "custom_plane",
+                  "building_footprint"
+                ]
+              }
+            },
+            "use_scene_obstacles": {
+              "type": "boolean"
+            },
+            "surface_ids": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            },
+            "obstacle_ids": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "module_footprint": {
+          "type": "object",
+          "required": [
+            "source_revision_id",
+            "physical_width_m",
+            "physical_height_m",
+            "orientation",
+            "packed_width_m",
+            "packed_height_m",
+            "packing_basis"
+          ],
+          "properties": {
+            "source_revision_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "physical_width_m": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "physical_height_m": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "orientation": {
+              "enum": [
+                "portrait",
+                "landscape"
+              ]
+            },
+            "packed_width_m": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Legacy-named oriented physical module-plane width; retained for compatibility and 3-D physical dimensions."
+            },
+            "packed_height_m": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Legacy-named oriented physical module-plane height; retained for compatibility and 3-D physical dimensions."
+            },
+            "packing_basis": {
+              "enum": [
+                "support_surface_2d",
+                "horizontal_plan_projection"
+              ],
+              "description": "Legacy support_surface_2d remains readable; Phase 4.7H-C generated fields use horizontal_plan_projection."
+            },
+            "tilt_deg": {
+              "type": "number",
+              "minimum": 0,
+              "exclusiveMaximum": 90,
+              "description": "Tilt used to derive the stored horizontal plan projection."
+            },
+            "plan_projection_width_m": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Horizontal-plan projection width used for canonical 2-D packing."
+            },
+            "plan_projection_height_m": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "description": "Horizontal-plan projection height used for canonical 2-D packing; oriented physical plane height multiplied by cos(tilt)."
+            }
+          },
+          "additionalProperties": false
+        },
+        "packing_command_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "packing_input_hash": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "layout_status": {
+          "enum": [
+            "unpacked",
+            "packed",
+            "manual",
+            "stale",
+            "conflict",
+            "explicit"
+          ]
+        },
+        "resolved_exclusion_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "row_layouts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "row_index",
+              "field_y_m",
+              "module_count",
+              "module_instance_ids"
+            ],
+            "properties": {
+              "row_index": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "field_y_m": {
+                "type": "number"
+              },
+              "module_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "module_instance_ids": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "field_kind": {
+          "enum": [
+            "generated",
+            "explicit_layout"
+          ]
+        },
+        "tables": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2000,
+          "items": {
+            "$ref": "#/$defs/explicit_table"
+          }
+        },
+        "explicit_layout_version": {
+          "type": "string"
+        },
+        "provenance": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "pv_field_id",
+        "scene_id",
+        "name",
+        "layout_source"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "field_kind"
+            ],
+            "properties": {
+              "field_kind": {
+                "const": "explicit_layout"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "tables",
+              "provenance",
+              "explicit_layout_version",
+              "layout_mode"
+            ],
+            "properties": {
+              "layout_source": {
+                "const": "explicit_layout"
+              },
+              "layout_mode": {
+                "const": "fixed_tilt"
+              }
+            }
+          },
+          "else": {
+            "required": [
+              "pv_field_id",
+              "scene_id",
+              "name",
+              "support_surface_id",
+              "module_definition_revision_id",
+              "orientation",
+              "azimuth_deg",
+              "tilt_deg",
+              "mounting_height_m",
+              "row_count",
+              "modules_per_row",
+              "module_gap_x_m",
+              "module_gap_y_m",
+              "row_pitch_m",
+              "layout_source"
+            ]
+          }
+        }
+      ]
+    },
+    "module_instance": {
+      "type": "object",
+      "required": [
+        "module_instance_id",
+        "pv_field_id",
+        "module_definition_revision_id",
+        "transform",
+        "row_index",
+        "column_index",
+        "enabled"
+      ],
+      "properties": {
+        "module_instance_id": {
+          "type": "string"
+        },
+        "pv_field_id": {
+          "type": "string"
+        },
+        "module_definition_revision_id": {
+          "type": "string"
+        },
+        "transform": {
+          "$ref": "#/$defs/transform"
+        },
+        "row_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "column_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "table_index": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "electrical_connection_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "metadata": {
+          "type": "object"
+        },
+        "table_id": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "dimension_source": {
+      "enum": [
+        "map_measurement",
+        "imported_geometry",
+        "component_database",
+        "user_override",
+        "field_measurement",
+        "derived",
+        "unknown"
+      ]
+    },
+    "edge_dimension_source": {
+      "type": "object",
+      "required": [
+        "edge_index",
+        "source",
+        "value_m"
+      ],
+      "properties": {
+        "edge_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source": {
+          "$ref": "#/$defs/dimension_source"
+        },
+        "value_m": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "source_reference_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "original_value_m": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "reference_line": {
+      "type": "object",
+      "required": [
+        "reference_line_id",
+        "scene_object_id",
+        "name",
+        "line_type",
+        "vertices",
+        "base_elevation_m",
+        "visible",
+        "locked",
+        "selectable",
+        "geometry_source"
+      ],
+      "properties": {
+        "reference_line_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scene_object_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string"
+        },
+        "line_type": {
+          "enum": [
+            "reference",
+            "construction",
+            "dimension"
+          ]
+        },
+        "vertices": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/point2d"
+          }
+        },
+        "base_elevation_m": {
+          "type": "number"
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "locked": {
+          "type": "boolean"
+        },
+        "selectable": {
+          "type": "boolean"
+        },
+        "group_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "geometry_source": {
+          "$ref": "#/$defs/dimension_source"
+        },
+        "edge_dimension_sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/edge_dimension_source"
+          }
+        },
+        "metadata": {
+          "type": "object"
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "opaque_mesh_payload": {
+      "type": "object",
+      "required": [
+        "vertices_m",
+        "faces"
+      ],
+      "properties": {
+        "vertices_m": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 50000,
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          }
+        },
+        "faces": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 50000,
+          "items": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 512,
+            "uniqueItems": true,
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "transform": {
+          "type": "object",
+          "required": [
+            "rotation_matrix",
+            "translation_m"
+          ],
+          "properties": {
+            "rotation_matrix": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                },
+                "minItems": 3,
+                "maxItems": 3
+              }
+            },
+            "translation_m": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "explicit_table": {
+      "type": "object",
+      "required": [
+        "table_id",
+        "anchor_xyz_m",
+        "anchor_convention",
+        "tilt_deg",
+        "azimuth_deg",
+        "module_definition_revision_id",
+        "modules_across",
+        "modules_up",
+        "module_orientation",
+        "module_gap_across_m",
+        "module_gap_up_m",
+        "rectangle",
+        "support_surface_id",
+        "physical_module_width_m",
+        "physical_module_height_m",
+        "plane_module_width_m",
+        "plane_module_height_m"
+      ],
+      "properties": {
+        "table_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "anchor_xyz_m": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        },
+        "anchor_convention": {
+          "enum": [
+            "lower_left",
+            "lower_center",
+            "lower_right",
+            "left_center",
+            "center",
+            "right_center",
+            "upper_left",
+            "upper_center",
+            "upper_right"
+          ],
+          "description": "Left/right as seen facing the front surface; lower/upper mean downhill/upslope."
+        },
+        "tilt_deg": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 90
+        },
+        "azimuth_deg": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 360
+        },
+        "module_definition_revision_id": {
+          "type": "string"
+        },
+        "modules_across": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50000
+        },
+        "modules_up": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 50000
+        },
+        "module_orientation": {
+          "enum": [
+            "portrait",
+            "landscape"
+          ]
+        },
+        "module_gap_across_m": {
+          "type": "number",
+          "minimum": 0
+        },
+        "module_gap_up_m": {
+          "type": "number",
+          "minimum": 0
+        },
+        "rectangle": {
+          "type": "object",
+          "required": [
+            "width_m",
+            "height_m"
+          ],
+          "properties": {
+            "width_m": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "height_m": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "support_surface_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "physical_module_width_m": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "physical_module_height_m": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "plane_module_width_m": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "plane_module_height_m": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true,
+  "description": "Canonical immutable scene-revision serialization. The v0.1 schema_name remains Scene for Phase-3 compatibility."
+}

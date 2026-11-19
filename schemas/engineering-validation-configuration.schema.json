@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/engineering-validation-configuration.schema.json",
+  "title": "OpenSIMPV EngineeringValidationConfiguration v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "minimum_cell_temperature_c",
+    "maximum_cell_temperature_c",
+    "design_irradiance_w_m2"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "EngineeringValidationConfiguration"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "minimum_cell_temperature_c": {
+      "type": "number"
+    },
+    "maximum_cell_temperature_c": {
+      "type": "number"
+    },
+    "design_irradiance_w_m2": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "orientation_tolerance_deg": {
+      "type": "number",
+      "minimum": 0,
+      "default": 0.1
+    },
+    "orientation_comparison": {
+      "type": "string",
+      "enum": ["tilt_azimuth", "normal_angle"],
+      "default": "tilt_azimuth",
+      "description": "S14b: tilt_azimuth compares tilt and azimuth differences separately; normal_angle compares the largest pairwise angle between module normals on an MPPT."
+    },
+    "dc_ac_ratio_warning_min": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "exclusiveMinimum": 0
+    },
+    "dc_ac_ratio_warning_max": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "exclusiveMinimum": 0
+    },
+    "temperature_model_policy": {
+      "enum": [
+        "detailed_then_linear_fallback",
+        "detailed_required"
+      ],
+      "default": "detailed_then_linear_fallback"
+    },
+    "fallback_voltage_uncertainty_fraction": {
+      "type": "number",
+      "minimum": 0,
+      "exclusiveMaximum": 1,
+      "default": 0.05,
+      "description": "Symmetric relative uncertainty envelope applied to linear-fallback Voc/Vmpp evidence."
+    },
+    "fallback_current_uncertainty_fraction": {
+      "type": "number",
+      "minimum": 0,
+      "exclusiveMaximum": 1,
+      "default": 0.05,
+      "description": "Symmetric relative uncertainty envelope applied to linear-fallback Imp/Isc evidence."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "dc_ac_ratio_warning_min",
+          "dc_ac_ratio_warning_max"
+        ],
+        "properties": {
+          "dc_ac_ratio_warning_min": {
+            "type": "number"
+          },
+          "dc_ac_ratio_warning_max": {
+            "type": "number"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "dc_ac_ratio_warning_max": {
+            "exclusiveMinimum": 0
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

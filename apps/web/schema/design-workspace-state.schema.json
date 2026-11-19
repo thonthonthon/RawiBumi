@@ -1,0 +1,296 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/design-workspace-state.schema.json",
+  "title": "OpenSIMPV DesignWorkspaceState v0.1",
+  "description": "Editor-only state. This object is not a canonical simulation input.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "workspace_state_id",
+    "project_id",
+    "active_project_revision_id",
+    "mode",
+    "active_tool",
+    "selection",
+    "snap_preferences",
+    "layer_visibility",
+    "updated_at"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "DesignWorkspaceState"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "workspace_state_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "project_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "active_project_revision_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "mode": {
+      "enum": [
+        "plan",
+        "3d",
+        "shading",
+        "electrical"
+      ]
+    },
+    "active_tool": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "plan_viewport": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "center_x_m": {
+          "type": "number"
+        },
+        "center_y_m": {
+          "type": "number"
+        },
+        "pixels_per_m": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "rotation_deg": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "center_x_m",
+        "center_y_m",
+        "pixels_per_m",
+        "rotation_deg"
+      ],
+      "additionalProperties": false
+    },
+    "camera_3d": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "position_x_m": {
+          "type": "number"
+        },
+        "position_y_m": {
+          "type": "number"
+        },
+        "position_z_m": {
+          "type": "number"
+        },
+        "target_x_m": {
+          "type": "number"
+        },
+        "target_y_m": {
+          "type": "number"
+        },
+        "target_z_m": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "position_x_m",
+        "position_y_m",
+        "position_z_m",
+        "target_x_m",
+        "target_y_m",
+        "target_z_m"
+      ],
+      "additionalProperties": false
+    },
+    "selection": {
+      "type": "object",
+      "required": [
+        "selected_entity_ids"
+      ],
+      "properties": {
+        "selected_entity_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "primary_entity_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "snap_preferences": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "vertex": {
+          "type": "boolean"
+        },
+        "edge": {
+          "type": "boolean"
+        },
+        "midpoint": {
+          "type": "boolean"
+        },
+        "parallel": {
+          "type": "boolean"
+        },
+        "perpendicular": {
+          "type": "boolean"
+        },
+        "module_edge": {
+          "type": "boolean"
+        },
+        "row_edge": {
+          "type": "boolean"
+        },
+        "user_grid": {
+          "type": "boolean"
+        },
+        "endpoint": {
+          "type": "boolean"
+        },
+        "intersection": {
+          "type": "boolean"
+        },
+        "snap_tolerance_m": {
+          "type": "number",
+          "minimum": 0
+        },
+        "grid_spacing_m": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "override_active": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "enabled"
+      ],
+      "additionalProperties": false
+    },
+    "layer_visibility": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    },
+    "panel_state": {
+      "type": "object"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "snap_feedback": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "applied": {
+          "type": "boolean"
+        },
+        "kind": {
+          "enum": [
+            "vertex",
+            "endpoint",
+            "edge",
+            "midpoint",
+            "intersection",
+            "parallel",
+            "perpendicular",
+            "module_edge",
+            "row_edge",
+            "user_grid",
+            null
+          ]
+        },
+        "source_entity_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "feature_index": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "raw_x_m": {
+          "type": "number"
+        },
+        "raw_y_m": {
+          "type": "number"
+        },
+        "snapped_x_m": {
+          "type": "number"
+        },
+        "snapped_y_m": {
+          "type": "number"
+        },
+        "distance_m": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "applied",
+        "kind",
+        "source_entity_id",
+        "feature_index",
+        "raw_x_m",
+        "raw_y_m",
+        "snapped_x_m",
+        "snapped_y_m",
+        "distance_m"
+      ],
+      "additionalProperties": false
+    },
+    "editor_history": {
+      "type": "object",
+      "properties": {
+        "undo_depth": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "redo_depth": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "undo_depth",
+        "redo_depth"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

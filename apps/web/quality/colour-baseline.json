@@ -1,0 +1,4 @@
+{
+  "note": "Hard-coded colour count per file. May only go down; 0 since F1 (all colours come from tokens).",
+  "files": {}
+}

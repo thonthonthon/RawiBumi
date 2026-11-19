@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/project.schema.json",
+  "title": "OpenSIMPV Project v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "project_id",
+    "name",
+    "status",
+    "site",
+    "project_revision"
+  ],
+  "properties": {
+    "distance_warning_m": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10000
+    },
+    "schema_name": {
+      "const": "Project"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "project_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}(?!\\n)$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "concept",
+        "design",
+        "tender",
+        "construction",
+        "as_built",
+        "archived"
+      ]
+    },
+    "site": {
+      "type": "object",
+      "required": [
+        "site_id",
+        "latitude_deg",
+        "longitude_deg",
+        "timezone",
+        "local_coordinate_system",
+        "north_reference"
+      ],
+      "properties": {
+        "site_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "latitude_deg": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude_deg": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "elevation_m": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "local_coordinate_system": {
+          "$ref": "https://opensimpv.org/schema/local-coordinate-system.schema.json"
+        },
+        "north_reference": {
+          "const": "geodetic_true_north"
+        },
+        "address": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "text",
+            "source",
+            "lat",
+            "lon",
+            "updatedAt"
+          ],
+          "properties": {
+            "text": {
+              "type": "string",
+              "maxLength": 2000
+            },
+            "source": {
+              "enum": [
+                "lookup",
+                "user"
+              ]
+            },
+            "attribution": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 500
+            },
+            "lat": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "lon": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            },
+            "updatedAt": {
+              "type": "string",
+              "maxLength": 64
+            }
+          },
+          "additionalProperties": false
+        },
+        "installation": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "properties": {
+            "installationType": {
+              "enum": [
+                "on_grid",
+                "on_grid_zero_export",
+                "off_grid",
+                "hybrid",
+                null
+              ]
+            },
+            "bessEnergyKwh": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "bessPowerKw": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "project_revision": {
+      "type": "object",
+      "required": [
+        "project_revision_id",
+        "revision_number",
+        "scene_revision_id",
+        "electrical_revision_id"
+      ],
+      "properties": {
+        "project_revision_id": {
+          "type": "string"
+        },
+        "revision_number": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "scene_revision_id": {
+          "type": "string"
+        },
+        "electrical_revision_id": {
+          "type": "string"
+        },
+        "weather_dataset_revision_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,254}(?!\\n)$"
+        },
+        "simulation_defaults_revision_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "change_summary": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

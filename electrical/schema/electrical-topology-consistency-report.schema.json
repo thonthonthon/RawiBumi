@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/electrical-topology-consistency-report.schema.json",
+  "title": "OpenSIMPV ElectricalTopologyConsistencyReport v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "electrical_revision_id",
+    "blocking_count",
+    "draft_count",
+    "findings"
+  ],
+  "properties": {
+    "schema_name": {"const": "ElectricalTopologyConsistencyReport"},
+    "schema_version": {"const": "0.1"},
+    "electrical_revision_id": {"type": "string"},
+    "blocking_count": {"type": "integer", "minimum": 0},
+    "draft_count": {"type": "integer", "minimum": 0},
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["severity", "code", "entity_id", "message"],
+        "properties": {
+          "severity": {"enum": ["error", "warning", "draft", "info"]},
+          "code": {"type": "string", "minLength": 1},
+          "entity_id": {"type": "string"},
+          "message": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,569 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/electrical-parameterization-evidence.schema.json",
+  "description": "Revision-bound validation evidence for region/sub-string or cell-level electrical parameterization. This object is capability evidence; a naked availability boolean is not authoritative.",
+  "title": "OpenSIMPV ElectricalParameterizationEvidence v0.1 / v0.2",
+  "type": "object",
+  "required": [
+    "schema_version"
+  ],
+  "properties": {
+    "schema_version": {
+      "enum": [
+        "0.1",
+        "0.2"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "schema_version": {
+            "const": "0.1"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/v0_1"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "schema_version": {
+            "const": "0.2"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/v0_2"
+      }
+    }
+  ],
+  "$defs": {
+    "v0_1": {
+      "type": "object",
+      "required": [
+        "schema_name",
+        "schema_version",
+        "contract_version",
+        "evidence_id",
+        "parameterization_scope",
+        "parameterization_id",
+        "module_definition_revision_id",
+        "module_topology_revision_id",
+        "model_id",
+        "model_version",
+        "validation_record_id",
+        "validation_status",
+        "verification_state",
+        "parameterization_provenance",
+        "source_ids",
+        "parameterization_payload_sha256"
+      ],
+      "properties": {
+        "schema_name": {
+          "const": "ElectricalParameterizationEvidence"
+        },
+        "schema_version": {
+          "const": "0.1"
+        },
+        "contract_version": {
+          "const": "0.1"
+        },
+        "evidence_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parameterization_scope": {
+          "enum": [
+            "region_substring",
+            "cell"
+          ],
+          "description": "The fidelity boundary this evidence authorizes when all other prerequisites are satisfied."
+        },
+        "parameterization_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "module_definition_revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "module_topology_revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "validation_record_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "validation_status": {
+          "const": "passed"
+        },
+        "verification_state": {
+          "enum": [
+            "auto_validated",
+            "reviewed",
+            "manufacturer_verified"
+          ]
+        },
+        "parameterization_provenance": {
+          "enum": [
+            "direct_source",
+            "manual_verified",
+            "derived_validated"
+          ],
+          "description": "Inferred/unresolved parameterizations are not capability evidence."
+        },
+        "source_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "parameterization_payload_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "module_quality_declaration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "relationship",
+            "module_quality_loss_fraction",
+            "source_ids",
+            "rationale"
+          ],
+          "properties": {
+            "relationship": {
+              "enum": [
+                "separate_from_parameterization",
+                "embedded_in_parameterization",
+                "unknown"
+              ]
+            },
+            "module_quality_loss_fraction": {
+              "type": "number",
+              "exclusiveMinimum": -1,
+              "exclusiveMaximum": 1
+            },
+            "source_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "metadata": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "v0_2": {
+      "type": "object",
+      "required": [
+        "schema_name",
+        "schema_version",
+        "contract_version",
+        "evidence_id",
+        "parameterization_scope",
+        "parameterization_id",
+        "module_definition_revision_id",
+        "module_topology_revision_id",
+        "model_id",
+        "model_version",
+        "validation_record_id",
+        "validation_status",
+        "verification_state",
+        "parameterization_provenance",
+        "source_ids",
+        "parameterization_payload_sha256",
+        "evidence_class",
+        "parameterization_revision_id",
+        "assumption_declaration",
+        "consistency_record"
+      ],
+      "properties": {
+        "schema_name": {
+          "const": "ElectricalParameterizationEvidence"
+        },
+        "schema_version": {
+          "const": "0.2"
+        },
+        "contract_version": {
+          "const": "0.1"
+        },
+        "evidence_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parameterization_scope": {
+          "enum": [
+            "region_substring",
+            "cell"
+          ],
+          "description": "The fidelity boundary this evidence authorizes when all other prerequisites are satisfied."
+        },
+        "parameterization_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "module_definition_revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "module_topology_revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "validation_record_id": {
+          "type": "null"
+        },
+        "validation_status": {
+          "const": "not_applicable"
+        },
+        "verification_state": {
+          "const": "not_applicable"
+        },
+        "parameterization_provenance": {
+          "const": "simulation_assumption"
+        },
+        "source_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "parameterization_payload_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "module_quality_declaration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "relationship",
+            "module_quality_loss_fraction",
+            "source_ids",
+            "rationale"
+          ],
+          "properties": {
+            "relationship": {
+              "enum": [
+                "separate_from_parameterization",
+                "embedded_in_parameterization",
+                "unknown"
+              ]
+            },
+            "module_quality_loss_fraction": {
+              "type": "number",
+              "exclusiveMinimum": -1,
+              "exclusiveMaximum": 1
+            },
+            "source_ids": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "metadata": {
+          "type": "object"
+        },
+        "evidence_class": {
+          "const": "NUMERICAL_ASSUMPTION"
+        },
+        "parameterization_revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "assumption_declaration": {
+          "type": "object",
+          "required": [
+            "assumption_id",
+            "assumption_revision_id",
+            "assumption_source_id",
+            "author",
+            "rationale",
+            "evidence_class",
+            "module_source",
+            "topology",
+            "parameterization",
+            "region_count",
+            "scientific_limitations",
+            "digest_sha256"
+          ],
+          "properties": {
+            "assumption_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "assumption_revision_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "assumption_source_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "author": {
+              "type": "string",
+              "minLength": 1
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1
+            },
+            "evidence_class": {
+              "const": "NUMERICAL_ASSUMPTION"
+            },
+            "module_source": {
+              "type": "object",
+              "required": [
+                "component_id",
+                "revision_id",
+                "original_pan_sha256",
+                "retained_pan_sha256"
+              ],
+              "properties": {
+                "component_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "revision_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "original_pan_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "retained_pan_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "additionalProperties": false
+            },
+            "topology": {
+              "type": "object",
+              "required": [
+                "topology_id",
+                "topology_revision_id",
+                "topology_sha256"
+              ],
+              "properties": {
+                "topology_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "topology_revision_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "topology_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "additionalProperties": false
+            },
+            "parameterization": {
+              "type": "object",
+              "required": [
+                "parameterization_id",
+                "parameterization_revision_id",
+                "parameterization_sha256"
+              ],
+              "properties": {
+                "parameterization_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "parameterization_revision_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "parameterization_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "additionalProperties": false
+            },
+            "region_count": {
+              "type": "integer",
+              "const": 3
+            },
+            "scientific_limitations": {
+              "type": "array",
+              "minItems": 8,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "digest_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "consistency_record": {
+          "type": "object",
+          "required": [
+            "policy_id",
+            "policy_version",
+            "assumption_digest_sha256",
+            "model_family",
+            "voltage_tolerance_v",
+            "cases",
+            "max_abs_residual_v",
+            "passed",
+            "digest_sha256"
+          ],
+          "properties": {
+            "policy_id": {
+              "const": "rawibumi.level2.uniform_iv_equal_series"
+            },
+            "policy_version": {
+              "const": "1.0.0"
+            },
+            "assumption_digest_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "model_family": {
+              "const": "pvsyst_sdm"
+            },
+            "voltage_tolerance_v": {
+              "type": "number",
+              "const": 0.0001
+            },
+            "cases": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "object",
+                "required": [
+                  "irradiance_w_m2",
+                  "cell_temperature_c",
+                  "samples"
+                ],
+                "properties": {
+                  "irradiance_w_m2": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "cell_temperature_c": {
+                    "type": "number"
+                  },
+                  "samples": {
+                    "type": "array",
+                    "minItems": 5,
+                    "maxItems": 5,
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "current_a",
+                        "module_voltage_v",
+                        "assembled_voltage_v",
+                        "residual_v"
+                      ],
+                      "properties": {
+                        "current_a": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "module_voltage_v": {
+                          "type": "number"
+                        },
+                        "assembled_voltage_v": {
+                          "type": "number"
+                        },
+                        "residual_v": {
+                          "type": "number"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "max_abs_residual_v": {
+              "type": "number",
+              "minimum": 0
+            },
+            "passed": {
+              "type": "boolean"
+            },
+            "digest_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

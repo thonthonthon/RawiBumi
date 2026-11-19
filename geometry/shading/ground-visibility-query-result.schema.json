@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/ground-visibility-query-result.schema.json",
+  "title": "OpenSIMPV GroundVisibilityQueryResult v0.1",
+  "description": "Deterministic Phase-5.7 weighted lower-hemisphere receiver-side ground/albedo visibility.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "solver_id",
+    "solver_version",
+    "compiled_geometry_hash",
+    "receiver_id",
+    "factor_convention",
+    "self_shading_enabled",
+    "weighting_method",
+    "ground_dome_resolution",
+    "ground_patch_count",
+    "has_front_ground_view",
+    "ground_front_weight_sum_sr",
+    "ground_visible_weight_sum_sr",
+    "ground_visibility_factor",
+    "directional_solver_id",
+    "directional_solver_version",
+    "participating_occluder_count",
+    "evaluation_count"
+  ],
+  "properties": {
+    "schema_name": {"const": "GroundVisibilityQueryResult"},
+    "schema_version": {"const": "0.1"},
+    "solver_id": {"type": "string", "minLength": 1},
+    "solver_version": {"type": "string", "minLength": 1},
+    "compiled_geometry_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "receiver_id": {"type": "string", "minLength": 1},
+    "factor_convention": {"const": "visibility_one_clear_zero_blocked"},
+    "self_shading_enabled": {"type": "boolean"},
+    "weighting_method": {"const": "patch_solid_angle_times_positive_receiver_cosine"},
+    "ground_dome_resolution": {
+      "type": "object",
+      "required": ["azimuth_sectors", "depression_bands", "band_coordinate"],
+      "properties": {
+        "azimuth_sectors": {"type": "integer", "minimum": 4},
+        "depression_bands": {"type": "integer", "minimum": 1},
+        "band_coordinate": {"const": "uniform_sin_depression"}
+      },
+      "additionalProperties": false
+    },
+    "ground_patch_count": {"type": "integer", "minimum": 1},
+    "has_front_ground_view": {"type": "boolean"},
+    "ground_front_weight_sum_sr": {"type": "number", "minimum": 0},
+    "ground_visible_weight_sum_sr": {"type": "number", "minimum": 0},
+    "ground_visibility_factor": {"type": "number", "minimum": 0, "maximum": 1},
+    "directional_solver_id": {"type": "string", "minLength": 1},
+    "directional_solver_version": {"type": "string", "minLength": 1},
+    "participating_occluder_count": {"type": "integer", "minimum": 0},
+    "evaluation_count": {"type": "integer", "minimum": 0},
+      "shadow_union_precision_fallback_events": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "required": [
+            "receiver_id",
+            "occluder_ids",
+            "source_direction_xyz",
+            "grid_size_m",
+            "perimeter_m",
+            "area_bound_m2"
+          ],
+          "properties": {
+            "receiver_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "occluder_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "source_direction_xyz": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "grid_size_m": {
+              "enum": [
+                1e-10,
+                1e-09,
+                1e-08,
+                1e-07,
+                1e-06
+              ]
+            },
+            "perimeter_m": {
+              "type": "number",
+              "minimum": 0
+            },
+            "area_bound_m2": {
+              "type": "number",
+              "minimum": 0
+            },
+            "timestamp": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "channel": {
+              "enum": [
+                "beam",
+                "sky",
+                "horizon",
+                "ground"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "quality_flags": {
+        "type": "array",
+        "items": {
+          "const": "shadow_union_precision_fallback"
+        },
+        "minItems": 1,
+        "maxItems": 1
+      }
+  },
+  "additionalProperties": false
+}

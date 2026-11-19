@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/design-validation-report.schema.json",
+  "title": "OpenSIMPV DesignValidationReport v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "design_validation_report_id",
+    "project_revision_id",
+    "scene_revision_id",
+    "electrical_revision_id",
+    "rule_set_id",
+    "generated_at",
+    "status",
+    "finding_counts",
+    "blocking_simulation",
+    "findings"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "DesignValidationReport"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "design_validation_report_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "project_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scene_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "electrical_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rule_set_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "enum": [
+        "valid",
+        "valid_with_findings",
+        "invalid"
+      ]
+    },
+    "finding_counts": {
+      "type": "object",
+      "required": [
+        "info",
+        "recommendation",
+        "warning",
+        "error",
+        "blocking_error"
+      ],
+      "properties": {
+        "info": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "recommendation": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "warning": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "error": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blocking_error": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "blocking_simulation": {
+      "type": "boolean"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "validation-finding.schema.json"
+      }
+    },
+    "metadata": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false
+}

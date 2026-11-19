@@ -1,0 +1,24 @@
+﻿name: phase59-annual-validation
+
+
+on:
+  push:
+    branches:
+      - phase59-full-geometry-aware-annual-run
+    paths-ignore:
+      - "docs/**"
+
+
+jobs:
+  full-annual-r1-r4:
+    if: github.repository == 'thonthonthon/RawiBumi'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -r requirements-validation.txt
+      - run: python tools/benchmark_phase59.py

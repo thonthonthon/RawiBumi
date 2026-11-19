@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/electrical-shading-configuration.schema.json",
+  "title": "OpenSIMPV ElectricalShadingConfiguration v0.1",
+  "description": "Requested electrical-shading fidelity and model identity. Phase 6.1 freezes this contract but does not activate a production electrical-shading solver.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "contract_version",
+    "requested_fidelity",
+    "fallback_policy",
+    "thermal_state_scope",
+    "loss_accounting_boundary",
+    "model_selections",
+    "scientific_options",
+    "execution_options"
+  ],
+  "properties": {
+    "schema_name": {"const": "ElectricalShadingConfiguration"},
+    "schema_version": {"const": "0.1"},
+    "contract_version": {"const": "0.1"},
+    "requested_fidelity": {
+      "enum": [
+        "level_0_geometric_only",
+        "level_1_module_approximation",
+        "level_2_bypass_substring",
+        "level_3_cell_submodule_iv"
+      ]
+    },
+    "fallback_policy": {
+      "enum": ["fail_closed", "explicit_lower_fidelity"],
+      "description": "There is no silent downgrade. explicit_lower_fidelity requires the resolved lower level to be recorded in run provenance."
+    },
+    "thermal_state_scope": {"const": "single_module_temperature"},
+    "loss_accounting_boundary": {
+      "const": "geometry_then_electrical_mismatch_then_mppt",
+      "description": "Geometric irradiance reduction remains upstream of electrical mismatch/bypass and MPPT interaction."
+    },
+    "model_selections": {
+      "type": "object",
+      "required": [
+        "module_electrical_model_id",
+        "region_parameterization_model_id",
+        "cell_parameterization_model_id",
+        "bypass_model_family_id",
+        "module_iv_assembly_model_id",
+        "string_iv_assembly_model_id",
+        "mppt_operating_point_model_id"
+      ],
+      "properties": {
+        "module_electrical_model_id": {"type": ["string", "null"]},
+        "region_parameterization_model_id": {"type": ["string", "null"]},
+        "cell_parameterization_model_id": {"type": ["string", "null"]},
+        "bypass_model_family_id": {"type": ["string", "null"]},
+        "module_iv_assembly_model_id": {"type": ["string", "null"]},
+        "string_iv_assembly_model_id": {"type": ["string", "null"]},
+        "mppt_operating_point_model_id": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "scientific_options": {
+      "type": "object",
+      "description": "Material physical/numerical choices that belong in scientific identity."
+    },
+    "execution_options": {
+      "type": "object",
+      "description": "Non-scientific execution choices such as cache/storage/parallelization. These must not alter physical-result identity."
+    }
+  },
+  "additionalProperties": false
+}

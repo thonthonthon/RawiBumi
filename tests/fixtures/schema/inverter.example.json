@@ -1,0 +1,21 @@
+{
+  "schema_name": "InverterDefinition",
+  "schema_version": "0.1",
+  "inverter_definition_id": "inv-openpv-ref-150k",
+  "revision_id": "inv-openpv-ref-150k-r1",
+  "manufacturer": "OpenSIMPV Reference",
+  "model": "REF-INV-150K",
+  "family": "Reference",
+  "inverter_type": "string",
+  "phase_configuration": "three_phase",
+  "verification_state": "auto_validated",
+  "source_ids": ["src-openpv-ref-inverter"],
+  "dc_limits": {"max_dc_voltage_v": 1100.0, "nominal_dc_voltage_v": 600.0, "max_dc_power_w": 225000.0, "max_dc_current_a": 336.0, "max_dc_short_circuit_current_a": 462.0, "startup_voltage_v": 200.0},
+  "ac_limits": {"nominal_ac_power_w": 150000.0, "max_ac_power_w": 165000.0, "nominal_ac_voltage_v": 400.0, "nominal_frequency_hz": 50.0, "max_ac_current_a": null},
+  "mppts": [
+    {"mppt_index": 1, "min_operating_voltage_v": 200.0, "max_operating_voltage_v": 1000.0, "nominal_voltage_v": 600.0, "max_operating_current_a": 48.0, "max_short_circuit_current_a": 66.0, "input_count": 3, "independent_inputs": false},
+    {"mppt_index": 2, "min_operating_voltage_v": 200.0, "max_operating_voltage_v": 1000.0, "nominal_voltage_v": 600.0, "max_operating_current_a": 48.0, "max_short_circuit_current_a": 66.0, "input_count": 3, "independent_inputs": false}
+  ],
+  "efficiency_model": {"model_type": "constant", "curves": [], "startup_loss_w": null, "standby_loss_w": null, "night_loss_w": null},
+  "capability_flags": {"basic_design_ready": true, "mppt_design_ready": true, "basic_yield_ready": true, "detailed_efficiency_ready": false, "derating_ready": false}
+}

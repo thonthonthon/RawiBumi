@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/resolved-component-model.schema.json",
+  "title": "OpenSIMPV ResolvedComponentModel v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "resolution_id",
+    "component_type",
+    "component_revision_id",
+    "status",
+    "requested_model_id",
+    "selected_model",
+    "enabled_refinements",
+    "unavailable_refinements",
+    "assumptions",
+    "warnings",
+    "source_ids",
+    "capability_snapshot"
+  ],
+  "properties": {
+    "schema_name": {"const": "ResolvedComponentModel"},
+    "schema_version": {"const": "0.1"},
+    "resolution_id": {"type": "string", "minLength": 1},
+    "component_type": {"enum": ["module", "inverter"]},
+    "component_definition_id": {"type": ["string", "null"]},
+    "component_revision_id": {"type": ["string", "null"]},
+    "status": {"enum": ["resolved", "blocked"]},
+    "requested_model_id": {"type": ["string", "null"]},
+    "selected_model": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": [
+            "model_id",
+            "component_type",
+            "model_family",
+            "fidelity_rank",
+            "implementation_status",
+            "description",
+            "parameter_source_path",
+            "validation_status"
+          ],
+          "properties": {
+            "model_id": {"type": "string", "minLength": 1},
+            "component_type": {"enum": ["module", "inverter"]},
+            "model_family": {"type": "string", "minLength": 1},
+            "fidelity_rank": {"type": "integer", "minimum": 0},
+            "source_model_type": {"type": ["string", "null"]},
+            "implementation_status": {"type": "string", "minLength": 1},
+            "description": {"type": "string", "minLength": 1},
+            "component_model_version": {"type": ["string", "null"]},
+            "parameter_source_path": {"type": "string", "minLength": 1},
+            "validation_status": {"type": ["string", "null"]}
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "enabled_refinements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "refinement_id",
+          "status",
+          "model_id",
+          "source_paths"
+        ],
+        "properties": {
+          "refinement_id": {"type": "string", "minLength": 1},
+          "status": {"const": "enabled"},
+          "model_id": {"type": "string", "minLength": 1},
+          "source_paths": {"type": "array", "items": {"type": "string"}},
+          "notes": {"type": ["string", "null"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "unavailable_refinements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "refinement_id",
+          "status",
+          "reason_code",
+          "missing_fields",
+          "consequence"
+        ],
+        "properties": {
+          "refinement_id": {"type": "string", "minLength": 1},
+          "status": {"const": "unavailable"},
+          "reason_code": {"type": "string", "minLength": 1},
+          "missing_fields": {"type": "array", "items": {"type": "string"}},
+          "consequence": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {"$ref": "simulation-assumption.schema.json"}
+    },
+    "warnings": {"type": "array", "items": {"type": "string"}},
+    "source_ids": {"type": "array", "items": {"type": "string"}},
+    "capability_snapshot": {"type": "object"}
+  },
+  "additionalProperties": false
+}

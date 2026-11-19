@@ -1,0 +1,48 @@
+﻿name: phase511-closure-validation
+
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "geometry/shading/**"
+      - "engine/simulation/**"
+      - "tools/benchmark_phase511.py"
+      - "tests/unit/test_phase511_closure_hardening.py"
+      - "tests/benchmarks/phase511_closure_matrix_20260925.yaml"
+      - ".github/workflows/phase511-closure-validation.yml"
+  push:
+    branches:
+      - main
+      - phase511-closure-hardening
+    paths:
+      - "geometry/shading/**"
+      - "engine/simulation/**"
+      - "tools/benchmark_phase511.py"
+      - "tests/unit/test_phase511_closure_hardening.py"
+      - "tests/benchmarks/phase511_closure_matrix_20260925.yaml"
+      - ".github/workflows/phase511-closure-validation.yml"
+
+
+jobs:
+  full-phase5-closure:
+    if: github.repository == 'thonthonthon/RawiBumi'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -r requirements-validation.txt
+      - name: Run full Phase-5 closure benchmark
+        run: |
+          set -o pipefail
+          python tools/benchmark_phase511.py | tee phase511-benchmark.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phase511-closure-benchmark
+          path: phase511-benchmark.json

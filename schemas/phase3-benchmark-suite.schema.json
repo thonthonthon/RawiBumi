@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/phase3-benchmark-suite.schema.json",
+  "title": "OpenSIMPV Phase 3 Unshaded Benchmark Suite v0.1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "suite_id",
+    "title",
+    "status",
+    "benchmark_policy",
+    "families"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1"},
+    "suite_id": {"type": "string", "pattern": "^[A-Z0-9]+(?:-[A-Z0-9]+)+$"},
+    "title": {"type": "string", "minLength": 1},
+    "status": {"enum": ["draft", "accepted", "deprecated"]},
+    "benchmark_policy": {
+      "type": "object",
+      "required": [
+        "external_agreement_is_evidence_not_truth",
+        "do_not_tune_to_annual_energy_only",
+        "uploaded_sources_redistributed"
+      ],
+      "properties": {
+        "external_agreement_is_evidence_not_truth": {"const": true},
+        "do_not_tune_to_annual_energy_only": {"const": true},
+        "uploaded_sources_redistributed": {"const": false}
+      },
+      "additionalProperties": true
+    },
+    "families": {
+      "type": "array",
+      "minItems": 3,
+      "items": {"$ref": "#/$defs/family"}
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "artifact": {
+      "type": "object",
+      "required": ["filename", "redistributed"],
+      "properties": {
+        "filename": {"type": "string", "minLength": 1},
+        "sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "size_bytes": {"type": ["integer", "null"], "minimum": 0},
+        "redistributed": {"type": "boolean"},
+        "note": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "case": {
+      "type": "object",
+      "required": [
+        "benchmark_id",
+        "case_id",
+        "simulation_resolution_seconds",
+        "status"
+      ],
+      "properties": {
+        "benchmark_id": {
+          "type": "string",
+          "pattern": "^[A-Z0-9]+(?:-[A-Z0-9]+)+$"
+        },
+        "case_id": {"type": "string", "minLength": 1},
+        "status": {"enum": ["reference_only", "planned", "implemented"]},
+        "native_resolution_seconds": {"type": ["integer", "null"], "minimum": 1},
+        "simulation_resolution_seconds": {"type": "integer", "minimum": 1},
+        "source_artifact": {"$ref": "#/$defs/artifact"},
+        "targets": {"type": "object"},
+        "configuration": {"type": "object"},
+        "notes": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "family": {
+      "type": "object",
+      "required": [
+        "family_id",
+        "family_type",
+        "purpose",
+        "cases"
+      ],
+      "properties": {
+        "family_id": {
+          "type": "string",
+          "pattern": "^[A-Z0-9]+(?:-[A-Z0-9]+)+$"
+        },
+        "family_type": {
+          "enum": [
+            "native_resolution_weather",
+            "cross_software_end_to_end",
+            "opensimpv_derived_resolution"
+          ]
+        },
+        "purpose": {"type": "string", "minLength": 1},
+        "source": {"type": "object"},
+        "shared_configuration": {"type": "object"},
+        "cases": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/case"}
+        },
+        "notes": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    }
+  }
+}

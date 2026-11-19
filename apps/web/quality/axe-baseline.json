@@ -1,0 +1,15 @@
+{
+  "note": "axe violations (nodes) per page; may only go down",
+  "pages": {
+    "start": {},
+    "step-site": {},
+    "step-scene": {},
+    "step-layout": {},
+    "step-components": {},
+    "step-electrical": {},
+    "step-meteo": {},
+    "step-simulate": {},
+    "step-results": {},
+    "step-export": {}
+  }
+}

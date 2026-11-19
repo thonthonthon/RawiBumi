@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/sky-visibility-query-result.schema.json",
+  "title": "OpenSIMPV SkyVisibilityQueryResult v0.1",
+  "description": "Deterministic Phase-5.6 weighted-sky visibility for one receiver.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "solver_id",
+    "solver_version",
+    "compiled_geometry_hash",
+    "receiver_id",
+    "factor_convention",
+    "self_shading_enabled",
+    "weighting_method",
+    "sky_dome_resolution",
+    "sky_patch_count",
+    "horizon_patch_count",
+    "sky_front_weight_sum_sr",
+    "sky_visible_weight_sum_sr",
+    "horizon_front_weight_sum_sr",
+    "horizon_visible_weight_sum_sr",
+    "sky_visibility_factor",
+    "horizon_visibility_factor",
+    "beam_solver_id",
+    "beam_solver_version"
+  ],
+  "properties": {
+    "schema_name": {"const": "SkyVisibilityQueryResult"},
+    "schema_version": {"const": "0.1"},
+    "solver_id": {"type": "string", "minLength": 1},
+    "solver_version": {"type": "string", "minLength": 1},
+    "compiled_geometry_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "receiver_id": {"type": "string", "minLength": 1},
+    "factor_convention": {
+      "const": "visibility_one_clear_zero_blocked"
+    },
+    "self_shading_enabled": {"type": "boolean"},
+    "weighting_method": {
+      "const": "patch_solid_angle_times_positive_receiver_cosine"
+    },
+    "sky_dome_resolution": {
+      "type": "object",
+      "required": [
+        "azimuth_sectors",
+        "elevation_bands",
+        "horizon_azimuth_sectors",
+        "horizon_elevation_bands",
+        "horizon_band_elevation_deg",
+        "band_coordinate"
+      ],
+      "properties": {
+        "azimuth_sectors": {"type": "integer", "minimum": 4},
+        "elevation_bands": {"type": "integer", "minimum": 1},
+        "horizon_azimuth_sectors": {"type": "integer", "minimum": 4},
+        "horizon_elevation_bands": {"type": "integer", "minimum": 1},
+        "horizon_band_elevation_deg": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 45
+        },
+        "band_coordinate": {"const": "uniform_sin_elevation"}
+      },
+      "additionalProperties": false
+    },
+    "sky_patch_count": {"type": "integer", "minimum": 1},
+    "horizon_patch_count": {"type": "integer", "minimum": 1},
+    "sky_front_weight_sum_sr": {"type": "number", "exclusiveMinimum": 0},
+    "sky_visible_weight_sum_sr": {"type": "number", "minimum": 0},
+    "horizon_front_weight_sum_sr": {"type": "number", "exclusiveMinimum": 0},
+    "horizon_visible_weight_sum_sr": {"type": "number", "minimum": 0},
+    "sky_visibility_factor": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "horizon_visibility_factor": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "beam_solver_id": {"type": "string", "minLength": 1},
+    "beam_solver_version": {"type": "string", "minLength": 1},
+    "participating_occluder_count": {"type": "integer", "minimum": 0},
+    "evaluation_count": {"type": "integer", "minimum": 0},
+      "shadow_union_precision_fallback_events": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "object",
+          "required": [
+            "receiver_id",
+            "occluder_ids",
+            "source_direction_xyz",
+            "grid_size_m",
+            "perimeter_m",
+            "area_bound_m2"
+          ],
+          "properties": {
+            "receiver_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "occluder_ids": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "source_direction_xyz": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "grid_size_m": {
+              "enum": [
+                1e-10,
+                1e-09,
+                1e-08,
+                1e-07,
+                1e-06
+              ]
+            },
+            "perimeter_m": {
+              "type": "number",
+              "minimum": 0
+            },
+            "area_bound_m2": {
+              "type": "number",
+              "minimum": 0
+            },
+            "timestamp": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "channel": {
+              "enum": [
+                "beam",
+                "sky",
+                "horizon",
+                "ground"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "quality_flags": {
+        "type": "array",
+        "items": {
+          "const": "shadow_union_precision_fallback"
+        },
+        "minItems": 1,
+        "maxItems": 1
+      }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,548 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/module-topology-definition.schema.json",
+  "title": "OpenSIMPV ModuleTopologyDefinition v0.1",
+  "description": "Optional, separately revisioned physical-to-electrical topology for one exact ModuleDefinition revision. Counts alone are never sufficient to create this object.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "contract_version",
+    "module_topology_id",
+    "revision_id",
+    "module_definition_revision_id",
+    "topology_version",
+    "orientation_reference",
+    "coordinate_convention",
+    "topology_class",
+    "region_resolution",
+    "physical_regions",
+    "electrical_substrings",
+    "bypass_devices",
+    "bypass_coverage_complete",
+    "verification_state",
+    "topology_provenance",
+    "source_ids"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "ModuleTopologyDefinition"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "contract_version": {
+      "const": "0.1"
+    },
+    "module_topology_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "module_definition_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "topology_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "orientation_reference": {
+      "const": "viewed_from_module_front",
+      "description": "Intrinsic left/right and bottom/top are defined while viewing the active module front."
+    },
+    "coordinate_convention": {
+      "const": "module_front_uv_normalized_width_height"
+    },
+    "topology_class": {
+      "const": "series_substrings_parallel_branches",
+      "description": "v0.1 common topology class reserved for later executable detailed physics. Unusual/cross-tied wiring must not be coerced into this class."
+    },
+    "region_resolution": {
+      "enum": [
+        "cell",
+        "half_cell",
+        "grouped_cells",
+        "submodule"
+      ]
+    },
+    "physical_regions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/physical_region"
+      }
+    },
+    "electrical_substrings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/electrical_substring"
+      }
+    },
+    "bypass_devices": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/bypass_device"
+      }
+    },
+    "bypass_coverage_complete": {
+      "type": "boolean",
+      "description": "True only when every electrical substring is explicitly mapped to its protecting bypass device(s). It does not imply that every forward-voltage model is available."
+    },
+    "verification_state": {
+      "enum": [
+        "unverified",
+        "source_attached",
+        "auto_validated",
+        "reviewed",
+        "manufacturer_verified"
+      ]
+    },
+    "topology_provenance": {
+      "enum": [
+        "direct_source",
+        "manual_verified",
+        "derived_validated",
+        "inferred",
+        "unresolved"
+      ],
+      "description": "Inferred or unresolved topology never unlocks detailed electrical shading."
+    },
+    "source_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "metadata": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "uv_vertex": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "physical_region": {
+      "type": "object",
+      "required": [
+        "region_id",
+        "region_type",
+        "polygon_normalized",
+        "electrical_substring_id",
+        "equivalent_element_count"
+      ],
+      "properties": {
+        "region_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "region_type": {
+          "enum": [
+            "cell",
+            "half_cell",
+            "grouped_cells",
+            "submodule"
+          ]
+        },
+        "polygon_normalized": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "$ref": "#/$defs/uv_vertex"
+          },
+          "description": "Normalized intrinsic module-UV polygon. JSON Schema enforces coordinate shape/bounds only; semantic contract validation separately determines structural non-zero geometry and region_geometry_execution_ready (simple polygon, no positive-area overlap with other physical regions)."
+        },
+        "electrical_substring_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "equivalent_element_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "shading_weight": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Optional source/validated weighting. Null when unknown; it must not be fabricated."
+        },
+        "active_area_fraction": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Optional source/validated active-area fraction. Null when unknown; it must not be fabricated."
+        },
+        "label": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "metadata": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "parallel_branch": {
+      "type": "object",
+      "required": [
+        "branch_id",
+        "series_region_ids"
+      ],
+      "properties": {
+        "branch_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "series_region_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "metadata": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "electrical_substring": {
+      "type": "object",
+      "required": [
+        "substring_id",
+        "series_order",
+        "physical_region_ids",
+        "parallel_branches"
+      ],
+      "properties": {
+        "substring_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "series_order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "physical_region_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "parallel_branches": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/parallel_branch"
+          }
+        },
+        "bypass_device_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "metadata": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "bypass_model": {
+      "type": "object",
+      "required": [
+        "model_type",
+        "model_id",
+        "model_version",
+        "model_authority",
+        "verification_state",
+        "model_provenance",
+        "validation_record_id",
+        "assumption_id",
+        "assumption_rationale",
+        "parameters",
+        "source_ids",
+        "model_payload_sha256"
+      ],
+      "properties": {
+        "model_type": {
+          "enum": [
+            "ideal",
+            "constant_forward_drop",
+            "parameterized_iv"
+          ]
+        },
+        "model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "parameters": {
+          "type": "object"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "model_authority": {
+          "enum": [
+            "component_model",
+            "explicit_simulation_assumption"
+          ],
+          "description": "Distinguishes component/source claims from explicitly selected simulation assumptions."
+        },
+        "verification_state": {
+          "enum": [
+            "unverified",
+            "source_attached",
+            "auto_validated",
+            "reviewed",
+            "manufacturer_verified",
+            "not_applicable"
+          ]
+        },
+        "model_provenance": {
+          "enum": [
+            "direct_source",
+            "manual_verified",
+            "derived_validated",
+            "simulation_assumption"
+          ]
+        },
+        "validation_record_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "assumption_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "assumption_rationale": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "model_payload_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "model_type": {
+                "const": "constant_forward_drop"
+              }
+            },
+            "required": [
+              "model_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "parameters": {
+                "required": [
+                  "forward_voltage_v"
+                ],
+                "properties": {
+                  "forward_voltage_v": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "model_type": {
+                "const": "parameterized_iv"
+              }
+            },
+            "required": [
+              "model_type"
+            ]
+          },
+          "then": {
+            "properties": {
+              "parameters": {
+                "minProperties": 1
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "model_authority": {
+                "const": "component_model"
+              }
+            },
+            "required": [
+              "model_authority"
+            ]
+          },
+          "then": {
+            "properties": {
+              "verification_state": {
+                "enum": [
+                  "unverified",
+                  "source_attached",
+                  "auto_validated",
+                  "reviewed",
+                  "manufacturer_verified"
+                ]
+              },
+              "model_provenance": {
+                "enum": [
+                  "direct_source",
+                  "manual_verified",
+                  "derived_validated"
+                ]
+              },
+              "assumption_id": {
+                "type": "null"
+              },
+              "assumption_rationale": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "model_authority": {
+                "const": "explicit_simulation_assumption"
+              }
+            },
+            "required": [
+              "model_authority"
+            ]
+          },
+          "then": {
+            "properties": {
+              "verification_state": {
+                "const": "not_applicable"
+              },
+              "model_provenance": {
+                "const": "simulation_assumption"
+              },
+              "validation_record_id": {
+                "type": "null"
+              },
+              "assumption_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "assumption_rationale": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "bypass_device": {
+      "type": "object",
+      "required": [
+        "bypass_device_id",
+        "device_type",
+        "protects_substring_ids"
+      ],
+      "properties": {
+        "bypass_device_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "device_type": {
+          "const": "bypass_diode"
+        },
+        "protects_substring_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "forward_voltage_model": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/bypass_model"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Optional in the topology record. Level-2 readiness requires every bypass device to have either a validated component model or an explicitly recorded simulation assumption; structural model presence alone is insufficient."
+        },
+        "metadata": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

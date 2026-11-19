@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/simulation-assumption.schema.json",
+  "title": "OpenSIMPV SimulationAssumption v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "assumption_id",
+    "kind",
+    "scope",
+    "statement",
+    "basis",
+    "severity",
+    "source_paths",
+    "affects"
+  ],
+  "properties": {
+    "schema_name": {"const": "SimulationAssumption"},
+    "schema_version": {"const": "0.1"},
+    "assumption_id": {"type": "string", "minLength": 1},
+    "kind": {
+      "enum": [
+        "model_selection",
+        "fallback",
+        "missing_refinement",
+        "unsupported_model",
+        "explicit_requirement",
+        "limitation"
+      ]
+    },
+    "scope": {"type": "string", "minLength": 1},
+    "statement": {"type": "string", "minLength": 1},
+    "basis": {"type": "string", "minLength": 1},
+    "severity": {"enum": ["info", "warning", "blocking"]},
+    "source_paths": {"type": "array", "items": {"type": "string"}},
+    "affects": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

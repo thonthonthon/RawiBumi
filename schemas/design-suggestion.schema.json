@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/design-suggestion.schema.json",
+  "title": "OpenSIMPV DesignSuggestion v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "suggestion_id",
+    "project_revision_id",
+    "suggestion_type",
+    "target_entity_id",
+    "actual_value",
+    "suggested_value",
+    "rationale",
+    "generated_by",
+    "generated_at",
+    "status",
+    "actual_source",
+    "suggestion_source",
+    "override_state"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "DesignSuggestion"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "suggestion_id": {
+      "type": "string"
+    },
+    "project_revision_id": {
+      "type": "string"
+    },
+    "suggestion_type": {
+      "enum": [
+        "row_pitch",
+        "module_count",
+        "orientation",
+        "string_length",
+        "mppt_assignment",
+        "setback",
+        "dc_ac_ratio",
+        "other"
+      ]
+    },
+    "target_entity_id": {
+      "type": "string"
+    },
+    "target_field_path": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "suggested_value": {},
+    "unit": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "rationale": {
+      "type": "string"
+    },
+    "generated_by": {
+      "type": "string"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "enum": [
+        "pending",
+        "accepted",
+        "rejected",
+        "expired"
+      ]
+    },
+    "actual_value": {},
+    "actual_source": {
+      "enum": [
+        "component_revision",
+        "map_measurement",
+        "field_measurement",
+        "imported_geometry",
+        "user_input",
+        "derived",
+        "command_result",
+        "unknown"
+      ]
+    },
+    "suggestion_source": {
+      "enum": [
+        "heuristic",
+        "command",
+        "optimization",
+        "validation_rule",
+        "user",
+        "unknown"
+      ]
+    },
+    "override_state": {
+      "enum": [
+        "not_overridden",
+        "user_overridden",
+        "accepted_suggestion"
+      ]
+    },
+    "accepted_in_project_revision_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

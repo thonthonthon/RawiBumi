@@ -1,0 +1,155 @@
+{
+  "schema_name": "InverterDefinition",
+  "schema_version": "0.1",
+  "inverter_definition_id": "inv-rawibumi-ref-150k",
+  "revision_id": "inv-rawibumi-ref-150k-r1",
+  "manufacturer": "RawiBumi Reference",
+  "model": "REF-INV-150K",
+  "family": "Synthetic Reference",
+  "inverter_type": "string",
+  "phase_configuration": "three_phase",
+  "verification_state": "auto_validated",
+  "source_ids": [
+    "src-rawibumi-synthetic-reference"
+  ],
+  "dc_limits": {
+    "max_dc_voltage_v": 1100,
+    "nominal_dc_voltage_v": 600,
+    "max_dc_power_w": 225000,
+    "max_dc_current_a": 336,
+    "max_dc_short_circuit_current_a": 462,
+    "startup_voltage_v": 200
+  },
+  "ac_limits": {
+    "nominal_ac_power_w": 150000,
+    "max_ac_power_w": 165000,
+    "nominal_ac_voltage_v": 400,
+    "nominal_frequency_hz": 50,
+    "max_ac_current_a": null
+  },
+  "mppts": [
+    {
+      "mppt_index": 1,
+      "min_operating_voltage_v": 200,
+      "max_operating_voltage_v": 1000,
+      "nominal_voltage_v": 600,
+      "max_operating_current_a": 48,
+      "max_short_circuit_current_a": 66,
+      "input_count": 3,
+      "independent_inputs": false
+    },
+    {
+      "mppt_index": 2,
+      "min_operating_voltage_v": 200,
+      "max_operating_voltage_v": 1000,
+      "nominal_voltage_v": 600,
+      "max_operating_current_a": 48,
+      "max_short_circuit_current_a": 66,
+      "input_count": 3,
+      "independent_inputs": false
+    }
+  ],
+  "efficiency_model": {
+    "model_type": "voltage_dependent_curves",
+    "curves": [
+      {
+        "dc_voltage_v": 400,
+        "points": [
+          {
+            "dc_power_w": 3000,
+            "ac_power_w": 2880,
+            "efficiency_fraction": 0.96
+          },
+          {
+            "dc_power_w": 15000,
+            "ac_power_w": 14670,
+            "efficiency_fraction": 0.978
+          },
+          {
+            "dc_power_w": 75000,
+            "ac_power_w": 73875,
+            "efficiency_fraction": 0.985
+          },
+          {
+            "dc_power_w": 150000,
+            "ac_power_w": 147600,
+            "efficiency_fraction": 0.984
+          }
+        ]
+      },
+      {
+        "dc_voltage_v": 600,
+        "points": [
+          {
+            "dc_power_w": 3000,
+            "ac_power_w": 2880,
+            "efficiency_fraction": 0.96
+          },
+          {
+            "dc_power_w": 15000,
+            "ac_power_w": 14670,
+            "efficiency_fraction": 0.978
+          },
+          {
+            "dc_power_w": 75000,
+            "ac_power_w": 73875,
+            "efficiency_fraction": 0.985
+          },
+          {
+            "dc_power_w": 150000,
+            "ac_power_w": 147600,
+            "efficiency_fraction": 0.984
+          }
+        ]
+      },
+      {
+        "dc_voltage_v": 800,
+        "points": [
+          {
+            "dc_power_w": 3000,
+            "ac_power_w": 2880,
+            "efficiency_fraction": 0.96
+          },
+          {
+            "dc_power_w": 15000,
+            "ac_power_w": 14670,
+            "efficiency_fraction": 0.978
+          },
+          {
+            "dc_power_w": 75000,
+            "ac_power_w": 73875,
+            "efficiency_fraction": 0.985
+          },
+          {
+            "dc_power_w": 150000,
+            "ac_power_w": 147600,
+            "efficiency_fraction": 0.984
+          }
+        ]
+      }
+    ],
+    "startup_loss_w": 100,
+    "standby_loss_w": 40,
+    "night_loss_w": 20,
+    "reference_metrics": {
+      "max_efficiency_fraction": 0.985,
+      "european_efficiency_fraction": 0.98,
+      "cec_efficiency_fraction": null
+    }
+  },
+  "capability_flags": {
+    "basic_design_ready": true,
+    "mppt_design_ready": true,
+    "basic_yield_ready": true,
+    "detailed_efficiency_ready": true,
+    "derating_ready": false
+  },
+  "notes": "Synthetic redistributable component for RawiBumi product-shell/UAT simulation testing; not a vendor product.",
+  "operating_thresholds": {
+    "minimum_input_power_w": 500,
+    "startup_power_w": 500,
+    "shutdown_power_w": null,
+    "standby_loss_w": 40,
+    "night_loss_w": 20
+  }
+}

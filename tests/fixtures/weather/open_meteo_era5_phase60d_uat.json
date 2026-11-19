@@ -1,0 +1,32 @@
+{
+  "latitude": -6.25,
+  "longitude": 106.75,
+  "generationtime_ms": 0.0,
+  "utc_offset_seconds": 0,
+  "timezone": "GMT",
+  "timezone_abbreviation": "GMT",
+  "elevation": 18.0,
+  "hourly_units": {
+    "time": "unixtime",
+    "temperature_2m": "°C",
+    "relative_humidity_2m": "%",
+    "dew_point_2m": "°C",
+    "surface_pressure": "hPa",
+    "wind_speed_10m": "m/s",
+    "shortwave_radiation": "W/m²",
+    "direct_normal_irradiance": "W/m²",
+    "diffuse_radiation": "W/m²"
+  },
+  "hourly": {
+    "time": [1735704000, 1735707600, 1735711200, 1735714800],
+    "temperature_2m": [28.0, 29.0, 30.0, 30.0],
+    "relative_humidity_2m": [78.0, 74.0, 70.0, 69.0],
+    "dew_point_2m": [23.5, 23.5, 23.5, 23.5],
+    "surface_pressure": [1008.0, 1007.5, 1007.0, 1006.5],
+    "wind_speed_10m": [1.2, 1.5, 1.8, 2.0],
+    "shortwave_radiation": [300.0, 450.0, 500.0, 400.0],
+    "direct_normal_irradiance": [0.0, 0.0, 0.0, 0.0],
+    "diffuse_radiation": [300.0, 450.0, 500.0, 400.0]
+  },
+  "_opensimpv_fixture_note": "Synthetic provider-shaped Phase-6.0D UAT response. It exercises the explicit ERA5 adapter transport/mapping contract but is not claimed to be an actual ERA5 observation or climatological reference."
+}

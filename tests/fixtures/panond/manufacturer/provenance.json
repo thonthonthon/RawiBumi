@@ -1,0 +1,33 @@
+{
+  "schema_version": "0.1",
+  "fixtures": [
+    {
+      "path": "JKM550M-72HL4-V_SGS_6079M3.PAN",
+      "component_type": "module",
+      "manufacturer": "Jinkosolar",
+      "model": "JKM550M-72HL4-V",
+      "original_filename": "JKM550M-72HL4-V_SGS_6079M3.PAN",
+      "original_sha256": "24bc13172fd13646f1a9a408d3fd462b1e7b6b8ee84923c83335e15e1f1b8764",
+      "original_byte_size": 1440,
+      "embedded_source_statement": "DataSource=Manufacturer 2020 SGS-CSTC",
+      "embedded_comment": "SGS-CSTC Standards Technical Service Co., Ltd",
+      "redistribution_basis": "Repository maintainer supplied this manufacturer-distributed file and explicitly confirmed that it is redistributable.",
+      "license_spdx": null,
+      "not_pvsyst_database_redistribution": true
+    },
+    {
+      "path": "Huawei_Sun2000_100KTL_M1.OND",
+      "component_type": "inverter",
+      "manufacturer": "Huawei Technologies",
+      "model": "SUN2000-100KTL-M1",
+      "original_filename": "Huawei_Sun2000_100KTL_M1.OND",
+      "original_sha256": "391f307112b4e5543ea9135b005e5408856d8e93c677cd60ed485615ab95b6f3",
+      "original_byte_size": 3587,
+      "embedded_source_statement": "DataSource=Manufacturer 2018",
+      "embedded_comment": "Huawei Technologies SUN2000-100KTL-M1 Manufacturer 2018",
+      "redistribution_basis": "Repository maintainer supplied this manufacturer-distributed file and explicitly confirmed that it is redistributable.",
+      "license_spdx": null,
+      "not_pvsyst_database_redistribution": true
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/string-length-suggestion.schema.json",
+  "title": "OpenSIMPV StringLengthSuggestion v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "editor_version",
+    "engineering_state_mutated",
+    "status",
+    "module_definition_revision_id",
+    "inverter_instance_id",
+    "inverter_definition_revision_id",
+    "mppt_index",
+    "basis",
+    "minimum_modules_per_string",
+    "maximum_modules_per_string",
+    "recommended_modules_per_string",
+    "reference_inputs",
+    "validation_deferred"
+  ],
+  "properties": {
+    "schema_name": {"const": "StringLengthSuggestion"},
+    "schema_version": {"const": "0.1"},
+    "editor_version": {"type": "string"},
+    "engineering_state_mutated": {"const": false},
+    "status": {
+      "enum": ["suggestion_available", "no_reference_condition_solution"]
+    },
+    "module_definition_revision_id": {"type": "string"},
+    "inverter_instance_id": {"type": "string"},
+    "inverter_definition_revision_id": {"type": "string"},
+    "mppt_index": {"type": ["integer", "null"], "minimum": 1},
+    "basis": {"const": "stc_reference_conditions_only"},
+    "minimum_modules_per_string": {"type": "integer", "minimum": 1},
+    "maximum_modules_per_string": {"type": "integer"},
+    "recommended_modules_per_string": {
+      "type": ["integer", "null"],
+      "minimum": 1
+    },
+    "reference_inputs": {
+      "type": "object",
+      "required": [
+        "module_voc_v",
+        "module_vmp_v",
+        "inverter_max_dc_voltage_v",
+        "effective_absolute_voltage_v",
+        "mppt_min_operating_voltage_v",
+        "mppt_max_operating_voltage_v",
+        "inverter_nominal_dc_voltage_v"
+      ],
+      "properties": {
+        "module_voc_v": {"type": "number", "exclusiveMinimum": 0},
+        "module_vmp_v": {"type": "number", "exclusiveMinimum": 0},
+        "inverter_max_dc_voltage_v": {"type": "number", "exclusiveMinimum": 0},
+        "effective_absolute_voltage_v": {"type": "number", "exclusiveMinimum": 0},
+        "mppt_min_operating_voltage_v": {"type": "number", "minimum": 0},
+        "mppt_max_operating_voltage_v": {"type": "number", "exclusiveMinimum": 0},
+        "inverter_nominal_dc_voltage_v": {
+          "type": ["number", "null"],
+          "exclusiveMinimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "validation_deferred": {
+      "type": "array",
+      "items": {"type": "string"},
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

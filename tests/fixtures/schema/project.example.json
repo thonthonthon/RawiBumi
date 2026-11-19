@@ -1,0 +1,47 @@
+{
+  "schema_name": "Project",
+  "schema_version": "0.1",
+  "project_id": "proj-ref-001",
+  "name": "OpenSIMPV Reference Project",
+  "description": "Synthetic project for schema and validation tests.",
+  "status": "design",
+  "site": {
+    "site_id": "site-ref-001",
+    "name": "Reference Site",
+    "latitude_deg": -6,
+    "longitude_deg": 106.8,
+    "elevation_m": 100,
+    "timezone": "Asia/Jakarta",
+    "local_coordinate_system": {
+      "schema_name": "LocalCoordinateSystem",
+      "schema_version": "0.1",
+      "coordinate_system_id": "enu-ref-001",
+      "site_id": "site-ref-001",
+      "origin_latitude_deg": -6,
+      "origin_longitude_deg": 106.8,
+      "origin_elevation_m": 100,
+      "geographic_crs": "EPSG:4326",
+      "local_frame": "rotated_enu",
+      "x_axis_definition": "East",
+      "y_axis_definition": "North",
+      "z_axis_definition": "Up",
+      "rotation_from_true_north_deg": 0,
+      "rotation_convention": "positive_clockwise_local_y_from_true_north",
+      "map_projection": {
+        "crs": "EPSG:3857",
+        "role": "context_only"
+      },
+      "notes": "Synthetic Phase-4.1 local coordinate frame."
+    },
+    "north_reference": "geodetic_true_north"
+  },
+  "project_revision": {
+    "project_revision_id": "proj-ref-001-r1",
+    "revision_number": 1,
+    "scene_revision_id": "scene-ref-001-r1",
+    "electrical_revision_id": "elec-ref-001-r1",
+    "weather_dataset_revision_id": "wx-ref-001-r1",
+    "simulation_defaults_revision_id": "simcfg-ref-001-r1",
+    "change_summary": "Initial synthetic reference project."
+  }
+}

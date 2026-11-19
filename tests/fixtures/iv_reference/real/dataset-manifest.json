@@ -1,0 +1,102 @@
+{
+  "dataset_id": "ivref-mitsubishi-pv-ue125mf5n-sandia-subset",
+  "description": "Redistributable subset of measured outdoor IV curves for Mitsubishi PV-UE125MF5N used by pvlib/PVLIB MATLAB PVsyst parameter-estimation tests.",
+  "source": {
+    "repository": "pvlib/pvlib-python",
+    "revision": "v0.15.2",
+    "path": "tests/data/PVsyst_demo.csv",
+    "url": "https://github.com/pvlib/pvlib-python/blob/v0.15.2/tests/data/PVsyst_demo.csv",
+    "git_blob_sha": "d7911d02c5ed3f4f19452177957190f934e3d773",
+    "sha256": "0d7e31c47bf69ecc00556b51ec9bb6e8a7b9d5b0f64e096a4bd9f75bb70b2a9d",
+    "byte_size": 3840933
+  },
+  "subset": {
+    "selected_source_indices": [
+      26,
+      1567,
+      2275,
+      2478,
+      2642,
+      2654,
+      2668,
+      2781,
+      2870,
+      2879,
+      2880,
+      2918
+    ],
+    "record_count": 12,
+    "samples_per_curve": 56,
+    "sha256": "3420290ed3310932925961e0351fbccfedb0b02b36f5ca3da811003e341a2734",
+    "byte_size": 12908,
+    "subset_index_to_source_index": [
+      {
+        "subset_index": 0,
+        "source_index": 26
+      },
+      {
+        "subset_index": 1,
+        "source_index": 1567
+      },
+      {
+        "subset_index": 2,
+        "source_index": 2275
+      },
+      {
+        "subset_index": 3,
+        "source_index": 2478
+      },
+      {
+        "subset_index": 4,
+        "source_index": 2642
+      },
+      {
+        "subset_index": 5,
+        "source_index": 2654
+      },
+      {
+        "subset_index": 6,
+        "source_index": 2668
+      },
+      {
+        "subset_index": 7,
+        "source_index": 2781
+      },
+      {
+        "subset_index": 8,
+        "source_index": 2870
+      },
+      {
+        "subset_index": 9,
+        "source_index": 2879
+      },
+      {
+        "subset_index": 10,
+        "source_index": 2880
+      },
+      {
+        "subset_index": 11,
+        "source_index": 2918
+      }
+    ],
+    "selection_note": "12 curves selected by deterministic farthest-point coverage in normalized effective-irradiance/cell-temperature space, restricted to upstream indices 0-2999 because pvlib's own fit_pvsyst_sandia regression test validates that range."
+  },
+  "module": {
+    "manufacturer": "Mitsubishi",
+    "model": "PV-UE125MF5N",
+    "cells_in_series": 36
+  },
+  "measurement_reference": {
+    "title": "Estimating Parameters for the PVsyst Version 6 Photovoltaic Module Performance Model",
+    "report": "SAND2015-8598",
+    "url": "https://www.osti.gov/servlets/purl/1223058",
+    "notes": "The report describes measured outdoor IV curves for a 36-cell Mitsubishi PV-UE125MF5N in Albuquerque, NM; cell temperature was estimated from three backsheet thermocouples and effective irradiance measured with a silicon reference cell."
+  },
+  "redistribution": {
+    "license_spdx": "BSD-3-Clause",
+    "license_url": "https://github.com/pvlib/pvlib-python/blob/v0.15.2/LICENSE",
+    "attribution": "pvlib python Contributors; PVLIB python Development Team; Sandia National Laboratories",
+    "modified": true,
+    "modification": "OpenSIMPV selected 12 source curves and changed the source curve-count line from 3585 to 12; numerical curve rows are otherwise copied unchanged."
+  }
+}

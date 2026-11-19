@@ -1,0 +1,768 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/generated-scene3d.schema.json",
+  "title": "OpenSIMPV GeneratedScene3D v0.1",
+  "description": "Deterministic derived 3-D verification artifact generated from one canonical Scene revision. It is non-authoritative and non-editable.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "generator_version",
+    "authority",
+    "editable",
+    "mesh_editing_supported",
+    "source_scene_id",
+    "source_scene_revision_id",
+    "coordinate_system_id",
+    "source_scene_hash",
+    "generation_input_hash",
+    "scene_3d_id",
+    "surfaces",
+    "obstacles",
+    "reference_lines",
+    "modules",
+    "bounds_3d",
+    "finding_count",
+    "findings"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "GeneratedScene3D"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "generator_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authority": {
+      "const": "derived_verification_only"
+    },
+    "editable": {
+      "const": false
+    },
+    "mesh_editing_supported": {
+      "const": false
+    },
+    "source_scene_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_scene_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "coordinate_system_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_scene_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "generation_input_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "scene_3d_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "surfaces": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/generated_surface"
+      }
+    },
+    "obstacles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/generated_obstacle"
+      }
+    },
+    "reference_lines": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/generated_reference_line"
+      }
+    },
+    "modules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/generated_module"
+      }
+    },
+    "bounds_3d": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/bounds3d"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "finding_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/height_finding"
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "point2": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "point3": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "items": false,
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "surface_plane": {
+      "type": "object",
+      "required": [
+        "surface_id",
+        "reference_point_xy_m",
+        "reference_elevation_m",
+        "slope_deg",
+        "azimuth_deg",
+        "normal_xyz",
+        "elevation_reference_mode"
+      ],
+      "properties": {
+        "surface_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reference_point_xy_m": {
+          "$ref": "#/$defs/point2"
+        },
+        "reference_elevation_m": {
+          "type": "number"
+        },
+        "slope_deg": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 90
+        },
+        "azimuth_deg": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 360
+        },
+        "normal_xyz": {
+          "$ref": "#/$defs/point3"
+        },
+        "elevation_reference_mode": {
+          "enum": [
+            "boundary_centroid",
+            "explicit_xy"
+          ]
+        },
+        "coordinate_basis": {
+          "const": "horizontal_engineering_xy"
+        },
+        "model_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "generated_surface": {
+      "type": "object",
+      "required": [
+        "surface_id",
+        "scene_object_id",
+        "surface_type",
+        "status",
+        "plane",
+        "boundary_vertices_3d",
+        "holes_3d",
+        "visible"
+      ],
+      "properties": {
+        "surface_id": {
+          "type": "string"
+        },
+        "scene_object_id": {
+          "type": "string"
+        },
+        "surface_type": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "resolved",
+            "unresolved"
+          ]
+        },
+        "plane": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/surface_plane"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "boundary_vertices_3d": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/point3"
+          }
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "unresolved_reason": {
+          "type": "string"
+        },
+        "holes_3d": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/point3"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "generated_reference_line": {
+      "type": "object",
+      "required": [
+        "reference_line_id",
+        "scene_object_id",
+        "line_type",
+        "vertices_3d",
+        "visible"
+      ],
+      "properties": {
+        "reference_line_id": {
+          "type": "string"
+        },
+        "scene_object_id": {
+          "type": "string"
+        },
+        "line_type": {
+          "type": "string"
+        },
+        "vertices_3d": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/point3"
+          }
+        },
+        "visible": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "generated_module": {
+      "type": "object",
+      "required": [
+        "module_instance_id",
+        "pv_field_id",
+        "module_definition_revision_id",
+        "support_surface_id",
+        "status",
+        "enabled",
+        "center_xyz",
+        "row_axis_xyz",
+        "downhill_axis_xyz",
+        "normal_xyz",
+        "corners_3d",
+        "physical_width_m",
+        "physical_height_m",
+        "plane_width_m",
+        "plane_height_m",
+        "orientation",
+        "azimuth_deg",
+        "tilt_deg",
+        "mounting_height_m",
+        "support_elevation_at_center_m",
+        "minimum_support_clearance_m",
+        "maximum_support_clearance_m",
+        "row_index",
+        "column_index",
+        "table_index"
+      ],
+      "properties": {
+        "module_instance_id": {
+          "type": "string"
+        },
+        "pv_field_id": {
+          "type": "string"
+        },
+        "module_definition_revision_id": {
+          "type": "string"
+        },
+        "support_surface_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "enum": [
+            "resolved",
+            "unresolved"
+          ]
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "center_xyz": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/point3"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "row_axis_xyz": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/point3"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "downhill_axis_xyz": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/point3"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "normal_xyz": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/point3"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "corners_3d": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/point3"
+          }
+        },
+        "physical_width_m": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "physical_height_m": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "azimuth_deg": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "exclusiveMaximum": 360
+        },
+        "tilt_deg": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 90
+        },
+        "mounting_height_m": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "support_elevation_at_center_m": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "minimum_support_clearance_m": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "maximum_support_clearance_m": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "row_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "column_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "table_index": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "unresolved_reason": {
+          "type": "string"
+        },
+        "plane_width_m": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "plane_height_m": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "orientation": {
+          "enum": [
+            "portrait",
+            "landscape",
+            null
+          ]
+        },
+        "canonical_center_z_m": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "expected_center_z_m": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "center_z_residual_m": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "plan_projection_width_m": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "plan_projection_height_m": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "plan_projection_corners_xy": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/point2"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "bounds3d": {
+      "type": "object",
+      "required": [
+        "min_xyz",
+        "max_xyz"
+      ],
+      "properties": {
+        "min_xyz": {
+          "$ref": "#/$defs/point3"
+        },
+        "max_xyz": {
+          "$ref": "#/$defs/point3"
+        }
+      },
+      "additionalProperties": false
+    },
+    "height_finding": {
+      "type": "object",
+      "required": [
+        "severity",
+        "code",
+        "entity_type",
+        "entity_id",
+        "message"
+      ],
+      "properties": {
+        "severity": {
+          "enum": [
+            "info",
+            "warning",
+            "error"
+          ]
+        },
+        "code": {
+          "enum": [
+            "surface_height_unresolved",
+            "obstacle_height_unresolved",
+            "module_field_unresolved",
+            "module_support_unresolved",
+            "module_geometry_unresolved",
+            "negative_mounting_height",
+            "module_intersects_support_plane",
+            "module_center_z_inconsistent",
+            "module_plan_projection_inconsistent"
+          ]
+        },
+        "entity_type": {
+          "enum": [
+            "scene",
+            "surface",
+            "obstacle",
+            "reference_line",
+            "pv_field",
+            "module_instance"
+          ]
+        },
+        "entity_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "generated_obstacle_native": {
+      "type": "object",
+      "required": [
+        "obstacle_id",
+        "scene_object_id",
+        "obstacle_type",
+        "status",
+        "base_elevation_m",
+        "height_m",
+        "base_vertices_3d",
+        "top_vertices_3d",
+        "base_holes_3d",
+        "top_holes_3d",
+        "visible",
+        "shading_enabled"
+      ],
+      "properties": {
+        "obstacle_id": {
+          "type": "string"
+        },
+        "scene_object_id": {
+          "type": "string"
+        },
+        "obstacle_type": {
+          "type": "string"
+        },
+        "status": {
+          "const": "resolved"
+        },
+        "base_elevation_m": {
+          "type": "number"
+        },
+        "height_m": {
+          "type": "number",
+          "minimum": 0
+        },
+        "base_vertices_3d": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/point3"
+          }
+        },
+        "top_vertices_3d": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/point3"
+          }
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "shading_enabled": {
+          "type": "boolean"
+        },
+        "base_holes_3d": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/point3"
+            }
+          }
+        },
+        "top_holes_3d": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/point3"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "generated_obstacle_mesh": {
+      "type": "object",
+      "required": [
+        "obstacle_id",
+        "scene_object_id",
+        "obstacle_type",
+        "status",
+        "mesh",
+        "visible",
+        "shading_enabled"
+      ],
+      "properties": {
+        "obstacle_id": {
+          "type": "string"
+        },
+        "scene_object_id": {
+          "type": "string"
+        },
+        "obstacle_type": {
+          "const": "imported_mesh"
+        },
+        "status": {
+          "const": "resolved"
+        },
+        "mesh": {
+          "type": "object",
+          "required": [
+            "vertices_3d",
+            "faces",
+            "triangles",
+            "topology",
+            "mesh_content_sha256",
+            "mesh_planarity_tolerance_m",
+            "adapter_version"
+          ],
+          "properties": {
+            "vertices_3d": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/point3"
+              }
+            },
+            "faces": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "triangles": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            },
+            "topology": {
+              "type": "object"
+            },
+            "mesh_content_sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "mesh_planarity_tolerance_m": {
+              "const": 0.001
+            },
+            "adapter_version": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "visible": {
+          "type": "boolean"
+        },
+        "shading_enabled": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "generated_obstacle": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/generated_obstacle_native"
+        },
+        {
+          "$ref": "#/$defs/generated_obstacle_mesh"
+        }
+      ]
+    }
+  }
+}

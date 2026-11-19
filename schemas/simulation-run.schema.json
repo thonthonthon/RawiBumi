@@ -1,0 +1,502 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/simulation-run.schema.json",
+  "title": "OpenSIMPV SimulationRun v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "simulation_run_id",
+    "project_revision_id",
+    "simulation_configuration_id",
+    "engine_version",
+    "started_at",
+    "completed_at",
+    "status",
+    "component_revision_manifest",
+    "weather_revision_id",
+    "scene_revision_id",
+    "electrical_revision_id",
+    "model_manifest",
+    "input_hash",
+    "result_reference",
+    "summary_result",
+    "validation_findings",
+    "assumptions",
+    "reproducibility_manifest",
+    "job_stage_history",
+    "warning_summary"
+  ],
+  "properties": {
+    "resolved_shading_accuracy": {
+      "$ref": "https://opensimpv.org/schema/shading-accuracy-settings.schema.json#/$defs/resolved"
+    },
+    "detailed_execution_identity": {
+      "$ref": "detailed-execution-identity.schema.json"
+    },
+    "schema_name": {
+      "const": "SimulationRun"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "simulation_run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "project_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "simulation_configuration_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "engine_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "status": {
+      "enum": [
+        "queued",
+        "running",
+        "completed",
+        "completed_with_warnings",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "deterministic_seed": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "component_revision_manifest": {
+      "type": "object"
+    },
+    "weather_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scene_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "electrical_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_manifest": {
+      "type": "object"
+    },
+    "input_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "result_reference": {
+      "anyOf": [
+        {
+          "$ref": "result-dataset-reference.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "summary_result": {
+      "anyOf": [
+        {
+          "$ref": "summary-result.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "validation_findings": {
+      "type": "array",
+      "items": {
+        "$ref": "validation-finding.schema.json"
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "$ref": "simulation-assumption.schema.json"
+      }
+    },
+    "model_resolution": {
+      "anyOf": [
+        {
+          "$ref": "simulation-model-resolution.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "reproducibility_manifest": {
+      "anyOf": [
+        {
+          "$ref": "reproducibility-manifest.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "job_stage_history": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "queued",
+          "validating",
+          "preprocessing",
+          "simulating",
+          "aggregating",
+          "reconciling",
+          "completed",
+          "failed"
+        ]
+      }
+    },
+    "log_reference": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "execution_telemetry": {
+      "type": "object"
+    },
+    "warning_summary": {
+      "type": "object",
+      "required": [
+        "warning_count",
+        "error_count",
+        "blocking_error_count"
+      ],
+      "properties": {
+        "warning_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "error_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blocking_error_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "design_validation_report_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "design_validation_report_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "design_validation_rule_set_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "shading_receiver_factor_reference": {
+      "anyOf": [
+        {
+          "$ref": "result-dataset-reference.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "shading_result": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "Authoritative geometry-aware shading artifact. The shading subsystem validates the complete ShadingResult schema before attachment; when present, its dataset_reference must equal shading_receiver_factor_reference."
+    },
+    "execution_model_resolutions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "execution_group_id",
+          "inverter_instance_id",
+          "resolution"
+        ],
+        "properties": {
+          "execution_group_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "inverter_instance_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resolution": {
+            "$ref": "simulation-model-resolution.schema.json"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "resolved_loss_settings": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "resolved_optics_thermal_settings": {
+      "$ref": "https://opensimpv.org/schema/optics-thermal-settings.schema.json#/$defs/resolved"
+    },
+    "circuit_loss_resolution": {
+      "$ref": "circuit-loss-resolution.schema.json"
+    },
+    "mixed_orientation": {
+      "type": "object",
+      "required": [
+        "model_id",
+        "scope_label",
+        "shading_basis",
+        "tracker_basis",
+        "mixed_string_ids",
+        "mixed_mppt_instance_ids",
+        "bypass_basis_by_module_revision",
+        "mppts",
+        "period_totals",
+        "is_complete_year"
+      ],
+      "properties": {
+        "model_id": {
+          "const": "rawibumi.mixed_orientation.v0.1"
+        },
+        "scope_label": {
+          "type": "string"
+        },
+        "shading_basis": {
+          "const": "orientation_class_average"
+        },
+        "tracker_basis": {
+          "const": "ideal_global_mpp"
+        },
+        "mixed_string_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "mixed_mppt_instance_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "bypass_basis_by_module_revision": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "object",
+            "required": [
+              "diode_count",
+              "forward_voltage_v",
+              "count_basis",
+              "forward_voltage_basis",
+              "no_bypass_current_limited",
+              "source_paths"
+            ],
+            "properties": {
+              "diode_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "forward_voltage_v": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "count_basis": {
+                "enum": [
+                  "data",
+                  "assumed"
+                ]
+              },
+              "forward_voltage_basis": {
+                "enum": [
+                  "data",
+                  "assumed"
+                ]
+              },
+              "no_bypass_current_limited": {
+                "type": "boolean"
+              },
+              "source_paths": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "mppts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "inverter_instance_id",
+              "mppt_instance_id",
+              "multi_peak_interval_count",
+              "multi_peak_duration_hours",
+              "energy_gaps_wh"
+            ],
+            "properties": {
+              "inverter_instance_id": {
+                "type": "string"
+              },
+              "mppt_instance_id": {
+                "type": "string"
+              },
+              "multi_peak_interval_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "multi_peak_duration_hours": {
+                "type": "number",
+                "minimum": 0
+              },
+              "energy_gaps_wh": {
+                "type": "object",
+                "required": [
+                  "simple_tracker",
+                  "second_highest",
+                  "lowest"
+                ],
+                "properties": {
+                  "simple_tracker": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "second_highest": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "lowest": {
+                    "type": "number",
+                    "minimum": 0
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "period_totals": {
+          "type": "object",
+          "required": [
+            "start_time",
+            "end_time",
+            "duration_hours",
+            "multi_peak_interval_count",
+            "multi_peak_duration_hours",
+            "energy_gaps_wh",
+            "multi_peak_mppt_interval_count",
+            "multi_peak_mppt_duration_hours"
+          ],
+          "properties": {
+            "start_time": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "end_time": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "duration_hours": {
+              "type": "number",
+              "minimum": 0
+            },
+            "multi_peak_interval_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "multi_peak_duration_hours": {
+              "type": "number",
+              "minimum": 0
+            },
+            "energy_gaps_wh": {
+              "type": "object",
+              "required": [
+                "simple_tracker",
+                "second_highest",
+                "lowest"
+              ],
+              "properties": {
+                "simple_tracker": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "second_highest": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "lowest": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": false
+            },
+            "multi_peak_mppt_interval_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "multi_peak_mppt_duration_hours": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "is_complete_year": {
+          "type": "boolean"
+        },
+        "dc_wiring_basis": {
+          "const": "nested_terminal_envelope_difference"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

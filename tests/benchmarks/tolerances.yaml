@@ -1,0 +1,36 @@
+schema_version: "0.1"
+tolerance_classes:
+  T0:
+    name: exact_deterministic
+    description: Exact topology, serialization, and algebraic checks.
+    default_atol: 0.0
+    default_rtol: 0.0
+  T1:
+    name: tight_numerical
+    description: Deterministic numerical calculations, geometry, summation, and interpolation.
+    default_atol: 1.0e-9
+    default_rtol: 1.0e-6
+  T2:
+    name: engineering_numerical
+    description: Solar position, POA components, and component-model outputs.
+    default_atol: 1.0e-6
+    default_rtol: 1.0e-3
+  T3:
+    name: model_comparison
+    description: Independent implementations of the same physical model.
+    default_atol: null
+    default_rtol: 0.01
+  T4:
+    name: system_comparison
+    description: Monthly or annual comparison where aligned model chains may still differ.
+    default_atol: null
+    default_rtol: 0.03
+  T5:
+    name: measured_data
+    description: Case-specific tolerance derived from measurement and model uncertainty.
+    default_atol: null
+    default_rtol: null
+policy:
+  near_zero_use_absolute_tolerance: true
+  tolerance_loosen_requires_review: true
+  case_specific_values_override_defaults: true

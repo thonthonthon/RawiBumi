@@ -1,0 +1,211 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/module-definition.schema.json",
+  "title": "OpenSIMPV ModuleDefinition v0.1",
+  "type": "object",
+  "required": ["schema_name", "schema_version", "module_definition_id", "revision_id", "manufacturer", "model", "verification_state", "mechanical", "stc"],
+  "properties": {
+    "schema_name": {"const": "ModuleDefinition"},
+    "schema_version": {"const": "0.1"},
+    "module_definition_id": {"type": "string", "minLength": 1},
+    "revision_id": {"type": "string", "minLength": 1},
+    "manufacturer": {"type": "string", "minLength": 1},
+    "model": {"type": "string", "minLength": 1},
+    "family": {"type": ["string", "null"]},
+    "technology": {"type": ["string", "null"]},
+    "verification_state": {"enum": ["unverified", "source_attached", "auto_validated", "reviewed", "manufacturer_verified"]},
+    "source_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "source_group_ids": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "mechanical": {
+      "type": "object",
+      "required": ["width_m", "height_m"],
+      "properties": {
+        "width_m": {"type": "number", "exclusiveMinimum": 0},
+        "height_m": {"type": "number", "exclusiveMinimum": 0},
+        "thickness_m": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "mass_kg": {"type": ["number", "null"], "exclusiveMinimum": 0}
+      },
+      "additionalProperties": true
+    },
+    "module_topology_revision_id": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "description": "Optional reference to a separately revisioned ModuleTopologyDefinition bound to this exact module revision. Absence does not invalidate the module."
+    },
+    "cell_architecture": {
+      "type": ["object", "null"],
+      "properties": {
+        "physical_cell_count": {"type": ["integer", "null"], "minimum": 1},
+        "cell_rows": {"type": ["integer", "null"], "minimum": 1},
+        "cell_columns": {"type": ["integer", "null"], "minimum": 1},
+        "half_cell": {"type": ["boolean", "null"]},
+        "cell_technology": {"type": ["string", "null"]},
+        "cells_in_series": {"type": ["integer", "null"], "minimum": 1},
+        "cells_in_parallel": {"type": ["integer", "null"], "minimum": 1},
+        "bypass_diode_forward_voltage_v": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "bypass_diode_count": {"type": ["integer", "null"], "minimum": 0},
+        "source_layout_code": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "stc": {
+      "type": "object",
+      "required": ["pmp_w", "voc_v", "isc_a", "vmp_v", "imp_a", "reference_irradiance_w_m2", "reference_cell_temperature_c"],
+      "properties": {
+        "nominal_power_w": {
+          "type": ["number", "null"],
+          "exclusiveMinimum": 0,
+          "description": "Commercial/nameplate nominal power; intentionally distinct from the actual or modeled Pmpp."
+        },
+        "pmp_w": {"type": "number", "exclusiveMinimum": 0},
+        "voc_v": {"type": "number", "exclusiveMinimum": 0},
+        "isc_a": {"type": "number", "exclusiveMinimum": 0},
+        "vmp_v": {"type": "number", "exclusiveMinimum": 0},
+        "imp_a": {"type": "number", "exclusiveMinimum": 0},
+        "reference_irradiance_w_m2": {"type": "number", "exclusiveMinimum": 0},
+        "reference_cell_temperature_c": {"type": "number"}
+      },
+      "additionalProperties": false
+    },
+    "temperature_coefficients": {
+      "type": ["object", "null"],
+      "properties": {
+        "alpha_isc_per_c": {"type": ["number", "null"]},
+        "beta_voc_per_c": {"type": ["number", "null"]},
+        "gamma_pmp_per_c": {"type": ["number", "null"]},
+        "coefficient_basis": {"enum": ["absolute", "relative", "manufacturer_defined", null]}
+      },
+      "additionalProperties": false
+    },
+    "optical": {
+      "type": ["object", "null"],
+      "properties": {
+        "absorptance_fraction": {
+          "type": ["number", "null"],
+          "exclusiveMinimum": 0,
+          "maximum": 1
+        },
+        "absorptance_source_ids": {
+          "type": "array",
+          "items": {"type": "string"},
+          "uniqueItems": true
+        },
+        "iam": {
+          "type": ["object", "null"],
+          "required": ["model_type", "execution_model_id", "interpolation_method", "normalize", "points"],
+          "properties": {
+            "model_type": {"const": "tabulated"},
+            "execution_model_id": {"type": "string", "minLength": 1},
+            "interpolation_method": {"enum": ["linear", "quadratic", "cubic"]},
+            "normalize": {"type": "boolean"},
+            "points": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "required": ["angle_deg", "modifier"],
+                "properties": {
+                  "angle_deg": {"type": "number", "minimum": 0, "maximum": 90},
+                  "modifier": {"type": "number", "minimum": 0}
+                },
+                "additionalProperties": false
+              }
+            },
+            "source_mode": {"type": ["string", "null"]},
+            "source_profile_type": {"type": ["string", "null"]},
+            "source_interpolation_mode_code": {"type": ["integer", "null"]},
+            "compatibility_note": {"type": ["string", "null"]},
+            "source_ids": {
+              "type": "array",
+              "items": {"type": "string"},
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "quality": {
+      "type": ["object", "null"],
+      "properties": {
+        "lid_loss_fraction": {
+          "type": ["number", "null"], "minimum": 0, "exclusiveMaximum": 1,
+          "description": "PAN LID loss suggestion only; never automatically applied to run loss settings."
+        },
+        "nameplate_power_tolerance": {
+          "type": ["object", "null"],
+          "properties": {
+            "lower_fraction": {"type": ["number", "null"]},
+            "upper_fraction": {"type": ["number", "null"]},
+            "source_ids": {
+              "type": "array",
+              "items": {"type": "string"},
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false
+        },
+        "default_module_quality_loss_fraction": {"type": ["number", "null"]},
+        "default_module_quality_method": {"type": ["string", "null"]},
+        "source_ids": {
+          "type": "array",
+          "items": {"type": "string"},
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "electrical_models": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["model_type", "model_version", "parameter_set"],
+        "properties": {
+          "model_type": {"enum": ["pvsyst_singlediode", "desoto_singlediode", "cec_sam", "pvwatts", "custom"]},
+          "model_version": {"type": "string"},
+          "parameter_set": {"type": "object"},
+          "source_ids": {"type": "array", "items": {"type": "string"}},
+          "verification_state": {"type": ["string", "null"]}
+        },
+        "additionalProperties": true
+      }
+    },
+    "bifacial": {
+      "type": ["object", "null"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "bifaciality_factor": {"type": ["number", "null"], "minimum": 0}
+      },
+      "additionalProperties": true
+    },
+    "limits": {
+      "type": ["object", "null"],
+      "properties": {
+        "max_system_voltage_v": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "max_system_voltage_iec_v": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "max_system_voltage_ul_v": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "max_series_fuse_a": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "operating_temperature_min_c": {"type": ["number", "null"]},
+        "operating_temperature_max_c": {"type": ["number", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "capability_flags": {
+      "type": "object",
+      "properties": {
+        "layout_ready": {"type": "boolean"},
+        "basic_yield_ready": {"type": "boolean"},
+        "detailed_sdm_ready": {"type": "boolean"},
+        "bifacial_ready": {"type": "boolean"},
+        "detailed_shading_ready": {
+          "type": "boolean",
+          "description": "Legacy compatibility flag. Phase 6.1+ detailed electrical-shading readiness is not authoritative on ModuleDefinition alone and must be resolved from the separately revisioned topology plus validated electrical parameterization."
+        },
+        "independent_iv_validated": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,16 @@
+#Weather data hourly data
+#Site;Jakarta Test
+#Country;Indonesia
+#Data Source;Synthetic OpenSIMPV fixture
+#Time step;Hour
+#Year;2026
+#Latitude;-6.2
+#Longitude;106.8
+#Altitude;20
+#Time Zone;7
+Year;Month;Day;Hour;Minute;GHI;DHI;DNI;Tamb;WindVel;RH;Pw;Albedo
+-;-;-;-;-;W/m2;W/m2;W/m2;deg.C;m/s;%;cm;ratio
+2026;1;1;0;0;0;0;0;25.0;1.2;82;4.1;0.2
+2026;1;1;1;0;100;40;120;25.4;1.5;80;4.0;0.2
+2026;1;1;2;0;400;100;500;26.2;1.8;75;3.9;0.2
+2026;1;1;3;0;200;70;250;26.0;1.6;77;3.9;0.2

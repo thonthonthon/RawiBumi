@@ -1,0 +1,16 @@
+{
+  "schema_name": "SceneEditorCommand",
+  "schema_version": "0.1",
+  "command_id": "cmd-phase42-dim-001",
+  "command_type": "edit_exact_dimension",
+  "target_entity_ids": [
+    "roof-survey"
+  ],
+  "parameters": {
+    "edge_index": 0,
+    "length_m": 20,
+    "preserve": "start",
+    "source": "user_override"
+  },
+  "issued_at": "2026-09-24T00:05:00Z"
+}

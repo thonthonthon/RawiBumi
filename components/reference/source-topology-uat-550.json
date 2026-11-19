@@ -1,0 +1,16 @@
+{
+  "schema_name": "SourceRecord",
+  "schema_version": "0.1",
+  "source_id": "src-rawibumi-uat-topology-fixture",
+  "source_type": "manual_entry",
+  "title": "RawiBumi synthetic UAT-550 grouped-cell topology fixture",
+  "manufacturer": "RawiBumi",
+  "filename": "module-topology-uat-550.json",
+  "file_hash": null,
+  "external_url": null,
+  "publication_date": "2026-09-27",
+  "imported_at": null,
+  "imported_by": "RawiBumi maintainers",
+  "license_note": "RawiBumi project-owned synthetic reference data intended for redistribution with the project.",
+  "source_notes": "Maintainer-authored explicit topology fixture for integration/validation. It is not manufacturer data and is not inferred from PAN cell, bypass, half-cell, or layout metadata."
+}

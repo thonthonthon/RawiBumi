@@ -1,0 +1,123 @@
+schema_version: "0.1"
+reference_matrix_id: P49C-CANONICAL-REFERENCE-PROJECTS-20260924
+status: accepted
+date: "2026-09-24"
+parent_phase: "4.9 Reference Projects and UX Hardening"
+closure_scope: "Phase-4 engineering design environment current scope"
+design_state_package:
+  format: opensimpv.design_state_package.v0.1
+  persisted_objects:
+    - Scene
+    - ElectricalDesignRevision
+    - ProjectRevision
+    - SimulationConfiguration
+    - DesignValidationReport
+  externally_pinned_revisions:
+    - WeatherDatasetRevision
+    - ComponentRevision
+  excluded_state:
+    - DesignWorkspaceState
+    - UI selection
+    - undo_redo_history
+    - camera_view_state
+  integrity:
+    per_object_sha256: true
+    package_sha256: true
+    fail_closed_on_mutation: true
+roundtrip_invariants:
+  save_reload_preserves:
+    - geometry
+    - module_coordinates
+    - component_revision_bindings
+    - electrical_topology
+    - design_validation_findings
+    - canonical_object_hashes
+  revalidation_is_deterministic: true
+  supported_rerun_preserves:
+    - canonical_simulation_input_hash
+    - result_logical_content_sha256
+    - standard_timeseries
+    - engineering_summary_content
+  execution_instance_identity_may_change:
+    - simulation_run_id
+cases:
+  R1:
+    title: simple flat rooftop
+    surfaces: 1
+    surface_types: [flat_roof]
+    obstacles: 0
+    pv_fields: 1
+    modules: 18
+    strings: 1
+    inverters: 1
+    orientations_deg: [{tilt: 0.0, azimuth: 0.0}]
+    execution_expectation: supported
+  R2:
+    title: multi-roof commercial rooftop
+    surfaces: 2
+    surface_types: [flat_roof, flat_roof]
+    obstacles: 0
+    pv_fields: 2
+    modules: 36
+    strings: 2
+    inverters: 1
+    orientations_deg: [{tilt: 0.0, azimuth: 0.0}]
+    execution_expectation: supported
+  R3:
+    title: rectangular ground-mounted site
+    surfaces: 1
+    surface_types: [ground]
+    obstacles: 0
+    pv_fields: 1
+    modules: 18
+    strings: 1
+    inverters: 1
+    orientations_deg: [{tilt: 20.0, azimuth: 0.0}]
+    execution_expectation: supported
+  R4:
+    title: obstacle-rich shaded reference scene
+    source_basis: Phase-4.9B VC5 SHD geometry
+    surfaces: 12
+    surface_types: [custom_plane]
+    obstacles: 2
+    pv_fields: 12
+    modules: 216
+    strings: 12
+    inverters: 1
+    orientations_deg: [{tilt: 20.0, azimuth: 0.0}]
+    exact_source_geometry:
+      table_origin_x_m: [0.0, 23.0]
+      table_origin_y_m: [8.0, 11.0, 14.0, 17.0, 20.0, 23.0]
+      table_size_xy_m: [20.752, 2.278]
+      obstacles:
+        - {origin_xyz_m: [-8.256538, -5.0, 0.0], size_xyz_m: [40.0, 10.0, 5.0]}
+        - {origin_xyz_m: [-8.24263, 24.358715, 0.0], size_xyz_m: [40.0, 10.0, 5.0]}
+    execution_expectation: explicit_current_scope_block
+    expected_rule_id: SIMULATION_SCOPE_UNSHADED_ONLY
+    interpretation: geometry and topology are valid Phase-4 design state; numerical near-shading belongs to Phase 5
+  R5:
+    title: multiple orientations with one inverter
+    surfaces: 2
+    surface_types: [flat_roof, flat_roof]
+    obstacles: 0
+    pv_fields: 2
+    modules: 36
+    strings: 2
+    inverters: 1
+    orientations_deg:
+      - {tilt: 20.0, azimuth: 0.0}
+      - {tilt: 20.0, azimuth: 90.0}
+    execution_expectation: explicit_current_scope_block
+    expected_rule_id: SIMULATION_SCOPE_REQUIRES_ONE_ORIENTATION
+    interpretation: design state is preserved without flattening orientations into a homogeneous equivalent
+phase4_closure:
+  design_environment_exit_gate_satisfied: true
+  reference_project_roundtrip_satisfied: true
+  supported_existing_runtime_rerun_satisfied: true
+  unsupported_physics_remains_explicit: true
+  phase4_status_after_49c: CLOSED_FOR_CURRENT_SCOPE
+  phase5_status: NEXT
+  no_claims:
+    - near_shading_solver_implemented
+    - multi_orientation_numerical_execution_implemented
+    - electrical_shading_mismatch_implemented

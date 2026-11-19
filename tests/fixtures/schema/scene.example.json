@@ -1,0 +1,222 @@
+{
+  "schema_name": "Scene",
+  "schema_version": "0.1",
+  "scene_id": "scene-ref-001",
+  "project_id": "proj-ref-001",
+  "revision_id": "scene-ref-001-r1",
+  "coordinate_system_id": "enu-ref-001",
+  "map_layer_configuration": {
+    "schema_name": "MapLayerConfiguration",
+    "schema_version": "0.1",
+    "map_configuration_id": "map-ref-001",
+    "engineering_geometry_authority": "local_metric",
+    "map_measurement_role": "context_only",
+    "providers": [
+      {
+        "provider_id": "provider-grid",
+        "provider_kind": "none",
+        "name": "Blank engineering grid",
+        "tile_url_template": null,
+        "style_url": null,
+        "credential_reference": null,
+        "attribution_required": false,
+        "attribution": null,
+        "license_note": null
+      },
+      {
+        "provider_id": "provider-ortho",
+        "provider_kind": "uploaded_asset",
+        "name": "Synthetic uploaded orthophoto",
+        "tile_url_template": null,
+        "style_url": null,
+        "credential_reference": null,
+        "attribution_required": false,
+        "attribution": null,
+        "license_note": "Synthetic fixture only."
+      }
+    ],
+    "layers": [
+      {
+        "layer_id": "grid",
+        "layer_type": "engineering_grid",
+        "provider_id": "provider-grid",
+        "source_record_id": null,
+        "imported_asset_id": null,
+        "orthophoto_georeference": null,
+        "notes": null
+      },
+      {
+        "layer_id": "orthophoto",
+        "layer_type": "orthophoto",
+        "provider_id": "provider-ortho",
+        "source_record_id": "source-ortho-ref-001",
+        "imported_asset_id": "asset-ortho-ref-001",
+        "orthophoto_georeference": {
+          "method": "affine_control_points",
+          "image_width_px": 2000,
+          "image_height_px": 1000,
+          "control_points": [
+            {
+              "pixel_x": 0,
+              "pixel_y": 0,
+              "local_x_m": 0,
+              "local_y_m": 100
+            },
+            {
+              "pixel_x": 1000,
+              "pixel_y": 0,
+              "local_x_m": 100,
+              "local_y_m": 100
+            },
+            {
+              "pixel_x": 0,
+              "pixel_y": 1000,
+              "local_x_m": 0,
+              "local_y_m": 0
+            }
+          ],
+          "rms_error_m": 0,
+          "notes": "Synthetic 0.1 m/pixel affine reference."
+        },
+        "notes": "Reference only; local metric scene geometry remains authoritative."
+      }
+    ],
+    "notes": "Synthetic provider-agnostic map configuration."
+  },
+  "created_at": "2026-09-22T00:00:00Z",
+  "notes": "Synthetic scene fixture.",
+  "surfaces": [
+    {
+      "surface_id": "roof-001",
+      "scene_object_id": "obj-roof-001",
+      "surface_type": "flat_roof",
+      "boundary_2d": {
+        "vertices": [
+          [
+            0,
+            0
+          ],
+          [
+            20,
+            0
+          ],
+          [
+            20,
+            10
+          ],
+          [
+            0,
+            10
+          ]
+        ],
+        "holes": [],
+        "winding": "counterclockwise",
+        "closed": true
+      },
+      "base_elevation_m": 8,
+      "slope_deg": 0,
+      "azimuth_deg": 0,
+      "parent_surface_id": null,
+      "material": null,
+      "albedo": 0.2,
+      "usable_for_pv": true,
+      "shading_receiver": false,
+      "notes": null
+    }
+  ],
+  "obstacles": [
+    {
+      "obstacle_id": "obs-001",
+      "scene_object_id": "obj-obs-001",
+      "obstacle_type": "box",
+      "footprint": {
+        "vertices": [
+          [
+            8,
+            4
+          ],
+          [
+            9,
+            4
+          ],
+          [
+            9,
+            5
+          ],
+          [
+            8,
+            5
+          ]
+        ],
+        "holes": [],
+        "winding": "counterclockwise",
+        "closed": true
+      },
+      "base_elevation_m": 8,
+      "height_m": 1.5,
+      "dimensions": {
+        "length_m": 1,
+        "width_m": 1
+      },
+      "shading_enabled": true,
+      "receiver_enabled": false,
+      "material": null
+    }
+  ],
+  "pv_fields": [
+    {
+      "pv_field_id": "field-001",
+      "scene_id": "scene-ref-001",
+      "name": "Roof field",
+      "support_surface_id": "roof-001",
+      "module_definition_revision_id": "mod-openpv-ref-650-r1",
+      "orientation": "portrait",
+      "azimuth_deg": 0,
+      "tilt_deg": 10,
+      "mounting_height_m": 0.2,
+      "layout_mode": "fixed_tilt",
+      "row_count": 1,
+      "modules_per_row": 1,
+      "module_gap_x_m": 0.02,
+      "module_gap_y_m": 0.02,
+      "row_pitch_m": 2.5,
+      "table_configuration": null,
+      "boundary_constraint_id": null,
+      "setback_configuration": {
+        "perimeter_setback_m": 0.5,
+        "edge_specific_setbacks": null,
+        "obstacle_setback_m": 0.5,
+        "walkway_rules": null
+      },
+      "generated_module_instance_ids": [
+        "module-001"
+      ],
+      "layout_source": "manual",
+      "notes": null
+    }
+  ],
+  "module_instances": [
+    {
+      "module_instance_id": "module-001",
+      "pv_field_id": "field-001",
+      "module_definition_revision_id": "mod-openpv-ref-650-r1",
+      "transform": {
+        "position_x_m": 2,
+        "position_y_m": 2,
+        "position_z_m": 8.2,
+        "rotation_x_deg": 0,
+        "rotation_y_deg": 10,
+        "rotation_z_deg": 0,
+        "scale_x": 1,
+        "scale_y": 1,
+        "scale_z": 1
+      },
+      "row_index": 0,
+      "column_index": 0,
+      "table_index": null,
+      "enabled": true,
+      "electrical_connection_id": null,
+      "metadata": {}
+    }
+  ]
+}

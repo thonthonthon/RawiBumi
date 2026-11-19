@@ -1,0 +1,86 @@
+{
+  "schema_name": "IVReferenceDataset",
+  "schema_version": "0.1",
+  "dataset_id": "ivref-synthetic-001",
+  "revision_id": "ivref-synthetic-001-r1",
+  "name": "Synthetic PVsyst SDM reference matrix",
+  "source_id": "src-synthetic-ivref-001",
+  "source_kind": "synthetic_reference",
+  "module_identity": {
+    "manufacturer": "OpenSIMPV Synthetic",
+    "model": "SYN-MOD-550",
+    "serial_number": null
+  },
+  "measurement_context": {
+    "irradiance_quantity": "effective_irradiance",
+    "spectral_correction_applied": null,
+    "temperature_quantity": "cell_temperature",
+    "laboratory": null,
+    "standard_or_method": "synthetic regression fixture",
+    "measurement_date": null,
+    "notes": "Generated solely for executable validation tests; not measurement evidence."
+  },
+  "points": [
+    {
+      "point_id": "G200-T0",
+      "effective_irradiance_w_m2": 200.0,
+      "cell_temperature_c": 0.0,
+      "summary": {
+        "isc_a": 2.7648429649052177,
+        "voc_v": 50.32037624889419,
+        "imp_a": 2.615813489252186,
+        "vmp_v": 44.25796335256293,
+        "pmp_w": 115.77057754446302
+      },
+      "iv_curve": null,
+      "uncertainty": {},
+      "source_point_reference": "synthetic-200-0",
+      "notes": null
+    },
+    {
+      "point_id": "G600-T50",
+      "effective_irradiance_w_m2": 600.0,
+      "cell_temperature_c": 50.0,
+      "summary": {
+        "isc_a": 8.510031132694735,
+        "voc_v": 45.72277443931276,
+        "imp_a": 7.981282892715201,
+        "vmp_v": 38.242065603463615,
+        "pmp_w": 305.2207439830166
+      },
+      "iv_curve": [
+        {"voltage_v": 0.0, "current_a": 8.510031132695},
+        {"voltage_v": 5.0, "current_a": 8.495993492159},
+        {"voltage_v": 10.0, "current_a": 8.481955643514},
+        {"voltage_v": 15.0, "current_a": 8.467915130276},
+        {"voltage_v": 20.0, "current_a": 8.453840500317},
+        {"voltage_v": 25.0, "current_a": 8.439329071925},
+        {"voltage_v": 30.0, "current_a": 8.419229048638},
+        {"voltage_v": 35.0, "current_a": 8.328234111416},
+        {"voltage_v": 40.0, "current_a": 7.422538251066},
+        {"voltage_v": 45.0, "current_a": 1.566233603496},
+        {"voltage_v": 45.72277443931276, "current_a": 0.0}
+      ],
+      "uncertainty": {},
+      "source_point_reference": "synthetic-600-50",
+      "notes": "Includes a full forward-quadrant IV curve."
+    },
+    {
+      "point_id": "G1000-T75",
+      "effective_irradiance_w_m2": 1000.0,
+      "cell_temperature_c": 75.0,
+      "summary": {
+        "isc_a": 14.363753814656926,
+        "voc_v": 43.513769111412046,
+        "imp_a": 13.379742028713595,
+        "vmp_v": 34.90813421055374,
+        "pmp_w": 467.06183044092074
+      },
+      "iv_curve": null,
+      "uncertainty": {},
+      "source_point_reference": "synthetic-1000-75",
+      "notes": null
+    }
+  ],
+  "notes": "Synthetic only. Passing this dataset is a regression check, not independent validation."
+}

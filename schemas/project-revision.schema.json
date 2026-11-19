@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/project-revision.schema.json",
+  "title": "OpenSIMPV ProjectRevision v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "project_revision_id",
+    "revision_number",
+    "scene_revision_id",
+    "electrical_revision_id"
+  ],
+  "properties": {
+    "schema_name": {"const": "ProjectRevision"},
+    "schema_version": {"const": "0.1"},
+    "project_revision_id": {"type": "string", "minLength": 1},
+    "revision_number": {"type": "integer", "minimum": 1},
+    "scene_revision_id": {"type": "string", "minLength": 1},
+    "electrical_revision_id": {"type": "string", "minLength": 1},
+    "weather_dataset_revision_id": {"type": ["string", "null"]},
+    "simulation_defaults_revision_id": {"type": ["string", "null"]},
+    "change_summary": {"type": ["string", "null"]}
+  },
+  "additionalProperties": true
+}

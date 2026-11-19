@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/electrical-parameterization-definition.schema.json",
+  "title": "OpenSIMPV ElectricalParameterizationDefinition v0.1",
+  "description": "Executable revision-bound region/sub-string electrical parameterization. This is the payload whose immutable hash is referenced by ElectricalParameterizationEvidence.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "contract_version",
+    "parameterization_id",
+    "revision_id",
+    "parameterization_scope",
+    "module_definition_revision_id",
+    "module_topology_revision_id",
+    "model_id",
+    "model_version",
+    "region_parameterizations",
+    "source_ids",
+    "parameterization_payload_sha256"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "ElectricalParameterizationDefinition"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "contract_version": {
+      "const": "0.1"
+    },
+    "parameterization_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parameterization_scope": {
+      "const": "region_substring"
+    },
+    "module_definition_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "module_topology_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "region_parameterizations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/region_parameterization"
+      }
+    },
+    "source_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "parameterization_payload_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "notes": {
+      "type": ["string", "null"]
+    },
+    "metadata": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "parameter_set": {
+      "type": "object",
+      "required": [
+        "alpha_sc_a_per_c",
+        "gamma_ref",
+        "mu_gamma",
+        "photocurrent_ref_a",
+        "saturation_current_ref_a",
+        "r_shunt_ref_ohm",
+        "r_shunt_0_ohm",
+        "r_series_ohm",
+        "cells_in_series",
+        "r_shunt_exp",
+        "energy_bandgap_ref_ev",
+        "reference_irradiance_w_m2",
+        "reference_cell_temperature_c"
+      ],
+      "properties": {
+        "alpha_sc_a_per_c": {"type": "number"},
+        "gamma_ref": {"type": "number"},
+        "mu_gamma": {"type": "number"},
+        "photocurrent_ref_a": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "saturation_current_ref_a": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "r_shunt_ref_ohm": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "r_shunt_0_ohm": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "r_series_ohm": {
+          "type": "number",
+          "minimum": 0
+        },
+        "cells_in_series": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "r_shunt_exp": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "energy_bandgap_ref_ev": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "reference_irradiance_w_m2": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "reference_cell_temperature_c": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "reverse_bias": {
+      "type": "object",
+      "required": [
+        "model_type",
+        "resistance_ohm",
+        "minimum_supported_voltage_v"
+      ],
+      "properties": {
+        "model_type": {
+          "const": "linear_resistance_from_isc"
+        },
+        "resistance_ohm": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "minimum_supported_voltage_v": {
+          "type": "number",
+          "maximum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "region_parameterization": {
+      "type": "object",
+      "required": [
+        "region_id",
+        "model_type",
+        "parameter_set",
+        "reverse_bias",
+        "current_domain_max_a"
+      ],
+      "properties": {
+        "region_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_type": {
+          "const": "pvsyst_singlediode_linear_reverse"
+        },
+        "parameter_set": {
+          "$ref": "#/$defs/parameter_set"
+        },
+        "reverse_bias": {
+          "$ref": "#/$defs/reverse_bias"
+        },
+        "current_domain_max_a": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "metadata": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

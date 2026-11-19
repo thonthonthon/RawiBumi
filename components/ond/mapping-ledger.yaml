@@ -1,0 +1,1508 @@
+schema_version: "0.1"
+format: ond
+notes: >
+  Evidence-backed OND mapping. AC nominal/maximum power, AC voltage/current, PV-array sizing
+  fields, efficiency summaries, temperature derating thresholds, and voltage-dependent
+  efficiency profiles are mapped where official PVsyst documentation plus manufacturer
+  evidence support the semantics. Ambiguous DC-current scope remains conservative: source
+  contractual current fields are not treated as physical MPPT operating-current limits.
+rules:
+  - source_path: [PVObject_, PVObject_Commercial, Manufacturer]
+    canonical_field: manufacturer
+    source_unit: null
+    canonical_unit: null
+    conversion_rule: string
+    semantic_description: Inverter manufacturer.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: identity
+    notes: null
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/grid-inverters/grid-inverters-main-interface/grid-inverters-main-parameters/index.html
+        note: PVsyst documents Model and Manufacturer as inverter identifiers.
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/CPS%20SCH275KTL-DO-US-800-250kW_275kVA_1.OND
+        note: Public pvlib fixture confirms the OND path.
+
+  - source_path: [PVObject_, PVObject_Commercial, Model]
+    canonical_field: model
+    source_unit: null
+    canonical_unit: null
+    conversion_rule: string
+    semantic_description: Commercial inverter model identifier.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: identity
+    notes: null
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/grid-inverters/grid-inverters-main-interface/grid-inverters-main-parameters/index.html
+        note: PVsyst documents Model and Manufacturer as inverter identifiers.
+
+  - source_path: [PVObject_, Converter, VMppMin]
+    canonical_field: mppt_template.min_operating_voltage_v
+    source_unit: V
+    canonical_unit: V
+    conversion_rule: float
+    semantic_description: Minimum MPP-tracking voltage.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: mppt
+    notes: Applies as a template until per-MPPT variation is proven for a given format/file.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/grid-inverters/grid-inverters-main-interface/grid-inverters-main-parameters/index.html
+        note: PVsyst defines VmppMin as minimum MPP voltage.
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/CPS%20SCH275KTL-DO-US-800-250kW_275kVA_1.OND
+        note: Public fixture uses VMppMin within Converter.
+
+  - source_path: [PVObject_, Converter, VMPPMax]
+    canonical_field: mppt_template.max_operating_voltage_v
+    source_unit: V
+    canonical_unit: V
+    conversion_rule: float
+    semantic_description: Maximum MPP-tracking voltage.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: mppt
+    notes: Applies as a template until per-MPPT variation is proven for a given format/file.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/grid-inverters/grid-inverters-main-interface/grid-inverters-main-parameters/index.html
+        note: PVsyst defines VmppMax as maximum MPP voltage.
+
+  - source_path: [PVObject_, Converter, VAbsMax]
+    canonical_field: dc_limits.max_dc_voltage_v
+    source_unit: V
+    canonical_unit: V
+    conversion_rule: float
+    semantic_description: Absolute maximum PV/DC input voltage.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: inverter
+    notes: null
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/grid-inverters/grid-inverters-main-interface/grid-inverters-main-parameters/index.html
+        note: PVsyst defines VAbsMax as absolute maximum PV voltage.
+
+  - source_path: [PVObject_, Converter, MonoTri]
+    canonical_field: phase_configuration
+    source_unit: null
+    canonical_unit: null
+    conversion_rule: mono_tri_to_phase
+    semantic_description: Single- or three-phase AC output classification.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: ac
+    notes: Known values Tri and Mono are normalized; unknown values cause a mapping warning.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/grid-inverters/grid-inverters-main-interface/grid-inverters-main-parameters/index.html
+        note: PVsyst documents Mono/Tri as inverter phase configuration.
+
+  - source_path: [PVObject_, NbMPPT]
+    canonical_field: mppt_template.count
+    source_unit: count
+    canonical_unit: count
+    conversion_rule: int
+    semantic_description: Number of MPPTs represented by the OND definition.
+    required_for_model: true
+    confidence: empirically_verified
+    auto_map: true
+    scope: mppt
+    notes: Exact heterogeneous-MPPT representation requires additional fixtures.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/CPS%20SCH275KTL-DO-US-800-250kW_275kVA_1.OND
+        note: Public fixture and pvlib test assert NbMPPT=12.
+      - kind: reference_repository
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/iotools/test_panond.py
+        note: pvlib test checks NbMPPT.
+
+  - source_path: [PVObject_, NbInputs]
+    canonical_field: mppt_template.total_input_count
+    source_unit: count
+    canonical_unit: count
+    conversion_rule: int
+    semantic_description: Total number of DC inputs represented by the OND file.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: mppt
+    notes: The mapper does not divide this by NbMPPT automatically.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/CPS%20SCH275KTL-DO-US-800-250kW_275kVA_1.OND
+        note: Public fixture contains NbInputs and NbMPPT.
+
+  - source_path: [PVObject_, Converter, PSeuil]
+    canonical_field: operating_thresholds.minimum_input_power_w
+    source_unit: W
+    canonical_unit: W
+    conversion_rule: float
+    semantic_description: Minimum input power threshold for inverter operation.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: inverter
+    notes: >
+      PVsyst documentation names the concept Pthresh while this public OND fixture uses
+      PSeuil. The semantic relationship is treated as empirically verified, not fully frozen.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.81"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/grid-inverters/grid-inverters-main-interface/grid-inverters-main-parameters/index.html
+        note: PVsyst defines the operating power-threshold concept.
+      - kind: reference_fixture
+        url: https://github.com/pvlib/pvlib-python/blob/main/tests/data/CPS%20SCH275KTL-DO-US-800-250kW_275kVA_1.OND
+        note: Public fixture contains PSeuil=500.0.
+
+  - source_path: [PVObject_, Converter, PNomConv]
+    canonical_field: ac_limits.nominal_ac_power_w
+    source_unit: kW
+    canonical_unit: W
+    conversion_rule: kw_to_w
+    semantic_description: Nominal continuous AC active output power.
+    required_for_model: true
+    confidence: confirmed
+    auto_map: true
+    scope: ac
+    notes: >
+      Huawei OND value 100 kW exactly matches the manufacturer-rated AC active power.
+      PVsyst defines PNomAC as the continuous nominal grid output power.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/physical-models-used/grid-inverter/inverter-model-input-and-output.html
+        note: PVsyst defines nominal AC power as the primary continuous output-power parameter.
+      - kind: datasheet
+        url: https://solar.huawei.com/-/media/Solar/attachment/pdf/mea/datasheet/SUN2000-100KTL-M1.pdf
+        note: Huawei specifies Nominal AC Active Power = 100,000 W.
+  - source_path: [PVObject_, Converter, PMaxOUT]
+    canonical_field: ac_limits.max_ac_power_w
+    source_unit: kW
+    canonical_unit: W
+    conversion_rule: kw_to_w
+    semantic_description: Maximum AC active output power available under allowed conditions.
+    required_for_model: false
+    confidence: confirmed
+    auto_map: true
+    scope: ac
+    notes: >
+      Huawei OND value 110 kW matches the manufacturer's maximum AC active power at cos(phi)=1.
+      PVsyst treats PMaxAC separately from continuous PNomAC and may couple it to temperature.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/grid-inverters/grid-inverters-main-interface/grid-inverters-main-parameters/index.html
+        note: PVsyst documents PMaxAC as a conditional maximum AC output power.
+      - kind: datasheet
+        url: https://solar.huawei.com/-/media/Solar/attachment/pdf/mea/datasheet/SUN2000-100KTL-M1.pdf
+        note: Huawei specifies Max. AC Active Power (cosφ=1) = 110,000 W.
+
+  - source_path: [PVObject_, Converter, VOutConv]
+    canonical_field: ac_limits.nominal_ac_voltage_v
+    source_unit: V
+    canonical_unit: V
+    conversion_rule: float
+    semantic_description: Configured nominal AC grid voltage for the OND converter.
+    required_for_model: true
+    confidence: confirmed
+    auto_map: true
+    scope: ac
+    notes: >
+      Huawei OND uses 380 V and the manufacturer datasheet lists 380 V as a supported rated output voltage.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: datasheet
+        url: https://solar.huawei.com/-/media/Solar/attachment/pdf/mea/datasheet/SUN2000-100KTL-M1.pdf
+        note: Huawei specifies rated output voltage including 380 V.
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS imports VOutConv as inverter nominal AC voltage.
+
+  - source_path: [PVObject_, Converter, INomAC]
+    canonical_field: ac_limits.nominal_ac_current_a
+    source_unit: A
+    canonical_unit: A
+    conversion_rule: float
+    semantic_description: Nominal AC output current at the configured AC voltage.
+    required_for_model: false
+    confidence: confirmed
+    auto_map: true
+    scope: ac
+    notes: >
+      Huawei OND value 152.0 A matches the 380 V nominal output-current specification.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/grid-inverters/grid-inverters-main-interface/grid-inverters-main-parameters/index.html
+        note: PVsyst defines INomAC as nominal AC current and notes it is not directly used in simulation.
+      - kind: datasheet
+        url: https://solar.huawei.com/-/media/Solar/attachment/pdf/mea/datasheet/SUN2000-100KTL-M1.pdf
+        note: Huawei specifies rated output current 152.0 A at 380 V.
+
+  - source_path: [PVObject_, Converter, IMaxAC]
+    canonical_field: ac_limits.max_ac_current_a
+    source_unit: A
+    canonical_unit: A
+    conversion_rule: float
+    semantic_description: Maximum AC output current at the configured AC voltage.
+    required_for_model: false
+    confidence: confirmed
+    auto_map: true
+    scope: ac
+    notes: >
+      Huawei OND value 168.8 A matches the 380 V maximum output-current specification.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/grid-inverters/grid-inverters-main-interface/grid-inverters-main-parameters/index.html
+        note: PVsyst defines IMaxAC as the manufacturer maximum AC current rating.
+      - kind: datasheet
+        url: https://solar.huawei.com/-/media/Solar/attachment/pdf/mea/datasheet/SUN2000-100KTL-M1.pdf
+        note: Huawei specifies maximum output current 168.8 A at 380 V.
+
+  - source_path: [PVObject_, Converter, VmppNom]
+    canonical_field: mppt_template.nominal_voltage_v
+    source_unit: V
+    canonical_unit: V
+    conversion_rule: float
+    semantic_description: PVsyst nominal MPP voltage field.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: mppt
+    notes: >
+      This preserves the OND VmppNom semantic. It must not be silently substituted for a separate manufacturer rated-input-voltage datum.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/grid-inverters/grid-inverters-main-interface/grid-inverters-main-parameters/index.html
+        note: PVsyst documents VmppNom as the nominal MPP voltage, weakly used for sizing.
+
+  - source_path: [PVObject_, Converter, PNomDC]
+    canonical_field: array_sizing_limits.nominal_pv_array_power_w
+    source_unit: kW
+    canonical_unit: W
+    conversion_rule: kw_to_w
+    semantic_description: Recommended nominal STC PV-array power associated with the inverter definition.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: array_sizing
+    notes: >
+      This is a PV-array sizing/nameplate constraint, not the inverter's physical DC conversion limit.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/grid-inverters/grid-inverters-main-interface/grid-inverters-main-parameters/index.html
+        note: PVsyst defines PNomPV as recommended nominal STC PV-array power.
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS imports OND PNomDC as a distinct DC/PV-array database field.
+
+  - source_path: [PVObject_, Converter, PMaxDC]
+    canonical_field: array_sizing_limits.max_pv_array_power_w
+    source_unit: kW
+    canonical_unit: W
+    conversion_rule: kw_to_w
+    semantic_description: Maximum contractual/recommended nominal STC PV-array power.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: array_sizing
+    notes: >
+      This is preserved separately from AC clipping power and from physical DC input power.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/grid-inverters/grid-inverters-main-interface/grid-inverters-main-parameters/index.html
+        note: PVsyst defines PMaxPV as a manufacturer maximum PV-array STC power constraint.
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS imports OND PMaxDC as a distinct DC/PV-array field.
+
+  - source_path: [PVObject_, Converter, IMaxDC]
+    canonical_field: array_sizing_limits.max_pv_current_a
+    source_unit: A
+    canonical_unit: A
+    conversion_rule: float
+    semantic_description: OND/PVsyst contractual maximum PV-array current field.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: array_sizing
+    notes: >
+      Do not use this as the MPPT operating-current limit. In this Huawei file it is 40 A, numerically matching the manufacturer max short-circuit current per MPPT, while the manufacturer max operating current per MPPT is 26 A and is not separately encoded by a verified OND field.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/grid-inverters/grid-inverters-main-interface/grid-inverters-main-parameters/index.html
+        note: PVsyst describes IMaxPV as a contractual maximum PV current, usually related to array Isc; it is distinct from the physical MPPT current limit.
+      - kind: datasheet
+        url: https://solar.huawei.com/-/media/Solar/attachment/pdf/mea/datasheet/SUN2000-100KTL-M1.pdf
+        note: Huawei specifies 26 A maximum current per MPPT and 40 A maximum short-circuit current per MPPT.
+
+  - source_path: [PVObject_, Converter, EfficMax]
+    canonical_field: efficiency_model.reference_metrics.max_efficiency_fraction
+    source_unit: "%"
+    canonical_unit: fraction
+    conversion_rule: percent_to_fraction
+    semantic_description: PVsyst maximum-efficiency summary associated with the inverter efficiency model.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: efficiency
+    notes: >
+      Summary value is preserved independently from the explicit transfer curves. A stated zero means not given and is normalized to null by the OND mapper; the raw source value remains in the mapping record.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/physical-models-used/grid-inverter/inverter-model-efficiency.html
+        note: PVsyst documents maximum efficiency as a summary derived from/used with the efficiency profile.
+
+  - source_path: [PVObject_, Converter, EfficEuro]
+    canonical_field: efficiency_model.reference_metrics.european_efficiency_fraction
+    source_unit: "%"
+    canonical_unit: fraction
+    conversion_rule: percent_to_fraction
+    semantic_description: PVsyst European weighted-efficiency summary.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: efficiency
+    notes: >
+      Summary value is preserved independently from explicit transfer-curve points. A stated zero means not given and is normalized to null by the OND mapper; per-voltage values are unchanged.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/component-database/grid-inverters/grid-inverters-main-interface/grid-inverters-main-parameters/index.html
+        note: PVsyst documents European efficiency as a weighted efficiency summary.
+
+  - source_path: [PVObject_, Converter, VNomEff]
+    canonical_field: ond_efficiency_source.voltages_v
+    source_unit: V
+    canonical_unit: V
+    conversion_rule: csv_float_list
+    semantic_description: Input-voltage anchors for the three OND efficiency profiles.
+    required_for_model: true
+    confidence: documented
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      PVsyst uses three input-voltage-specific efficiency curves and interpolates between them during simulation.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/physical-models-used/grid-inverter/inverter-model-efficiency.html
+        note: PVsyst supports three efficiency profiles at three input voltages.
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads VNomEff as low/medium/high input-voltage anchors for ProfilPIOV1/V2/V3.
+
+  - source_path: [PVObject_, Converter, ModeAffEnum]
+    canonical_field: ond_efficiency_source.profile_mode
+    source_unit: null
+    canonical_unit: null
+    conversion_rule: string
+    semantic_description: OND efficiency-profile display/transfer mode identifier.
+    required_for_model: true
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Accepted display modes are POutf_PIn, Efficiencyf_POut, Efficf_POut,
+      Efficf_PIn and Efficiencyf_PIn. All use the stored (PIn, POut) pairs without
+      transformation. Unknown modes remain refused. No official specification of
+      the ModeAffEnum strings or Point_n storage order was found. Storage order
+      rests on aggregate file evidence and the runtime guard requiring finite
+      PIn >= POut >= 0 and efficiency <= 1 at every point. Planner read-only sweep
+      of 56 files: POutf_PIn 2, Efficiencyf_POut 33, Efficf_POut 8, Efficf_PIn 10,
+      Efficiencyf_PIn 3. Every non-zero pair satisfied PIn >= POut. Best POut/PIn
+      matched the stated maximum within 0.00 percentage points in 54 files and
+      within 0.17 in the other two. Counts only; no private file names or contents
+      retained.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS interprets profile points as DC input power and AC output power when importing OND efficiency curves.
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help-pvsyst7/inverters_curve.htm
+        note: Documents the display forms Pout=f(Pin) and efficiency as a function of Pin or Pout; does not specify serialized field names or pair order.
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/physical-models-used/grid-inverter/inverter-model-efficiency.html
+        note: Defines efficiency as output/input power and the transfer-function representation; does not specify ModeAffEnum encoding.
+      - kind: test
+        url: tests/unit/test_rb_fix_eng1_ond_modes.py
+        note: Synthetic variants pin five-mode parity and refusal of invalid power pairs without copying any private files.
+
+  - source_path: [PVObject_, Night_Loss]
+    canonical_field: operating_thresholds.night_loss_w
+    source_unit: W
+    canonical_unit: W
+    conversion_rule: float
+    semantic_description: Night-time inverter self-consumption/loss.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: loss
+    notes: >
+      PVsyst applies night consumption as an auxiliary inverter loss.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help/physical-models-used/grid-inverter/inverter-model-input-and-output.html
+        note: PVsyst documents night consumption as an inverter auxiliary loss.
+
+  - source_path: [PVObject_, Converter, TPMax]
+    canonical_field: temperature_derating_model.max_power_temperature_c
+    source_unit: degC
+    canonical_unit: degC
+    conversion_rule: float
+    semantic_description: Maximum reference temperature at which conditional PMax output is available.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: temperature_derating
+    notes: >
+      Used with PMaxOUT and TPNom in PVsyst's temperature-dependent output-power model.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help-pvsyst7/inverter_outputparameter.htm
+        note: PVsyst requires the maximum temperature for attaining PMax.
+
+  - source_path: [PVObject_, Converter, TPNom]
+    canonical_field: temperature_derating_model.nominal_power_temperature_c
+    source_unit: degC
+    canonical_unit: degC
+    conversion_rule: float
+    semantic_description: Reference temperature at which available output power reaches PNom.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: temperature_derating
+    notes: >
+      Huawei OND specifies 40 C; the manufacturer datasheet rates 100 kW active output at 40 C.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help-pvsyst7/inverter_outputparameter.htm
+        note: PVsyst defines the temperature at which available output power reaches PNom.
+      - kind: datasheet
+        url: https://solar.huawei.com/-/media/Solar/attachment/pdf/mea/datasheet/SUN2000-100KTL-M1.pdf
+        note: Huawei specifies rated AC active power 100,000 W at 40°C.
+
+  - source_path: [PVObject_, Converter, TPLim1]
+    canonical_field: temperature_derating_model.limit1_temperature_c
+    source_unit: degC
+    canonical_unit: degC
+    conversion_rule: float
+    semantic_description: High-temperature derating breakpoint temperature.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: temperature_derating
+    notes: >
+      Paired with PLim1.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help-pvsyst7/inverter_outputparameter.htm
+        note: PVsyst allows additional high-temperature power-limit points.
+
+  - source_path: [PVObject_, Converter, PLim1]
+    canonical_field: temperature_derating_model.limit1_power_w
+    source_unit: kW
+    canonical_unit: W
+    conversion_rule: kw_to_w
+    semantic_description: Available output-power limit at TPLim1.
+    required_for_model: false
+    confidence: documented
+    auto_map: true
+    scope: temperature_derating
+    notes: >
+      Paired with TPLim1.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: official_documentation
+        url: https://www.pvsyst.com/help-pvsyst7/inverter_outputparameter.htm
+        note: PVsyst allows temperature-dependent power-limit points above PNom.
+
+  - source_path: [PVObject_, Converter, TPLimAbs]
+    canonical_field: temperature_derating_model.absolute_limit_temperature_c
+    source_unit: degC
+    canonical_unit: degC
+    conversion_rule: float
+    semantic_description: Absolute high-temperature operating limit stored by the OND model.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: temperature_derating
+    notes: >
+      Preserved as a threshold; OpenSIMPV does not infer a zero-power point unless the simulation model explicitly defines that behavior.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_fixture
+        url: https://github.com/juancuk/OpenSIMPV/blob/main/tests/fixtures/panond/manufacturer/Huawei_Sun2000_100KTL_M1.OND
+        note: Manufacturer-supplied Huawei OND includes TPLimAbs=62.0.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV1, NPtsEff]
+    canonical_field: ond_efficiency_source.profiles.v1.point_count
+    source_unit: count
+    canonical_unit: count
+    conversion_rule: int
+    semantic_description: Number of effective points in OND voltage-dependent efficiency profile 1.
+    required_for_model: true
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Only Point_1 through Point_NPtsEff are assembled; trailing zero placeholders are ignored.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS uses NPtsEff and the profile point fields when importing OND curves.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV1, Point_1]
+    canonical_field: ond_efficiency_source.profiles.v1.point_1
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 1 for voltage-dependent efficiency profile 1.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV1, Point_2]
+    canonical_field: ond_efficiency_source.profiles.v1.point_2
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 2 for voltage-dependent efficiency profile 1.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV1, Point_3]
+    canonical_field: ond_efficiency_source.profiles.v1.point_3
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 3 for voltage-dependent efficiency profile 1.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV1, Point_4]
+    canonical_field: ond_efficiency_source.profiles.v1.point_4
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 4 for voltage-dependent efficiency profile 1.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV1, Point_5]
+    canonical_field: ond_efficiency_source.profiles.v1.point_5
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 5 for voltage-dependent efficiency profile 1.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV1, Point_6]
+    canonical_field: ond_efficiency_source.profiles.v1.point_6
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 6 for voltage-dependent efficiency profile 1.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV1, Point_7]
+    canonical_field: ond_efficiency_source.profiles.v1.point_7
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 7 for voltage-dependent efficiency profile 1.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV1, Point_8]
+    canonical_field: ond_efficiency_source.profiles.v1.point_8
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 8 for voltage-dependent efficiency profile 1.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV1, Point_9]
+    canonical_field: ond_efficiency_source.profiles.v1.point_9
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 9 for voltage-dependent efficiency profile 1.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV1, Point_10]
+    canonical_field: ond_efficiency_source.profiles.v1.point_10
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 10 for voltage-dependent efficiency profile 1.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV1, Point_11]
+    canonical_field: ond_efficiency_source.profiles.v1.point_11
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 11 for voltage-dependent efficiency profile 1.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV2, NPtsEff]
+    canonical_field: ond_efficiency_source.profiles.v2.point_count
+    source_unit: count
+    canonical_unit: count
+    conversion_rule: int
+    semantic_description: Number of effective points in OND voltage-dependent efficiency profile 2.
+    required_for_model: true
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Only Point_1 through Point_NPtsEff are assembled; trailing zero placeholders are ignored.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS uses NPtsEff and the profile point fields when importing OND curves.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV2, Point_1]
+    canonical_field: ond_efficiency_source.profiles.v2.point_1
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 1 for voltage-dependent efficiency profile 2.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV2, Point_2]
+    canonical_field: ond_efficiency_source.profiles.v2.point_2
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 2 for voltage-dependent efficiency profile 2.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV2, Point_3]
+    canonical_field: ond_efficiency_source.profiles.v2.point_3
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 3 for voltage-dependent efficiency profile 2.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV2, Point_4]
+    canonical_field: ond_efficiency_source.profiles.v2.point_4
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 4 for voltage-dependent efficiency profile 2.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV2, Point_5]
+    canonical_field: ond_efficiency_source.profiles.v2.point_5
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 5 for voltage-dependent efficiency profile 2.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV2, Point_6]
+    canonical_field: ond_efficiency_source.profiles.v2.point_6
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 6 for voltage-dependent efficiency profile 2.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV2, Point_7]
+    canonical_field: ond_efficiency_source.profiles.v2.point_7
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 7 for voltage-dependent efficiency profile 2.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV2, Point_8]
+    canonical_field: ond_efficiency_source.profiles.v2.point_8
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 8 for voltage-dependent efficiency profile 2.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV2, Point_9]
+    canonical_field: ond_efficiency_source.profiles.v2.point_9
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 9 for voltage-dependent efficiency profile 2.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV2, Point_10]
+    canonical_field: ond_efficiency_source.profiles.v2.point_10
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 10 for voltage-dependent efficiency profile 2.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV2, Point_11]
+    canonical_field: ond_efficiency_source.profiles.v2.point_11
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 11 for voltage-dependent efficiency profile 2.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV3, NPtsEff]
+    canonical_field: ond_efficiency_source.profiles.v3.point_count
+    source_unit: count
+    canonical_unit: count
+    conversion_rule: int
+    semantic_description: Number of effective points in OND voltage-dependent efficiency profile 3.
+    required_for_model: true
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Only Point_1 through Point_NPtsEff are assembled; trailing zero placeholders are ignored.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS uses NPtsEff and the profile point fields when importing OND curves.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV3, Point_1]
+    canonical_field: ond_efficiency_source.profiles.v3.point_1
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 1 for voltage-dependent efficiency profile 3.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV3, Point_2]
+    canonical_field: ond_efficiency_source.profiles.v3.point_2
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 2 for voltage-dependent efficiency profile 3.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV3, Point_3]
+    canonical_field: ond_efficiency_source.profiles.v3.point_3
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 3 for voltage-dependent efficiency profile 3.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV3, Point_4]
+    canonical_field: ond_efficiency_source.profiles.v3.point_4
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 4 for voltage-dependent efficiency profile 3.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV3, Point_5]
+    canonical_field: ond_efficiency_source.profiles.v3.point_5
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 5 for voltage-dependent efficiency profile 3.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV3, Point_6]
+    canonical_field: ond_efficiency_source.profiles.v3.point_6
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 6 for voltage-dependent efficiency profile 3.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV3, Point_7]
+    canonical_field: ond_efficiency_source.profiles.v3.point_7
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 7 for voltage-dependent efficiency profile 3.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV3, Point_8]
+    canonical_field: ond_efficiency_source.profiles.v3.point_8
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 8 for voltage-dependent efficiency profile 3.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV3, Point_9]
+    canonical_field: ond_efficiency_source.profiles.v3.point_9
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 9 for voltage-dependent efficiency profile 3.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV3, Point_10]
+    canonical_field: ond_efficiency_source.profiles.v3.point_10
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 10 for voltage-dependent efficiency profile 3.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIOV3, Point_11]
+    canonical_field: ond_efficiency_source.profiles.v3.point_11
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 11 for voltage-dependent efficiency profile 3.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  # DEC-85: single ProfilPIO; expanded with three identical curves only for single-profile files.
+  - source_path: [PVObject_, Converter, ProfilPIO, NPtsEff]
+    canonical_field: ond_efficiency_source.profiles.single.point_count
+    source_unit: count
+    canonical_unit: count
+    conversion_rule: int
+    semantic_description: Number of effective points in OND single voltage-independent efficiency profile.
+    required_for_model: true
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      Only Point_1 through Point_NPtsEff are assembled; trailing zero placeholders are ignored.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS uses NPtsEff and the profile point fields when importing OND curves.
+
+  - source_path: [PVObject_, Converter, ProfilPIO, Point_1]
+    canonical_field: ond_efficiency_source.profiles.single.point_1
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 1 for single voltage-independent efficiency profile.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      DEC-85: used only when no voltage-specific profiles are present. Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIO, Point_2]
+    canonical_field: ond_efficiency_source.profiles.single.point_2
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 2 for single voltage-independent efficiency profile.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      DEC-85: used only when no voltage-specific profiles are present. Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIO, Point_3]
+    canonical_field: ond_efficiency_source.profiles.single.point_3
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 3 for single voltage-independent efficiency profile.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      DEC-85: used only when no voltage-specific profiles are present. Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIO, Point_4]
+    canonical_field: ond_efficiency_source.profiles.single.point_4
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 4 for single voltage-independent efficiency profile.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      DEC-85: used only when no voltage-specific profiles are present. Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIO, Point_5]
+    canonical_field: ond_efficiency_source.profiles.single.point_5
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 5 for single voltage-independent efficiency profile.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      DEC-85: used only when no voltage-specific profiles are present. Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIO, Point_6]
+    canonical_field: ond_efficiency_source.profiles.single.point_6
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 6 for single voltage-independent efficiency profile.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      DEC-85: used only when no voltage-specific profiles are present. Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIO, Point_7]
+    canonical_field: ond_efficiency_source.profiles.single.point_7
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 7 for single voltage-independent efficiency profile.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      DEC-85: used only when no voltage-specific profiles are present. Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIO, Point_8]
+    canonical_field: ond_efficiency_source.profiles.single.point_8
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 8 for single voltage-independent efficiency profile.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      DEC-85: used only when no voltage-specific profiles are present. Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIO, Point_9]
+    canonical_field: ond_efficiency_source.profiles.single.point_9
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 9 for single voltage-independent efficiency profile.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      DEC-85: used only when no voltage-specific profiles are present. Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIO, Point_10]
+    canonical_field: ond_efficiency_source.profiles.single.point_10
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 10 for single voltage-independent efficiency profile.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      DEC-85: used only when no voltage-specific profiles are present. Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.
+
+  - source_path: [PVObject_, Converter, ProfilPIO, Point_11]
+    canonical_field: ond_efficiency_source.profiles.single.point_11
+    source_unit: W,W
+    canonical_unit: W,W
+    conversion_rule: power_pair_w
+    semantic_description: DC-input/AC-output power pair 11 for single voltage-independent efficiency profile.
+    required_for_model: false
+    confidence: empirically_verified
+    auto_map: true
+    scope: efficiency_source
+    notes: >
+      DEC-85: used only when no voltage-specific profiles are present. Pair is interpreted as Pin,Pout. The candidate builder derives efficiency=Pout/Pin and ignores points beyond NPtsEff.
+    first_seen_format_version: "6.81"
+    last_verified_format_version: "6.86"
+    evidence:
+      - kind: reference_repository
+        url: https://github.com/CanadianSolar/CASSYS/blob/master/CASSYS%20Interface/DatabaseImportModule.vba
+        note: CASSYS reads OND profile Point_i as input power and output power and computes efficiency as Pout/Pin.

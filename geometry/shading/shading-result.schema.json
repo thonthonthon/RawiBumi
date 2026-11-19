@@ -1,0 +1,522 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/shading-result.schema.json",
+  "title": "OpenSIMPV ShadingResult v0.1",
+  "description": "Geometry-only shading factors with explicit beam, sky, and ground channels. Electrical shading is not modeled in Phase 5.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "contract_version",
+    "shading_result_id",
+    "source_scene_revision_id",
+    "compiled_geometry_hash",
+    "shading_configuration_hash",
+    "solver_manifest",
+    "fidelity_level",
+    "receiver_granularity",
+    "factor_convention",
+    "electrical_shading_scope",
+    "channels",
+    "storage_mode",
+    "record_count",
+    "orchestrator_manifest",
+    "receiver_set_sha256",
+    "source_execution_plan_id",
+    "result_payload_sha256",
+    "approximation_manifest",
+    "findings"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "ShadingResult"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "contract_version": {
+      "const": "0.1"
+    },
+    "shading_result_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_scene_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "compiled_geometry_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "shading_configuration_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "scientific_shading_configuration_sha256": {
+      "$ref": "#/$defs/sha256",
+      "description": "Optional path/cache-policy-normalized scientific shading configuration identity for long-run physical-result comparison."
+    },
+    "source_execution_plan_payload_sha256": {
+      "$ref": "#/$defs/sha256",
+      "description": "Optional full execution-plan payload hash retained by annual/long-run shading artifacts."
+    },
+    "physical_result_sha256": {
+      "$ref": "#/$defs/sha256",
+      "description": "Optional storage-location-independent physical shading-result identity. For exact cache modes it excludes execution-only cache policy."
+    },
+    "solver_manifest": {
+      "type": "object",
+      "required": [
+        "beam",
+        "sky_diffuse",
+        "ground"
+      ],
+      "properties": {
+        "beam": {
+          "$ref": "#/$defs/model_manifest"
+        },
+        "sky_diffuse": {
+          "$ref": "#/$defs/model_manifest"
+        },
+        "ground": {
+          "$ref": "#/$defs/model_manifest"
+        }
+      },
+      "additionalProperties": false
+    },
+    "fidelity_level": {
+      "enum": [
+        "preview",
+        "fast",
+        "engineering",
+        "detailed",
+        "research"
+      ]
+    },
+    "receiver_granularity": {
+      "enum": [
+        "module",
+        "pv_field",
+        "surface",
+        "mixed",
+        "electrical_region"
+      ]
+    },
+    "factor_convention": {
+      "const": "visibility_one_clear_zero_blocked"
+    },
+    "electrical_shading_scope": {
+      "const": "not_modeled"
+    },
+    "channels": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "beam_visibility",
+          "sky_visibility",
+          "ground_visibility",
+          "directional_diffuse_visibility"
+        ]
+      }
+    },
+    "storage_mode": {
+      "enum": [
+        "inline",
+        "dataset_reference"
+      ]
+    },
+    "record_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "inline_records": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/record"
+      }
+    },
+    "dataset_reference": {
+      "anyOf": [
+        {
+          "$ref": "https://opensimpv.org/schema/result-dataset-reference.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "approximation_manifest": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/approximation"
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    },
+    "orchestrator_manifest": {
+      "type": "object",
+      "required": [
+        "orchestrator_id",
+        "orchestrator_version"
+      ],
+      "properties": {
+        "orchestrator_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "orchestrator_version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "receiver_set_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "sun_state_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_execution_plan_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "result_payload_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_parent_compiled_geometry_hash": {
+      "$ref": "#/$defs/sha256",
+      "description": "For derived electrical-region receiver views, the exact parent Phase-5 CompiledShadingGeometry hash."
+    },
+    "source_electrical_region_map_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Required when receiver_granularity is electrical_region."
+    },
+    "source_electrical_region_map_hash": {
+      "$ref": "#/$defs/sha256",
+      "description": "Required when receiver_granularity is electrical_region."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "storage_mode": {
+            "const": "inline"
+          }
+        },
+        "required": [
+          "storage_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "inline_records"
+        ],
+        "properties": {
+          "dataset_reference": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "storage_mode": {
+            "const": "dataset_reference"
+          }
+        },
+        "required": [
+          "storage_mode"
+        ]
+      },
+      "then": {
+        "required": [
+          "dataset_reference"
+        ],
+        "properties": {
+          "dataset_reference": {
+            "$ref": "https://opensimpv.org/schema/result-dataset-reference.schema.json"
+          }
+        },
+        "not": {
+          "required": [
+            "inline_records"
+          ]
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "receiver_granularity": {
+            "const": "electrical_region"
+          }
+        },
+        "required": [
+          "receiver_granularity"
+        ]
+      },
+      "then": {
+        "required": [
+          "source_parent_compiled_geometry_hash",
+          "source_electrical_region_map_id",
+          "source_electrical_region_map_hash"
+        ]
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "point3": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "items": false,
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "factor": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "model_manifest": {
+      "type": "object",
+      "required": [
+        "model_id",
+        "model_version",
+        "resolution"
+      ],
+      "properties": {
+        "model_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolution": {
+          "type": "object"
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "record": {
+      "type": "object",
+      "required": [
+        "receiver_id",
+        "timestamp",
+        "sun_vector_xyz",
+        "beam_visibility_factor",
+        "sky_visibility_factor",
+        "ground_visibility_factor",
+        "quality_flags"
+      ],
+      "properties": {
+        "receiver_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "timestamp": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "sun_vector_xyz": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/point3"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "beam_visibility_factor": {
+          "$ref": "#/$defs/factor"
+        },
+        "sky_visibility_factor": {
+          "$ref": "#/$defs/factor"
+        },
+        "ground_visibility_factor": {
+          "$ref": "#/$defs/factor"
+        },
+        "directional_diffuse_visibility": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "quality_flags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+          "shadow_union_precision_fallback_events": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": [
+                "receiver_id",
+                "occluder_ids",
+                "source_direction_xyz",
+                "grid_size_m",
+                "perimeter_m",
+                "area_bound_m2"
+              ],
+              "properties": {
+                "receiver_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "occluder_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "source_direction_xyz": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  },
+                  "minItems": 3,
+                  "maxItems": 3
+                },
+                "grid_size_m": {
+                  "enum": [
+                    1e-10,
+                    1e-09,
+                    1e-08,
+                    1e-07,
+                    1e-06
+                  ]
+                },
+                "perimeter_m": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "area_bound_m2": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "timestamp": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "channel": {
+                  "enum": [
+                    "beam",
+                    "sky",
+                    "horizon",
+                    "ground"
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+      },
+      "additionalProperties": false
+    },
+    "approximation": {
+      "type": "object",
+      "required": [
+        "approximation_id",
+        "scope",
+        "description"
+      ],
+      "properties": {
+        "approximation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "affected_entity_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "finding": {
+      "type": "object",
+      "required": [
+        "severity",
+        "code",
+        "message"
+      ],
+      "properties": {
+        "severity": {
+          "enum": [
+            "info",
+            "warning",
+            "error"
+          ]
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "context": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

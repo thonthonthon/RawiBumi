@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/source-record.schema.json",
+  "title": "OpenSIMPV SourceRecord v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "source_id",
+    "source_type"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "SourceRecord"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "source_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_type": {
+      "enum": [
+        "manufacturer_datasheet",
+        "manufacturer_submission",
+        "manufacturer_api",
+        "pan",
+        "ond",
+        "test_report",
+        "open_database",
+        "manual_entry",
+        "community_submission",
+        "tmy3",
+        "epw",
+        "pvsyst_met",
+        "csv",
+        "user_input",
+        "field_measurement",
+        "map_measurement",
+        "imported_geometry",
+        "derived",
+        "calculated",
+        "unknown",
+        "map_provider",
+        "orthophoto"
+      ]
+    },
+    "title": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "manufacturer": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "filename": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "file_hash": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "external_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "publication_date": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "imported_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "imported_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "license_note": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

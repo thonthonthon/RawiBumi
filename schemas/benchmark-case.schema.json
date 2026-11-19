@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/benchmark-case.schema.json",
+  "title": "OpenSIMPV BenchmarkCase v0.1",
+  "type": "object",
+  "required": ["benchmark_id", "title", "category", "authority_class", "tolerance_class", "status", "implementation_status"],
+  "properties": {
+    "benchmark_id": {"type": "string", "pattern": "^[A-Z0-9]+(?:-[A-Z0-9]+)+$"},
+    "title": {"type": "string"},
+    "category": {"enum": ["analytical_unit", "numerical_unit", "integration", "geometry", "component", "weather", "electrical_design", "end_to_end", "cross_software", "performance", "reproducibility", "regression"]},
+    "authority_class": {"enum": ["A", "B", "C", "D", "E"]},
+    "description": {"type": ["string", "null"]},
+    "tolerance_class": {"pattern": "^T[0-5]$"},
+    "status": {"enum": ["draft", "reviewed", "accepted", "deprecated", "superseded"]},
+    "implementation_status": {"enum": ["planned", "implemented", "blocked", "deferred"]},
+    "source_reference": {"type": ["string", "null"]},
+    "notes": {"type": ["string", "null"]}
+  },
+  "additionalProperties": true
+}

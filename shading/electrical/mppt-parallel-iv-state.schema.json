@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/mppt-parallel-iv-state.schema.json",
+  "title": "OpenSIMPV MPPTParallelIVState v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "contract_version",
+    "state_id",
+    "source_electrical_revision_id",
+    "source_mppt_instance_id",
+    "source_inverter_instance_id",
+    "source_mppt_index",
+    "source_string_ids",
+    "source_string_curves",
+    "combined_curve_id",
+    "parallel_rule",
+    "source_curve_interpolation",
+    "reverse_interstring_current_policy",
+    "voltage_grid_strategy",
+    "voltage_samples",
+    "scientific_input_sha256",
+    "state_payload_sha256"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "MPPTParallelIVState"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "contract_version": {
+      "const": "0.1"
+    },
+    "state_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_electrical_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_mppt_instance_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_inverter_instance_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_mppt_index": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source_string_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "source_string_curves": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/string_curve_source"
+      }
+    },
+    "combined_curve_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "parallel_rule": {
+      "const": "common_voltage_sum_delivery_currents"
+    },
+    "source_curve_interpolation": {
+      "const": "piecewise_linear_current_on_represented_voltage_grid"
+    },
+    "reverse_interstring_current_policy": {
+      "const": "not_modeled_pv_delivery_branch_only_zero_contribution_above_source_voc"
+    },
+    "voltage_grid_strategy": {
+      "const": "union_source_voltage_knots_plus_exact_interval_power_vertices"
+    },
+    "voltage_samples": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "$ref": "#/$defs/voltage_sample"
+      }
+    },
+    "scientific_input_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "state_payload_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "string_curve_source": {
+      "type": "object",
+      "required": [
+        "string_id",
+        "curve_id",
+        "scientific_input_sha256",
+        "physical_result_sha256",
+        "isc_a",
+        "voc_v"
+      ],
+      "properties": {
+        "string_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "curve_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scientific_input_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "physical_result_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "isc_a": {
+          "type": "number",
+          "minimum": 0
+        },
+        "voc_v": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "string_current": {
+      "type": "object",
+      "required": [
+        "string_id",
+        "current_a",
+        "power_w"
+      ],
+      "properties": {
+        "string_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "current_a": {
+          "type": "number",
+          "minimum": 0
+        },
+        "power_w": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "voltage_sample": {
+      "type": "object",
+      "required": [
+        "voltage_v",
+        "total_current_a",
+        "total_power_w",
+        "string_currents"
+      ],
+      "properties": {
+        "voltage_v": {
+          "type": "number",
+          "minimum": 0
+        },
+        "total_current_a": {
+          "type": "number",
+          "minimum": 0
+        },
+        "total_power_w": {
+          "type": "number",
+          "minimum": 0
+        },
+        "string_currents": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/string_current"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

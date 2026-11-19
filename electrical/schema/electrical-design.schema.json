@@ -1,0 +1,366 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/electrical-design.schema.json",
+  "title": "OpenSIMPV ElectricalDesignRevision v0.1 — logical ElectricalTopologyRevision",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "electrical_revision_id",
+    "project_id",
+    "inverter_instances",
+    "mppt_instances",
+    "strings",
+    "connections",
+    "pcc_definition"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "ElectricalDesignRevision"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "electrical_revision_id": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "change_summary": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "inverter_instances": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/inverter_instance"
+      }
+    },
+    "mppt_instances": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/mppt_instance"
+      }
+    },
+    "strings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/string_circuit"
+      }
+    },
+    "connections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/electrical_connection"
+      }
+    },
+    "pcc_definition": {
+      "type": "object"
+    },
+    "orientation_policy": {
+      "description": "S14b: strings on one MPPT whose module normals agree within the tolerance are one orientation group. An override records the reason a mixed MPPT is accepted.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "normal_angle_tolerance_deg": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "overrides": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mppt_instance_id",
+              "reason"
+            ],
+            "properties": {
+              "mppt_instance_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              }
+            }
+          }
+        }
+      }
+    },
+    "revision_number": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "created_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "supersedes_revision_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "active",
+        "superseded",
+        "archived",
+        null
+      ]
+    }
+  },
+  "$defs": {
+    "inverter_instance": {
+      "type": "object",
+      "required": [
+        "inverter_instance_id",
+        "project_revision_id",
+        "inverter_definition_revision_id",
+        "name",
+        "enabled",
+        "mppt_instance_ids"
+      ],
+      "properties": {
+        "inverter_instance_id": {
+          "type": "string"
+        },
+        "project_revision_id": {
+          "type": "string"
+        },
+        "inverter_definition_revision_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "location": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "mppt_instance_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "paired_pv_field_ids": {
+          "description": "S14b: the PV fields this inverter is paired with (advisory).",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "ac_connection_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "mppt_instance": {
+      "type": "object",
+      "required": [
+        "mppt_instance_id",
+        "inverter_instance_id",
+        "mppt_definition_id",
+        "index",
+        "connected_string_ids",
+        "enabled"
+      ],
+      "properties": {
+        "mppt_instance_id": {
+          "type": "string"
+        },
+        "inverter_instance_id": {
+          "type": "string"
+        },
+        "mppt_definition_id": {
+          "type": "string"
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "connected_string_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "string_circuit": {
+      "type": "object",
+      "required": [
+        "string_id",
+        "project_revision_id",
+        "name",
+        "module_instance_ids",
+        "target_mppt_instance_id",
+        "enabled",
+        "polarity"
+      ],
+      "properties": {
+        "string_id": {
+          "type": "string"
+        },
+        "project_revision_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "module_instance_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "target_mppt_instance_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Null is allowed for draft/unassigned strings. Enabled simulation strings must be reciprocally assigned to an MPPT."
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "polarity": {
+          "enum": [
+            "normal",
+            "reversed",
+            "unknown"
+          ]
+        },
+        "cable_definition_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "electrical_connection": {
+      "type": "object",
+      "required": [
+        "connection_id",
+        "project_revision_id",
+        "from_node_id",
+        "to_node_id",
+        "connection_type",
+        "enabled"
+      ],
+      "properties": {
+        "connection_id": {
+          "type": "string"
+        },
+        "project_revision_id": {
+          "type": "string"
+        },
+        "from_node_id": {
+          "type": "string"
+        },
+        "to_node_id": {
+          "type": "string"
+        },
+        "connection_type": {
+          "enum": [
+            "module_series",
+            "string_to_mppt",
+            "inverter_ac",
+            "ac_combiner",
+            "transformer",
+            "feeder",
+            "pcc"
+          ]
+        },
+        "phase": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "conductor_reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "length_m": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "resistance_ohm": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "loss_model_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true,
+  "description": "Canonical immutable electrical-topology revision serialization. The v0.1 schema_name remains ElectricalDesignRevision for Phase-3 compatibility. Phase 4.6 permits draft unassigned strings via target_mppt_instance_id=null; simulation/runtime consistency rules remain stricter."
+}

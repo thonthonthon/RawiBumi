@@ -1,0 +1,20 @@
+{
+  "schema_name": "SiteWorkspaceBootstrap",
+  "schema_version": "0.1",
+  "project_id": "project-example-001",
+  "site": {
+    "site_id": "site-example-001",
+    "latitude_deg": -6.2,
+    "longitude_deg": 106.8,
+    "elevation_m": 25.0,
+    "timezone": "Asia/Jakarta",
+    "north_reference": "geodetic_true_north",
+    "local_coordinate_system_id": "lcs-example-001"
+  },
+  "workspace_context": {
+    "mode": "map_overlay",
+    "map_layer_configuration_id": "map-layer-example-001",
+    "show_true_north": true,
+    "show_metric_grid": true
+  }
+}

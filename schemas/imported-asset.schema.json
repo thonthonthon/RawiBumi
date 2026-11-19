@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/imported-asset.schema.json",
+  "title": "OpenSIMPV ImportedAsset v0.1",
+  "type": "object",
+  "required": ["schema_name", "schema_version", "asset_id", "filename", "media_type", "asset_type", "size_bytes", "sha256", "storage_location", "parse_status"],
+  "properties": {
+    "schema_name": {"const": "ImportedAsset"},
+    "schema_version": {"const": "0.1"},
+    "asset_id": {"type": "string"},
+    "project_id": {"type": ["string", "null"]},
+    "filename": {"type": "string"},
+    "media_type": {"type": "string"},
+    "asset_type": {"enum": ["pan", "ond", "weather", "datasheet", "geometry", "orthophoto", "drawing", "report", "other"]},
+    "size_bytes": {"type": "integer", "minimum": 0},
+    "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+    "storage_location": {"type": "string"},
+    "uploaded_at": {"type": ["string", "null"], "format": "date-time"},
+    "uploaded_by": {"type": ["string", "null"]},
+    "source_id": {"type": ["string", "null"]},
+    "parser_version": {"type": ["string", "null"]},
+    "parse_status": {"enum": ["not_parsed", "parsed", "parsed_with_warnings", "failed"]},
+    "parse_log": {"type": ["array", "null"], "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

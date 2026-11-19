@@ -1,0 +1,23 @@
+import {expect,test} from '@playwright/test';
+import path from 'node:path';
+const API=process.env.RAWIBUMI_API;
+if(!API||!/^http:\/\/127\.0\.0\.1:\d+$/.test(API)||API.endsWith(':8000'))throw new Error('S12b requires the unmodified disposable test API launcher, never port 8000.');
+const ROOT=path.resolve(process.cwd(),'../..');
+test('EPW preview and explicit selection persist the raw file and appear in the Weather step',async({page,request})=>{
+ const name=`S12b ${Date.now()} ${Math.random()}`;
+ const created=await request.post(`${API}/api/projects`,{data:{name,latitude_deg:-6.2,longitude_deg:106.8,timezone:'Asia/Jakarta',elevation_m:20}});expect(created.status()).toBe(201);
+ const pid=(await created.json()).bundle.project.project_id;
+ await page.goto('/');await page.locator('.start__row',{hasText:name}).click();await expect(page.locator('.rail')).toBeVisible();await page.keyboard.press('Alt+7');
+ await page.getByRole('button',{name:'Import TMY3 / EPW / MET CSV…'}).click();const hub=page.getByRole('dialog',{name:'Import',exact:true});
+ await hub.getByLabel('Choose a file').setInputFiles(path.join(ROOT,'tests/fixtures/weather/epw_minimal.epw'));
+ const response=page.waitForResponse(r=>r.url().includes(`/projects/${pid}/weather/import?`)&&r.url().includes('dry_run=true'));
+ await hub.getByRole('button',{name:'Detect and preview'}).click();expect((await response).status()).toBe(200);
+ const preview=hub.getByRole('region',{name:'Weather file preview'});await expect(preview).toContainText('epw_minimal.epw');await expect(preview).toContainText('epw');await expect(preview).toContainText('passed');
+ await expect(preview.getByRole('table',{name:'Monthly GHI'}).locator('tbody tr')).toHaveCount(12);
+ expect((await(await request.get(`${API}/api/projects/${pid}`)).json()).bundle.weather_selection).toBeNull();
+ const commit=page.waitForResponse(r=>r.url().includes(`/projects/${pid}/weather/import?`)&&r.url().includes('dry_run=false'));
+ await preview.getByRole('button',{name:'Use this weather for the project'}).click();expect((await commit).status()).toBe(200);
+ await expect(page.locator('.toasts')).toContainText('epw file epw_minimal.epw');
+ const bundle=(await(await request.get(`${API}/api/projects/${pid}`)).json()).bundle;expect(bundle.weather_selection.manifest.kind).toBe('file_import');expect(bundle.weather_selection.manifest.format).toBe('epw');expect(bundle.weather_selection.manifest.filename).toBe('epw_minimal.epw');expect(bundle.project.project_revision.weather_dataset_revision_id).toBe(bundle.weather_selection.revision_id);
+ await hub.getByRole('button',{name:'Close',exact:true}).click();await expect(page.locator('.taskpanel')).toContainText('epw_minimal.epw');await expect(page.locator('.taskpanel')).toContainText('epw');
+});

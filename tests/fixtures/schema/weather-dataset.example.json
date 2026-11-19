@@ -1,0 +1,70 @@
+{
+  "schema_name": "WeatherDataset",
+  "schema_version": "0.1",
+  "weather_dataset_id": "wx-ref-001",
+  "revision_id": "wx-ref-001-r1",
+  "name": "Synthetic Reference Hourly Weather",
+  "source_id": "src-wx-ref-001",
+  "site_id": "site-ref-001",
+  "native_resolution_seconds": 3600,
+  "timezone": "Asia/Jakarta",
+  "start_time": "2026-01-01T00:00:00+07:00",
+  "end_time": "2027-01-01T00:00:00+07:00",
+  "calendar_type": "gregorian",
+  "leap_year_handling": "not_applicable",
+  "data_quality_status": "synthetic_reference",
+  "weather_series_reference": "weather/ref_hourly.parquet",
+  "variables": {
+    "ghi_w_m2": {
+      "canonical_unit": "W/m2"
+    },
+    "dni_w_m2": {
+      "canonical_unit": "W/m2"
+    },
+    "dhi_w_m2": {
+      "canonical_unit": "W/m2"
+    },
+    "ambient_temperature_c": {
+      "canonical_unit": "degC"
+    },
+    "wind_speed_m_s": {
+      "canonical_unit": "m/s"
+    }
+  },
+  "transformations": [],
+  "source_format": "opensimpv_csv_v0.1",
+  "source_files": [],
+  "series_resolution_seconds": 3600,
+  "timestamp_convention": "interval_start",
+  "source_timestamp_convention": "interval_start",
+  "location": {
+    "latitude_deg": -6.2,
+    "longitude_deg": 106.8,
+    "elevation_m": 20
+  },
+  "qc_summary": null,
+  "time_semantics": {
+    "origin_source": {
+      "timezone": "Asia/Jakarta",
+      "utc_offset_hours": null,
+      "timestamp_convention": "interval_start",
+      "interval_seconds": 3600,
+      "reference": {
+        "kind": "none",
+        "offset_minutes": null,
+        "applied_to_canonical_timestamp": false,
+        "applied_to_solar_evaluation": false
+      }
+    },
+    "canonical": {
+      "timezone": "Asia/Jakarta",
+      "timestamp_convention": "interval_start",
+      "interval_seconds": 3600
+    },
+    "representative_time": {
+      "policy": "interval_midpoint",
+      "solar_evaluation_offset_minutes": 0,
+      "solar_evaluation_offset_source": "none"
+    }
+  }
+}

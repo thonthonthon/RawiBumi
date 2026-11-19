@@ -1,0 +1,8 @@
+/* Drawing and SLD lettering (ISO 3098). Licence: public/fonts/osifont/LICENSE.md */
+@font-face {
+  font-family: "osifont";
+  src: url("/fonts/osifont/osifont-lgpl3fe.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}

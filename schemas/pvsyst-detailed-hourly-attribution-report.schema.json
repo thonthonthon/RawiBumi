@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/pvsyst-detailed-hourly-attribution-report.schema.json",
+  "title": "OpenSIMPV PVsystDetailedHourlyAttributionReport v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "oracle",
+    "oracle_balance",
+    "reference_metrics",
+    "observed_metrics",
+    "acceptance_report",
+    "interval_statistics",
+    "grid_residual_decomposition",
+    "subhourly_clipping_boundary"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "PVsystDetailedHourlyAttributionReport"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "oracle": {
+      "type": "object",
+      "required": [
+        "oracle_id",
+        "case_id",
+        "source_filename",
+        "source_sha256",
+        "source_byte_size",
+        "weather_filename",
+        "simulation_date",
+        "row_count",
+        "simulation_timestep_seconds"
+      ],
+      "properties": {
+        "oracle_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "case_id": {
+          "type": "string",
+          "pattern": "^VC[0246]$"
+        },
+        "source_filename": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_byte_size": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "weather_filename": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "simulation_date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "row_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "simulation_timestep_seconds": {
+          "const": 3600
+        }
+      },
+      "additionalProperties": false
+    },
+    "oracle_balance": {
+      "type": "object",
+      "required": [
+        "status",
+        "power_tolerance_kw",
+        "max_residuals",
+        "subhourly_clipping_correction"
+      ],
+      "properties": {
+        "status": {
+          "const": "passed"
+        },
+        "power_tolerance_kw": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_residuals": {
+          "type": "object"
+        },
+        "subhourly_clipping_correction": {
+          "type": "object"
+        },
+        "mixed_orientation_loss": {
+          "type": "object",
+          "required": [
+            "source_column_present",
+            "column",
+            "signed_loss_convention"
+          ],
+          "properties": {
+            "source_column_present": {
+              "type": "boolean"
+            },
+            "column": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "signed_loss_convention": {
+              "const": "positive_loss"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "reference_metrics": {
+      "type": "object"
+    },
+    "observed_metrics": {
+      "type": "object"
+    },
+    "acceptance_report": {
+      "type": "object",
+      "required": [
+        "schema_name",
+        "acceptance_admissible",
+        "acceptance_status",
+        "readiness_status"
+      ],
+      "properties": {
+        "schema_name": {
+          "const": "PVsystAttributionReport"
+        },
+        "acceptance_admissible": {
+          "const": true
+        },
+        "acceptance_status": {
+          "enum": [
+            "pass",
+            "fail"
+          ]
+        },
+        "readiness_status": {
+          "const": "acceptance_ready_with_interval_attribution"
+        }
+      }
+    },
+    "interval_statistics": {
+      "type": "object",
+      "required": [
+        "alignment",
+        "irradiated_threshold_w_m2",
+        "metrics"
+      ],
+      "properties": {
+        "alignment": {
+          "const": "exact_local_wall_time"
+        },
+        "irradiated_threshold_w_m2": {
+          "type": "number",
+          "minimum": 0
+        },
+        "metrics": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "subhourly_clipping_boundary": {
+      "type": "object",
+      "required": [
+        "pvsyst_ilpmxsh_kwh",
+        "provenance",
+        "opensimpv_model_status",
+        "ordinary_hourly_clipping_reference_metric",
+        "final_grid_reference_metric",
+        "grid_energy_plus_reported_subhourly_correction_kwh",
+        "counterfactual_warning"
+      ],
+      "properties": {
+        "pvsyst_ilpmxsh_kwh": {
+          "type": "number",
+          "minimum": 0
+        },
+        "provenance": {
+          "type": "object"
+        },
+        "opensimpv_model_status": {
+          "const": "not_implemented_named_difference"
+        },
+        "ordinary_hourly_clipping_reference_metric": {
+          "const": "IL_Pmax"
+        },
+        "final_grid_reference_metric": {
+          "const": "E_Grid"
+        },
+        "grid_energy_plus_reported_subhourly_correction_kwh": {
+          "type": "number"
+        },
+        "counterfactual_warning": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "grid_residual_decomposition": {
+      "type": "object",
+      "required": [
+        "observed_grid_kwh",
+        "reference_grid_kwh",
+        "actual_grid_delta_kwh",
+        "actual_grid_relative_error",
+        "components",
+        "expected_grid_delta_from_components_kwh",
+        "reconciliation_residual_kwh",
+        "gross_absolute_component_contribution_kwh",
+        "cancellation_ratio",
+        "cancellation_detected",
+        "interpretation"
+      ],
+      "properties": {
+        "observed_grid_kwh": {
+          "type": "number"
+        },
+        "reference_grid_kwh": {
+          "type": "number"
+        },
+        "actual_grid_delta_kwh": {
+          "type": "number"
+        },
+        "actual_grid_relative_error": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "components": {
+          "type": "object"
+        },
+        "expected_grid_delta_from_components_kwh": {
+          "type": "number"
+        },
+        "reconciliation_residual_kwh": {
+          "type": "number"
+        },
+        "gross_absolute_component_contribution_kwh": {
+          "type": "number",
+          "minimum": 0
+        },
+        "cancellation_ratio": {
+          "type": "number",
+          "minimum": 0
+        },
+        "cancellation_detected": {
+          "type": "boolean"
+        },
+        "interpretation": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,21 @@
+{
+  "schema_name": "Scene",
+  "schema_version": "0.1",
+  "scene_id": "scene-phase42-survey",
+  "project_id": "proj-ref-001",
+  "revision_id": "scene-phase42-survey-r1",
+  "coordinate_system_id": "enu-ref-001",
+  "map_layer_configuration": null,
+  "created_at": "2026-09-24T00:00:00Z",
+  "notes": "Empty Phase-4.2 survey reconstruction fixture.",
+  "surfaces": [],
+  "obstacles": [],
+  "reference_lines": [],
+  "pv_fields": [],
+  "module_instances": [],
+  "revision_number": 1,
+  "created_by": "phase42-fixture",
+  "supersedes_revision_id": null,
+  "status": "active",
+  "change_summary": "Empty scene before survey reconstruction."
+}

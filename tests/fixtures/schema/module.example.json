@@ -1,0 +1,44 @@
+{
+  "schema_name": "ModuleDefinition",
+  "schema_version": "0.1",
+  "module_definition_id": "mod-openpv-ref-650",
+  "revision_id": "mod-openpv-ref-650-r1",
+  "manufacturer": "OpenSIMPV Reference",
+  "model": "REF-MOD-650",
+  "family": "Reference",
+  "technology": "topcon",
+  "verification_state": "auto_validated",
+  "source_ids": ["src-openpv-ref-module"],
+  "mechanical": {"width_m": 1.134, "height_m": 2.382, "thickness_m": 0.03, "mass_kg": 33.0},
+  "cell_architecture": {
+    "physical_cell_count": 144,
+    "cell_rows": 12,
+    "cell_columns": 12,
+    "half_cell": true,
+    "cell_technology": "n_type",
+    "cells_in_series": 72,
+    "cells_in_parallel": 2,
+    "bypass_diode_count": 3,
+    "source_layout_code": null
+  },
+  "stc": {
+    "nominal_power_w": 650.0,
+    "pmp_w": 650.0,
+    "voc_v": 52.0,
+    "isc_a": 15.8,
+    "vmp_v": 43.0,
+    "imp_a": 15.12,
+    "reference_irradiance_w_m2": 1000.0,
+    "reference_cell_temperature_c": 25.0
+  },
+  "temperature_coefficients": {"alpha_isc_per_c": 0.00045, "beta_voc_per_c": -0.0024, "gamma_pmp_per_c": -0.0029, "coefficient_basis": "relative"},
+  "electrical_models": [],
+  "bifacial": {"enabled": false, "bifaciality_factor": null},
+  "limits": {
+    "max_system_voltage_v": 1500.0,
+    "max_system_voltage_iec_v": 1500.0,
+    "max_system_voltage_ul_v": 1500.0,
+    "max_series_fuse_a": 30.0
+  },
+  "capability_flags": {"layout_ready": true, "basic_yield_ready": true, "detailed_sdm_ready": false, "bifacial_ready": false, "detailed_shading_ready": false}
+}

@@ -1,0 +1,346 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/shading-configuration.schema.json",
+  "title": "OpenSIMPV ShadingConfiguration v0.1",
+  "description": "Compatibility-preserving SimulationConfiguration shading block plus explicit Phase-5 geometry-aware contract fields.",
+  "type": "object",
+  "required": [
+    "beam_method",
+    "diffuse_method",
+    "fidelity_level"
+  ],
+  "properties": {
+    "beam_method": {
+      "type": "string",
+      "minLength": 1
+    },
+    "diffuse_method": {
+      "type": "string",
+      "minLength": 1
+    },
+    "albedo_method": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1
+    },
+    "fidelity_level": {
+      "enum": [
+        "preview",
+        "fast",
+        "engineering",
+        "detailed",
+        "research"
+      ]
+    },
+    "sun_position_resolution_seconds": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "electrical_shading_method": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "description": "Legacy compatibility carrier. New Phase-6 electrical-shading requests use electrical_shading_configuration."
+    },
+    "electrical_shading_configuration": {
+      "anyOf": [
+        {
+          "$ref": "https://opensimpv.org/schema/electrical-shading-configuration.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "geometry_contract_version": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "0.1",
+        null
+      ]
+    },
+    "coordinate_basis": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "scene_local_east_north_up_m",
+        null
+      ]
+    },
+    "sun_vector_convention": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "receiver_to_sun",
+        null
+      ]
+    },
+    "factor_convention": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "visibility_one_clear_zero_blocked",
+        null
+      ]
+    },
+    "receiver_granularity": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        "module",
+        "pv_field",
+        "surface",
+        "mixed",
+        null
+      ]
+    },
+    "self_shading_enabled": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "cache_policy": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/cache_policy"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "geometric_resolution": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "receiver_subdivision_u": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "receiver_subdivision_v": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "occluder_chord_tolerance_m": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "model_options": {
+      "type": "object"
+    },
+    "sky_dome_resolution": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "azimuth_sectors": {
+          "type": "integer",
+          "minimum": 4
+        },
+        "elevation_bands": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "horizon_azimuth_sectors": {
+          "type": "integer",
+          "minimum": 4
+        },
+        "horizon_elevation_bands": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "horizon_band_elevation_deg": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 45
+        }
+      },
+      "required": [
+        "azimuth_sectors",
+        "elevation_bands",
+        "horizon_azimuth_sectors",
+        "horizon_elevation_bands",
+        "horizon_band_elevation_deg"
+      ],
+      "additionalProperties": false
+    },
+    "ground_dome_resolution": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "azimuth_sectors": {
+          "type": "integer",
+          "minimum": 4
+        },
+        "depression_bands": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "azimuth_sectors",
+        "depression_bands"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "geometry_contract_version": {
+            "const": "0.1"
+          }
+        },
+        "required": [
+          "geometry_contract_version"
+        ]
+      },
+      "then": {
+        "required": [
+          "coordinate_basis",
+          "sun_vector_convention",
+          "factor_convention",
+          "receiver_granularity",
+          "self_shading_enabled",
+          "sun_position_resolution_seconds",
+          "cache_policy"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "diffuse_method": {
+            "const": "opensimpv.sky_visibility.weighted_dome"
+          }
+        },
+        "required": [
+          "diffuse_method"
+        ]
+      },
+      "then": {
+        "required": [
+          "sky_dome_resolution"
+        ],
+        "properties": {
+          "sky_dome_resolution": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "albedo_method": {
+            "const": "opensimpv.ground_visibility.weighted_dome"
+          }
+        },
+        "required": [
+          "albedo_method"
+        ]
+      },
+      "then": {
+        "required": [
+          "ground_dome_resolution"
+        ],
+        "properties": {
+          "ground_dome_resolution": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "cache_policy": {
+      "type": "object",
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "none",
+            "exact",
+            "angular_bins"
+          ]
+        },
+        "sun_azimuth_bin_deg": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0,
+          "maximum": 360
+        },
+        "sun_altitude_bin_deg": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0,
+          "maximum": 180
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "angular_bins"
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          },
+          "then": {
+            "required": [
+              "sun_azimuth_bin_deg",
+              "sun_altitude_bin_deg"
+            ],
+            "properties": {
+              "sun_azimuth_bin_deg": {
+                "type": "number"
+              },
+              "sun_altitude_bin_deg": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    }
+  }
+}

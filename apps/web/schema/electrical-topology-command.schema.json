@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/electrical-topology-command.schema.json",
+  "title": "OpenSIMPV ElectricalTopologyCommand v0.1",
+  "description": "Explicit Phase-4.6 topology editor command envelope.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "command_id",
+    "command_type",
+    "parameters"
+  ],
+  "properties": {
+    "schema_name": {"const": "ElectricalTopologyCommand"},
+    "schema_version": {"const": "0.1"},
+    "command_id": {"type": "string", "minLength": 1},
+    "command_type": {
+      "enum": [
+        "add_inverter",
+        "create_string",
+        "assign_strings_to_mppt",
+        "unassign_strings",
+        "delete_string",
+        "suggest_string_length",
+        "create_strings",
+        "assign_strings",
+        "balance_mppt",
+        "inspect_inverter",
+        "split_string",
+        "join_strings",
+        "reverse_string",
+        "move_module",
+        "swap_modules",
+        "replicate_pattern",
+        "apply_mppt_layout",
+        "set_orientation_tolerance",
+        "set_orientation_override",
+        "set_inverter_pairing",
+        "commit_revision"
+      ]
+    },
+    "parameters": {"type": "object"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/component-revision-command.schema.json",
+  "title": "OpenSIMPV ComponentRevisionCommand v0.1",
+  "description": "Explicit UI command envelope for Phase-4.5 revision changes.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "command_id",
+    "command_type",
+    "component_type",
+    "target_id",
+    "proposed_revision_id"
+  ],
+  "properties": {
+    "schema_name": {"const": "ComponentRevisionCommand"},
+    "schema_version": {"const": "0.1"},
+    "command_id": {"type": "string", "minLength": 1},
+    "command_type": {
+      "enum": [
+        "analyze_revision_change",
+        "apply_revision_keep_current_layout",
+        "apply_revision_and_rebuild_field",
+        "apply_revision_keep_current_topology"
+      ]
+    },
+    "component_type": {"enum": ["module", "inverter"]},
+    "target_id": {"type": "string", "minLength": 1},
+    "proposed_revision_id": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}

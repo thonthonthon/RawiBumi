@@ -1,0 +1,220 @@
+schema_version: "0.1"
+evidence_id: P39H-VC2-ATTR-20260923
+case_id: VC2
+oracle_id: P39-HR1-PVSYST816-20260923
+source_sha256: a7dbd60c80bf4c9483f17ccd82aa963a3d11e64150f24db1190bc49184c8687f
+status: acceptance_candidate_pass_with_grid_cancellation_pending_exact_canonical_spa_execution
+
+configuration:
+  strings: 14
+  modules_per_string: 18
+  modules_total: 252
+  dc_nameplate_kwp: 138.6
+  dc_ac_ratio: 1.39
+  dc_array_resistance_ohm: 0.059
+  module_quality_loss_fraction: -0.0075
+  module_mismatch_loss_fraction: 0.02
+  string_mismatch_loss_fraction: 0.0
+
+reference:
+  glob_hor_kwh_m2: 1749.8706369
+  diff_hor_kwh_m2: 860.1768670
+  ambient_temp_c: 28.04189452054794
+  glob_inc_kwh_m2: 1758.0986391
+  glob_eff_kwh_m2: 1752.0930667
+  array_nominal_energy_kwh: 242982.6798
+  irradiance_level_loss_pct: -0.029311019229283364
+  temperature_loss_pct: -9.407197332173943
+  module_quality_effect_pct: 0.7500017081681909
+  mismatch_loss_pct: -2.000001039191801
+  dc_wiring_loss_pct: -1.0086763284363753
+  array_virtual_mpp_kwh: 215084.9204
+  inverter_conversion_loss_kwh: 2903.6526
+  inverter_conversion_loss_pct: -1.3500028707730816
+  ordinary_hourly_clipping_il_pmax_kwh: 224.4617
+  ordinary_hourly_clipping_effect_pct: -0.10578770799484216
+  pvsyst_subhourly_clipping_ilpmxsh_kwh: 536.7011
+  night_loss_kwh: 8.752
+  e_grid_kwh: 211411.4185
+  specific_yield_kwh_kwp: 1525.3349098124097
+  pr: 0.8676048521334695
+
+candidate:
+  method: >
+    Same common-input family as VC0. Upstream PVsyst-geometry isolation stages
+    inherit the validated VC0 per-module chain; module count is scaled 216→252.
+    The VC2-specific 59 mΩ array resistance is applied using the exact I²R
+    scaling law. The inverter is then evaluated interval-by-interval with the
+    OpenSIMPV bounded OND transfer curve. The local environment does not contain
+    pvlib, therefore this is not relabelled as the exact canonical NREL-SPA run.
+  glob_inc_kwh_m2: 1757.8413167029582
+  glob_eff_kwh_m2: 1749.901267272776
+  array_nominal_energy_kwh: 240909.48511166548
+  irradiance_level_loss_pct: 0.2981323019955795
+  temperature_loss_pct: -9.159873643693162
+  module_quality_effect_pct: 0.7500000000000062
+  mismatch_loss_pct: -1.9999999999999907
+  dc_wiring_loss_pct: -0.9897091495847388
+  array_virtual_mpp_kwh: 214573.4291135154
+  inverter_conversion_loss_kwh: 2903.4140799880633
+  inverter_conversion_loss_pct: -1.3531097918242585
+  ordinary_hourly_clipping_kwh: 150.56296738475012
+  ordinary_hourly_clipping_effect_pct: -0.07113098535043161
+  night_loss_kwh: 8.752
+  e_grid_kwh: 211510.70006614257
+  specific_yield_kwh_kwp: 1526.0512270284457
+  pr: 0.8681393550873735
+
+frozen_threshold_comparison:
+  glob_inc_relative_error_pct: -0.01463640272047631
+  glob_eff_relative_error_pct: -0.12509606189766417
+  array_nominal_relative_error_pct: -0.8532273535055926
+  irradiance_level_effect_delta_percentage_point: 0.32744332122486286
+  temperature_effect_delta_percentage_point: 0.24732368848078146
+  module_quality_delta_percentage_point: -0.000001708168184677561
+  mismatch_delta_percentage_point: 0.000001039191810381368
+  dc_wiring_delta_percentage_point: 0.018967178851636568
+  array_virtual_mpp_relative_error_pct: -0.2378089944815173
+  inverter_conversion_delta_percentage_point: -0.0031069210511769363
+  ordinary_clipping_delta_percentage_point: 0.034656722644410554
+  e_grid_relative_error_pct: 0.04696130741046012
+  specific_yield_relative_error_pct: 0.04696130741045759
+  pr_absolute_delta: 0.0005345029539040036
+  monthly_grid_rms_relative_error_pct: 0.17173526491851318
+  monthly_grid_max_absolute_relative_error_pct: 0.416234241278037
+  frozen_threshold_result: pass
+  first_nonpassing_stage: null
+
+grid_residual_decomposition:
+  actual_grid_delta_kwh: 99.28156614259933
+  actual_grid_relative_error_pct: 0.04696130741046012
+  components:
+    array_virtual_mpp:
+      delta_kwh: -511.4912864846119
+      grid_delta_contribution_kwh: -511.4912864846119
+    conversion_loss:
+      delta_kwh: -0.2385200119365436
+      grid_delta_contribution_kwh: 0.2385200119365436
+    ordinary_hourly_clipping:
+      delta_kwh: -73.89873261524988
+      grid_delta_contribution_kwh: 73.89873261524988
+    pvsyst_subhourly_clipping_correction:
+      observed_kwh: 0.0
+      reference_kwh: 536.7011
+      grid_delta_contribution_kwh: 536.7011
+      model_status: missing_from_opensimpv_named_difference
+    other_earr_mpp_to_grid_losses:
+      observed_kwh: 8.752000000007314
+      reference_kwh: 8.686500000032083
+      grid_delta_contribution_kwh: -0.0654999999752306
+  expected_grid_delta_from_components_kwh: 99.28156614259925
+  reconciliation_residual_kwh: 0.00000000000008
+  gross_absolute_component_contribution_kwh: 1122.3951391117735
+  cancellation_ratio: 0.08845509275919307
+  cancellation_detected: true
+  interpretation: >
+    The +0.047% final-grid residual is not stage-level parity. A -511.5 kWh DC
+    residual is largely cancelled by the absent +536.7 kWh PVsyst ILPmxSH
+    correction and by lower ordinary clipping. Final annual agreement must not
+    hide these opposing channels.
+
+monthly_grid:
+  direct_candidate:
+    rms_relative_error_pct: 0.17173526491851318
+    maximum_absolute_relative_error_pct: 0.416234241278037
+  candidate_minus_source_ilpmxsh_attribution_aid:
+    rms_relative_error_pct: 0.2080227685459643
+    maximum_absolute_relative_error_pct: 0.23778919371517823
+    warning: >
+      Subtracting source ILPmxSH is an attribution aid, not an exact rerun
+      without/with the correction because inverter conversion can depend on the
+      displaced operating point.
+  source_ilpmxsh_monthly_kwh:
+    - 25.5766
+    - 53.8289
+    - 107.1820
+    - 78.2487
+    - 35.8746
+    - 26.6961
+    - 30.5674
+    - 64.9606
+    - 45.0739
+    - 44.9589
+    - 10.1483
+    - 13.5851
+
+interval_stage_statistics:
+  array_virtual_mpp_kw:
+    mean_bias_kw: -0.05838941626536806
+    mae_kw: 0.05849273846843151
+    rmse_kw: 0.11908199525388008
+    max_abs_kw: 0.560583962681207
+    p95_abs_kw: 0.3096815962999185
+  inverter_conversion_loss_kw:
+    mean_bias_kw: -0.000027228311864964694
+    mae_kw: 0.00189022664375398
+    rmse_kw: 0.008034588854619806
+    max_abs_kw: 0.17226563641685932
+  ordinary_clipping:
+    pvsyst_active_intervals: 60
+    opensimpv_candidate_active_intervals: 47
+    overlap_intervals: 47
+    union_intervals: 60
+    candidate_kwh: 150.56296738475012
+    pvsyst_il_pmax_kwh: 224.4617
+    note: >
+      Relative clipping-energy mismatch is large because the loss is small and
+      the models expose different boundaries. The frozen stage-effect delta is
+      only +0.03466 percentage point and remains inside its gate.
+  grid_power_kw:
+    mean_bias_kw: 0.011333512116730908
+    mae_kw: 0.104882887975014
+    rmse_kw: 0.4524899154379724
+    max_abs_kw: 10.465999999999994
+
+inverter_oracle_dc_isolation:
+  method: >
+    Feed PVsyst EArrMPP directly into the OpenSIMPV inverter transfer curve to
+    isolate inverter conversion and limiting from upstream DC residual.
+  opensimpv_conversion_loss_kwh: 2910.706973714006
+  pvsyst_il_oper_kwh: 2903.6526
+  conversion_loss_delta_kwh: 7.054373714006033
+  conversion_loss_relative_error_pct: 0.24295033794126582
+  opensimpv_ac_clipping_kwh: 172.13438659999957
+  pvsyst_il_pmax_kwh: 224.4617
+  clipping_energy_relative_difference_pct: -23.3123572529302
+  opensimpv_clipped_intervals: 50
+  pvsyst_il_pmax_intervals: 60
+  overlap_intervals: 49
+  grid_before_ilpmxsh_kwh: 211993.327039686
+  grid_minus_source_ilpmxsh_attribution_aid_kwh: 211456.625939686
+  reference_e_grid_kwh: 211411.4185
+  adjusted_grid_delta_kwh: 45.20743968602619
+  adjusted_grid_relative_error_pct: 0.02138458681812504
+  interpretation: >
+    Conversion is closely aligned. The IL_Pmax vs OpenSIMPV AC-clipping energy
+    mismatch should not be treated as a like-for-like channel defect because
+    PVsyst IL_Pmax participates in EArrMPP→EArray operating-point displacement,
+    while OpenSIMPV intentionally does not fabricate DC feedback from AC clipping.
+
+named_model_boundaries:
+  - id: KD-IAM-TCUBIC
+    status: visible_small_difference
+  - id: KD-THERMAL-HISTORY-EDGE
+    status: visible_small_difference
+  - id: KD-OND-TCUBIC
+    status: visible_small_difference
+  - id: KD-EARRAY-DC-FEEDBACK
+    status: active_in_vc2
+  - id: PVSYST_ILPMXSH
+    status: active_unimplemented_named_difference
+    reference_kwh: 536.7011
+
+governing_interpretation:
+  - Every frozen Phase-3.9 acceptance metric passes.
+  - There is no first nonpassing stage under the frozen acceptance policy.
+  - Final E_Grid agreement is cancellation-sensitive and must not be presented
+    as stage-level parity.
+  - VC2 activates the EArray/DC-operating-feedback semantic boundary.
+  - Exact canonical acceptance still requires the external CSV to be executed
+    through the repository NREL-SPA runtime.

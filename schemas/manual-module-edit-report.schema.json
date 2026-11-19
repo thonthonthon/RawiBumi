@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/manual-module-edit-report.schema.json",
+  "title": "OpenSIMPV ManualModuleEditReport v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "manual_edit_version",
+    "pv_field_id",
+    "module_instance_id",
+    "edit_kind",
+    "identity_preserved",
+    "before_transform",
+    "after_transform",
+    "field_layout_status",
+    "manual_position_override",
+    "conflict_report",
+    "affected_strings",
+    "electrical_design_mutated",
+    "snap"
+  ],
+  "properties": {
+    "schema_name": {"const": "ManualModuleEditReport"},
+    "schema_version": {"const": "0.1"},
+    "manual_edit_version": {"type": "string", "minLength": 1},
+    "pv_field_id": {"type": "string", "minLength": 1},
+    "module_instance_id": {"type": "string", "minLength": 1},
+    "edit_kind": {"enum": ["move", "rotate"]},
+    "identity_preserved": {"const": true},
+    "before_transform": {
+      "$ref": "https://opensimpv.org/schema/scene.schema.json#/$defs/transform"
+    },
+    "after_transform": {
+      "$ref": "https://opensimpv.org/schema/scene.schema.json#/$defs/transform"
+    },
+    "field_layout_status": {"const": "manual"},
+    "manual_position_override": {"const": true},
+    "conflict_report": {
+      "$ref": "https://opensimpv.org/schema/pv-field-conflict-report.schema.json"
+    },
+    "affected_strings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "string_id",
+          "membership_status",
+          "module_instance_id"
+        ],
+        "properties": {
+          "string_id": {"type": "string", "minLength": 1},
+          "membership_status": {
+            "const": "identity_preserved_geometry_changed"
+          },
+          "module_instance_id": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "electrical_design_mutated": {"const": false},
+    "snap": {
+      "anyOf": [
+        {"type": "null"},
+        {
+          "type": "object",
+          "required": [
+            "applied",
+            "kind",
+            "source_entity_id",
+            "feature_index",
+            "raw_point",
+            "snapped_point",
+            "distance_m",
+            "visible_marker"
+          ],
+          "properties": {
+            "applied": {"type": "boolean"},
+            "kind": {"type": ["string", "null"]},
+            "source_entity_id": {"type": ["string", "null"]},
+            "feature_index": {"type": ["integer", "null"]},
+            "raw_point": {
+              "type": "array",
+              "prefixItems": [{"type": "number"}, {"type": "number"}],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "snapped_point": {
+              "type": "array",
+              "prefixItems": [{"type": "number"}, {"type": "number"}],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "distance_m": {"type": "number", "minimum": 0},
+            "visible_marker": {"type": ["string", "null"]}
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  },
+  "additionalProperties": false
+}

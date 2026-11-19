@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RawiBumi manual</title>
+<style>
+:root { --bg: #f6f5f2; --panel: #ffffff; --text: #1d1d1b; --muted: #55534c; --rule: #d9d6cd; --accent: #8a5a00; --code: #efece4; --warn: #9a3412; }
+@media (prefers-color-scheme: dark) { :root { --bg: #151513; --panel: #1d1d1b; --text: #ecebe6; --muted: #b3b1a8; --rule: #3a3934; --accent: #e5b45c; --code: #2a2a26; --warn: #f0a070; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 15px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+header { position: sticky; top: 0; background: var(--panel); border-bottom: 1px solid var(--rule); padding: 10px 16px; display: flex; gap: 12px; align-items: center; z-index: 1; flex-wrap: wrap; }
+header h1 { font-size: 17px; margin: 0; flex: 1; }
+header a { color: var(--text); }
+main { max-width: 900px; margin: 0 auto; padding: 16px; }
+a { color: var(--accent); text-underline-offset: 2px; }
+a:hover, a:focus-visible { color: var(--text); }
+nav.toc { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 8px 16px; }
+nav.toc ol { margin: 6px 0; padding-left: 0; list-style: none; columns: 2; }
+@media (max-width: 640px) { nav.toc ol { columns: 1; } }
+h2 { margin-top: 36px; border-bottom: 1px solid var(--rule); padding-bottom: 4px; }
+h3 { margin: 20px 0 4px; }
+kbd, code { background: var(--code); border-radius: 3px; padding: 0 4px; font: 13px ui-monospace, Menlo, Consolas, monospace; }
+table { border-collapse: collapse; width: 100%; margin: 8px 0; display: block; overflow-x: auto; }
+th, td { border-bottom: 1px solid var(--rule); text-align: left; padding: 4px 8px; vertical-align: top; }
+th { white-space: nowrap; }
+.note { background: var(--panel); border-left: 3px solid var(--accent); padding: 8px 12px; margin: 10px 0; }
+.warn { border-left-color: var(--warn); }
+.muted { color: var(--muted); }
+dl dt { font-weight: 600; margin-top: 8px; }
+dl dd { margin: 0 0 0 16px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>RawiBumi manual</h1>
+  <a href="id.html" lang="id">Bahasa Indonesia</a>
+  <a href="/">Back to RawiBumi</a>
+</header>
+<main>
+<p>RawiBumi designs and simulates <strong>grid-connected PV</strong> on roofs and the ground. You draw the roofs, fill
+them with modules, group them into systems, wire strings to inverters, choose a weather year, run an hourly
+simulation of a full year with near shading, then read the results and export a report. This manual explains how to
+operate every step and what each setting and result means. <span class="muted">The software is a beta; known limits
+are in chapter 19.</span></p>
+
+<nav class="toc" aria-label="Contents"><strong>Contents</strong><ol>
+<li><a href="#start">1. Getting started</a></li>
+<li><a href="#workspace">2. The workspace</a></li>
+<li><a href="#conventions">3. Conventions and units</a></li>
+<li><a href="#site">4. Step 1 · Project &amp; site</a></li>
+<li><a href="#components">5. Step 2 · Components</a></li>
+<li><a href="#scene">6. Step 3 · Scene</a></li>
+<li><a href="#layout">7. Step 4 · PV layout</a></li>
+<li><a href="#systems">8. Step 5 · Systems</a></li>
+<li><a href="#electrical">9. Step 6 · Electrical</a></li>
+<li><a href="#meteo">10. Step 7 · Weather</a></li>
+<li><a href="#losses-grid">11. Step 8 · Losses &amp; grid</a></li>
+<li><a href="#simulate">12. Step 9 · Simulate</a></li>
+<li><a href="#results">13. Step 10 · Results</a></li>
+<li><a href="#export">14. Step 11 · Report &amp; export</a></li>
+<li><a href="#losses">15. The loss chain explained</a></li>
+<li><a href="#glossary">16. Glossary</a></li>
+<li><a href="#keys">17. Keyboard reference</a></li>
+<li><a href="#trouble">18. Messages and troubleshooting</a></li>
+<li><a href="#limits">19. Known limits</a></li>
+<li><a href="#beta">20. Your data, the beta and feedback</a></li>
+</ol></nav>
+
+<h2 id="start">1. Getting started</h2>
+<h3>The start screen</h3>
+<p>The start screen lists the saved projects (name, location, time zone) and shows how many modules and inverters the
+component library holds. Click a project to open it. Each row also has <em>Rename</em>, <em>Delete</em> (you type the
+exact name to confirm; this removes the project, its runs and its weather), <em>Export…</em> and <em>Backups…</em>.</p>
+<p><strong>New project:</strong> enter a name, the latitude and longitude (click the map or type them), the elevation
+and the time zone (an IANA name such as <code>Asia/Jakarta</code>). Choose where to <em>start in</em>: a <em>blank
+engineering plane</em> (an empty grid) or a <em>map overlay</em> (you draw over a map). Press <em>Create project</em>.</p>
+<h3>Project files and backups</h3>
+<ul>
+<li><strong>Export</strong> (start screen <em>Export…</em>, or the Report &amp; export step): one <code>.rawibumi</code> file with
+the project, its weather and its overlay images, optionally with saved results (the file is then larger). Use it to keep
+a copy or move the project to another RawiBumi.</li>
+<li><strong>Import project</strong> (start screen): restores such a file. If the same project exists, you are asked
+whether to replace it; the current one is backed up first. Runs that arrive by import are labelled <em>Imported: not
+computed by this installation</em>.</li>
+<li><strong>Backups</strong>: every save is kept (the newest 20), plus a protected copy before any import, restore or
+upgrade. Open <em>Backups…</em> to restore one.</li>
+</ul>
+
+<h2 id="workspace">2. The workspace</h2>
+<dl>
+<dt>Top bar</dt><dd>Project name and revision, <em>Undo</em>, <em>Redo</em> and <em>Manual</em>.</dd>
+<dt>Rail (left edge)</dt><dd>The eleven steps in working order. Each shows a state: <em>Not started</em>,
+<em>Draft</em>, <em>Valid</em> or <em>Blocked</em> (something must be fixed before you can simulate). Hover a step to
+see its shortcut.</dd>
+<dt>Task panel (left)</dt><dd>The current step's work, in folding <strong>sections</strong>. The section holding the
+step's main work (for example the fill form or the layer list) opens by itself; the others start folded. Click a
+heading to open or fold it. RawiBumi remembers your choices in this browser.</dd>
+<dt>Stage (centre)</dt><dd>One geometry window with view presets: <strong>Top</strong> (the plan, true north up, with every editing tool),
+<strong>Front</strong> (from south), <strong>Back</strong> (from north), <strong>Left</strong> (from west),
+<strong>Right</strong> (from east), <strong>Isometric</strong> (perspective), and <strong>Perpendicular to face</strong>
+(select a roof first). Choose with the icon buttons or right-click → <strong>View</strong>. The side and face views are
+orthographic; they keep selection and offer the move/raise gizmo. Other tools show “This tool works in Top view” and
+return to Select. Shift+T/F/I choose Top/Front/Isometric. The view is remembered per project in this browser.
+<strong>SLD</strong> remains a separate single-line diagram of inverters, MPPTs and strings. The stage label describes
+the imagery or electrical overlay. In Top, <em>Grid</em> toggles the grid. <em>Focus</em>
+(<kbd>Alt</kbd>+<kbd>\</kbd>) hides the side panels.</dd>
+<dt>Inspector (right)</dt><dd>The selected item's properties: name, transform (move, rotate, resize), heights and roof
+plane, topology links, history and identity.</dd>
+<dt>Notifications</dt><dd>Short messages at the bottom after actions: saved, filled, refused, and so on.</dd>
+<dt>Context menu</dt><dd>Right-click anything on the plan (or press <kbd>Shift</kbd>+<kbd>F10</kbd>) for what you can
+do with it: edit, delete, add modules to a string, start a new string, finish or cancel a drawing, undo or redo.</dd>
+</dl>
+<h3>Undo and redo</h3>
+<p><kbd>Ctrl</kbd>+<kbd>Z</kbd> undoes; <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> or <kbd>Ctrl</kbd>+<kbd>Y</kbd>
+redoes. Every engine edit (a roof, a fill, a table move, a string change) is one step. If you press Undo while a save is
+still running, for example a roof edit that re-fills its PV field, the undo runs as soon as the save finishes. The
+engine keeps the last 10 steps of each project, also after you reload the page.</p>
+<h3>Saving</h3>
+<p>Edits are saved as you make them; there is nothing to save by hand. Forms with an <em>Apply</em> or <em>Save</em>
+button keep a draft until you press it.</p>
+
+<h2 id="conventions">3. Conventions and units</h2>
+<ul>
+<li><strong>Plan coordinates</strong> are metres: X to the east, Y to the north, measured from the scene origin, which
+the plan marks with labelled X and Y arrows.</li>
+<li><strong>Azimuth</strong> is the direction a surface or module faces: 0° north, 90° east, 180° south, 270° west,
+clockwise. In Indonesia, south of the equator, modules facing roughly north (azimuth near 0°) usually yield the most.</li>
+<li><strong>Tilt</strong> is the angle from horizontal: 0° lies flat, 90° is vertical.</li>
+<li><strong>Heights</strong>: a roof's height is its level above the ground. An obstacle has a base elevation (where it
+starts) and a height (how tall it is).</li>
+<li><strong>Numbers</strong> use a point for decimals. Height and elevation fields in the inspector save when you press
+<kbd>Enter</kbd> or leave the field; <kbd>Esc</kbd> cancels; the up and down arrows step the value at once.</li>
+<li><strong>Typed input while drawing</strong>: <code>x,y</code> for a point, <code>@dx,dy</code> relative to the last
+point, <code>d&lt;bearing</code> for a distance along a bearing (0° north, clockwise), or a single length along the
+cursor direction. Units <code>m</code>, <code>cm</code> and <code>mm</code> and arithmetic such as <code>12.5+0.3</code>
+work. The comma separates x and y, so decimals take a point.</li>
+<li><strong>Energy</strong> is in kWh or MWh; power in kW (AC) or kWp (DC at standard test conditions).</li>
+</ul>
+
+<h2 id="site">4. Step 1 · Project &amp; site <span class="muted">(<kbd>Alt</kbd>+<kbd>1</kbd>)</span></h2>
+<h3>Site details</h3>
+<table><tr><th>Field</th><th>Meaning and limits</th></tr>
+<tr><td>Site name</td><td>1–160 characters.</td></tr>
+<tr><td>Latitude, longitude</td><td>Decimal degrees. Latitude between −90° and 90° (the poles are not supported);
+longitude −180° to 180°.</td></tr>
+<tr><td>Elevation</td><td>Metres above sea level, −500 to 9,000 m.</td></tr>
+<tr><td>Timezone</td><td>An IANA name such as <code>Asia/Jakarta</code>. Results and charts use the site's local
+standard time.</td></tr>
+</table>
+<p>Press <em>Apply</em> to save. If weather is already selected and you move the site, RawiBumi asks first: the
+selected weather is cleared because it belongs to the old location. Stored runs and weather files are kept.</p>
+<h3>Address</h3>
+<p>RawiBumi looks the address up from the coordinates (OpenStreetMap Nominatim; you can switch the lookup off). Edit it
+freely: your text is never replaced. It is saved with the project and printed on the report cover.</p>
+<h3>System summary</h3>
+<p>Installation type (on-grid, on-grid with zero export, off-grid, hybrid with battery, or not given) and the battery
+(BESS) energy and power. They appear on the report cover. <strong>They are not simulated</strong>: RawiBumi simulates
+grid-connected PV only.</p>
+<h3>Imagery</h3>
+<ul>
+<li><strong>Basemap</strong>: streets; satellite or hybrid after you set up an imagery provider you are licensed to use
+(an https tile address containing <code>{z}</code>, <code>{x}</code> and <code>{y}</code>; its key stays in your
+browser and is never saved in a project).</li>
+<li><strong>Image overlay</strong>: upload an aerial photo, drone orthophoto or drawing (PNG, JPEG or WebP, up to 10 MB
+and 8,192 px per side). Drag it to move, drag a corner to scale (<kbd>Shift</kbd> keeps the proportions), use the round
+handle to rotate, or type its resolution, rotation and top-left position.</li>
+<li><strong>Calibrate with two points</strong>: click two points a known distance apart on the image, then type that
+distance. The image is scaled to match.</li>
+<li><strong>Lock overlay</strong> when it is right, so clicks pass through to your drawing. Lower the overlay opacity to
+see your design over it.</li>
+</ul>
+<div class="note">Imagery is context only: dimensions you type or survey always win over traced ones. Your uploaded
+overlay appears in the report's layout figure; satellite tiles never do.</div>
+
+<h2 id="components">5. Step 2 · Components <span class="muted">(<kbd>Alt</kbd>+<kbd>2</kbd>)</span></h2>
+<ul>
+<li><strong>In this project</strong>: the modules and inverters the design uses. The project keeps its own copy of each
+(a pinned revision), so later library changes never alter it silently.</li>
+<li><strong>Library</strong>: filter by type (modules or inverters), brand and status, or search by model. Long lists are
+shortened; narrow the filters to see the rest.</li>
+<li><strong>Import PAN / OND</strong>: add your own PVsyst component files (up to 2 MiB and 5,000 lines each). A refused
+file shows the reason. Missing inverter datasheet values can be completed with a cited source.</li>
+<li>A PAN file's light-induced degradation (LID) value is offered as a <strong>suggestion</strong> and not applied: the
+loss settings keep LID at 0 % until you change it.</li>
+</ul>
+
+<h2 id="scene">6. Step 3 · Scene <span class="muted">(<kbd>Alt</kbd>+<kbd>3</kbd>)</span></h2>
+<p>In the Inspector, choose one of nine reference points on the object’s own box (u follows the first edge; v is 90° counter-clockwise). The choice is saved; the default is start/start (minimum u and v). Position X/Y places that point in scene metres. Move reference point to origin places it at (0, 0). Orientation is the compass bearing of u (0° north, clockwise), and rotates about the reference point. Move by ΔX/ΔY can use scene or own axes. Rectangle Length/Width follow u/v and keep the reference point fixed. Relative rotation can use the centre or reference point.</p>
+<p>The scene is the 3D model of everything that holds or shades the modules: roofs, holes, obstacles and keep-out
+zones.</p>
+<h3>Tools</h3>
+<table><tr><th>Key</th><th>Tool</th><th>How to use it</th></tr>
+<tr><td><kbd>V</kbd></td><td>Select</td><td>Click to select, <kbd>Shift</kbd>-click to add. Drag to move. Corner, edge
+and rotate handles appear on the selection.</td></tr>
+<tr><td><kbd>M</kbd></td><td>Move</td><td>Pick a base point, then the destination; or type <code>@dx,dy</code> or
+<code>d&lt;bearing</code>.</td></tr>
+<tr><td><kbd>R</kbd></td><td>Rotate</td><td>Pick the pivot, then point the direction; or type the angle (clockwise).</td></tr>
+<tr><td><kbd>B</kbd></td><td>Rectangle roof</td><td>Two opposite corners.</td></tr>
+<tr><td><kbd>P</kbd></td><td>Polygon roof</td><td>Click each corner (concave shapes allowed); <kbd>Enter</kbd> closes
+the outline.</td></tr>
+<tr><td><kbd>H</kbd></td><td>Hole in roof</td><td>Skylights, courtyards and other cut-outs inside a roof.</td></tr>
+<tr><td><kbd>O</kbd></td><td>Box obstacle</td><td>Two corners and a height: tanks, plant rooms, parapets.</td></tr>
+<tr><td><kbd>E</kbd></td><td>Polygon obstacle</td><td>Any outline, extruded to a height.</td></tr>
+<tr><td><kbd>K</kbd></td><td>Keep-out zone</td><td>Areas without PV: fire access, walkways, service zones.</td></tr>
+<tr><td><kbd>D</kbd></td><td>Measure</td><td>Distance and bearing between two points.</td></tr>
+<tr><td><kbd>Z</kbd></td><td>Zoom to all</td><td>Fits the whole design in the view.</td></tr></table>
+<p>While drawing, <kbd>Backspace</kbd> removes the last point and <kbd>Esc</kbd> cancels the drawing.</p>
+<h3>Editing shapes</h3>
+<ul>
+<li>Drag a corner (vertex) to move it, or an edge handle to move the whole edge.</li>
+<li>Double-click a dimension label to type an exact edge length; double-click an edge to add a corner;
+<kbd>Alt</kbd>-click a corner to remove it.</li>
+<li>Arrow keys nudge the selection by 0.10 m, <kbd>Shift</kbd>+arrows by 1.00 m.</li>
+<li>Locked items (padlock in the layer list) cannot be changed.</li>
+</ul>
+<div class="note warn"><strong>Rotated buildings:</strong> set a rectangle's lengths while it is still aligned with north,
+then rotate it. Typing a new length on an already rotated rectangle can skew it into a parallelogram.</div>
+<h3>Roof planes</h3>
+<p>Select a roof and set its plane in the inspector (<em>Plane and heights</em>):</p>
+<table><tr><th>Definition</th><th>Use it for</th></tr>
+<tr><td>Flat at a height</td><td>Flat roofs: one roof height.</td></tr>
+<tr><td>Reference edge + tilt</td><td>Sloped roofs measured from an eave or ridge: choose the edge, its height, the roof
+tilt, and whether the roof falls or rises from that edge.</td></tr>
+<tr><td>Height + tilt + slope direction</td><td>Sloped roofs known at one point: the height at the reference point, the
+tilt and the downslope azimuth.</td></tr>
+</table>
+<p>Obstacles have a <em>base elevation</em> and a <em>height</em>. If you place an obstacle over modules, RawiBumi asks
+whether to remove the modules under it or to cancel.</p>
+<h3>Snapping and grid</h3>
+<p>Under <em>Snapping</em>, choose what points snap to: corners, end points, edges, midpoints, intersections, parallel
+and perpendicular lines, module and row edges, and the grid (with its spacing, 0.5 m by default). Hold
+<kbd>Shift</kbd> for 15° angle steps and <kbd>Alt</kbd> to place a point without snapping. The plan grid is drawn at the
+grid spacing, with a stronger line every 10 cells, at every zoom.</p>
+<h3>Layers</h3>
+<p>The layer list shows every roof, obstacle and keep-out. Click a name to select it. The eye hides it; the padlock
+locks it.</p>
+<h3>3D view</h3>
+<p>Switch the stage to 3D to check heights, slopes and obstacles. Undo and redo work there too.</p>
+
+<h2 id="layout">7. Step 4 · PV layout <span class="muted">(<kbd>Alt</kbd>+<kbd>4</kbd>)</span></h2>
+<p>A <strong>PV field</strong> is a roof filled with modules in tables and rows. Fill a roof with the form, then adjust
+tables by hand if needed.</p>
+<h3>The fill form</h3>
+<table><tr><th>Setting</th><th>Meaning</th><th>Default</th></tr>
+<tr><td>Field name</td><td>A name for the PV field.</td><td>"Roof array"</td></tr>
+<tr><td>Support surface</td><td>The roof to fill.</td><td>The selected roof</td></tr>
+<tr><td>Module</td><td>The module model. Its footprint (width × height) comes from the component and cannot be
+stretched.</td><td>—</td></tr>
+<tr><td>Orientation</td><td>Portrait (the long side runs up the slope) or landscape.</td><td>Portrait</td></tr>
+<tr><td>Mounting</td><td><em>Tilted racks</em>: you set tilt and azimuth. <em>Parallel to roof</em>: modules lie in the
+roof plane and take its tilt and azimuth; re-fill if the roof slope changes later.</td><td>Tilted racks</td></tr>
+<tr><td>Tilt</td><td>Module tilt from horizontal, 0–89°. On a flat roof this is the rack tilt.</td><td>10°</td></tr>
+<tr><td>Azimuth</td><td>The direction the modules face, 0° north, clockwise.</td><td>0°</td></tr>
+<tr><td>Mounting height</td><td>Height of the modules' lower edge above the roof.</td><td>0.2 m</td></tr>
+<tr><td>Rows per table</td><td>Module rows stacked in one table; 1 is a single row.</td><td>1</td></tr>
+<tr><td>Module gap</td><td>Gap between modules along a row, in the module plane.</td><td>0.02 m</td></tr>
+<tr><td>In-table gap</td><td>Gap between the rows of one table, in the module plane.</td><td>0.02 m</td></tr>
+<tr><td>Leftover depth</td><td>With several rows per table: where a smaller last table goes (at the back, at the
+front) or leave it empty.</td><td>At the back</td></tr>
+<tr><td>Alignment</td><td>A 3×3 picker that moves the layout within the spare roof space: front (low edge), middle or
+back (high edge), and left, centre or right. It never removes modules.</td><td>Rows placed for the most modules</td></tr>
+<tr><td>Table size cap</td><td>The longest table, in modules per row; 0 means no cap.</td><td>0</td></tr>
+<tr><td>Walkway every N modules</td><td>A walkway across the rows after every N modules, with its width; 0 means none.</td><td>0</td></tr>
+<tr><td>Pitch</td><td>How rows are spaced. <em>Fixed aisle</em>: the clear distance between tables on the roof.
+<em>GCR</em> (ground-coverage ratio): table slant depth ÷ pitch, above 0 and at most 1. <em>Shading-free</em>: the engine
+spaces rows so they do not shade each other for a design sun elevation and azimuth offset, and shows the resulting
+pitch.</td><td>Fixed aisle 0.6 m (GCR 0.5; design sun 30°)</td></tr>
+<tr><td>Setbacks</td><td>Distance kept from the roof edges: the same on every edge, or per edge (each listed with its
+length and facing direction).</td><td>0.3 m</td></tr>
+<tr><td>Keep-out offset</td><td>Clearance around obstacles and keep-out zones.</td><td>0.3 m</td></tr>
+</table>
+<div class="note">Fixed aisle and GCR only stop rows from overlapping. Tilted rows can still shade each other in the
+morning, the evening or low-sun months. Use <em>Shading-free</em> to space rows by the sun, and check the shading loss in
+Results.</div>
+<h3>Applying</h3>
+<p><strong>Apply fill</strong> places the modules; one fill is one undo step. If the roof already has a PV field, Apply
+fill asks you to confirm that it replaces the existing layout. The confirmation shows the module count and STC power
+before and after, and the strings that will be deleted.</p>
+<h3>The PV fields list</h3>
+<p>Each field shows one summary line: modules, kWp, tilt and azimuth. Open <em>Details</em> for the roof, the table
+count, the orientation and any notes. <strong>Re-fill</strong> loads the field's stored settings into the form so you
+can change them and apply again. <strong>Delete field</strong> shows what is removed (modules, strings) before you
+confirm.</p>
+<h3>Editing tables</h3>
+<p>Click a module to select it; drag it to move its whole table. You can move selected tables by an exact distance east
+and north, delete them, or remove single modules: <kbd>Delete</kbd> removes the selected modules and
+<kbd>Shift</kbd>+<kbd>Delete</kbd> their tables. Every edit <strong>pins</strong> the tables it touches, and a later
+re-fill keeps pinned tables where they are. <em>Unpin</em> a table to let the fill place it again.</p>
+
+<h2 id="systems">8. Step 5 · Systems <span class="muted">(<kbd>Alt</kbd>+<kbd>5</kbd>)</span></h2>
+<p>Systems organises the design before detailed wiring: which roofs form a building, how far apart the buildings are,
+which modules face the same way, and which inverters serve which roofs.</p>
+<h3>Buildings</h3>
+<p>Press <em>Use suggested buildings</em> to group touching or nearby roofs. Rename a building, merge two, or ungroup a
+roof. Buildings organise the design and the report; they do not change the physics.</p>
+<h3>Distances</h3>
+<p>The nearest edge-to-edge distance between buildings. Distances above the <em>warning threshold</em> (50 m by default)
+are flagged, for example because of long DC cables. It is a warning, never a block.</p>
+<h3>Orientation groups</h3>
+<p>Modules grouped by the direction they face, within the orientation tolerance (at most 1° between module normals; set
+in Electrical).</p>
+<h3>Inverters</h3>
+<ol>
+<li>Choose an <strong>inverter model</strong> and a <strong>count</strong>, then <em>Add inverters</em>.</li>
+<li>Choose which roofs each inverter <strong>serves</strong>, then <em>Save area</em>.</li>
+<li>Read the sizing help: the valid <strong>string length range</strong> (from the module's cold open-circuit voltage
+and the inverter's voltage limits), how many inverters of this model reach your <strong>DC/AC target</strong>, each MPPT's
+inputs, and whether short-circuit current limits an MPPT's number of strings.</li>
+<li>Fill each MPPT's row: the <strong>source</strong> roof (or any roof this inverter serves), the <strong>string
+length</strong> and the number of <strong>strings</strong>. Or press <em>Suggest</em> for an engine-sized layout and adjust
+it.</li>
+<li>Check the live engine checks under the table, then press <strong>Apply MPPT layout</strong>.</li>
+</ol>
+<p>Applying keeps existing strings that still fit (same MPPT and length) and re-strings the rest, using the modules of
+the replaced strings and any unstrung modules.</p>
+<h3>Expert notation</h3>
+<p>The same layout as text. Strings on one MPPT are separated by commas, MPPTs by semicolons: <code>16,16 ; 16</code> is
+two strings of 16 modules on MPPT 1 and one on MPPT 2. <code>0</code> leaves an input empty; <code>3x(16,0)</code>
+repeats a pattern.</p>
+<div class="note">If an MPPT combines roof orientations, RawiBumi simulates it physically, and the extra loss appears as
+<em>Orientation mismatch</em> in Results.</div>
+
+<h2 id="electrical">9. Step 6 · Electrical <span class="muted">(<kbd>Alt</kbd>+<kbd>6</kbd>)</span></h2>
+<p>Here you wire modules into <strong>strings</strong> and connect the strings to inverter <strong>MPPTs</strong>. The
+plan colours modules by MPPT; unstrung modules are hatched.</p>
+<h3>The target MPPT</h3>
+<p>New strings and the Assign brush go to the <strong>target</strong> MPPT. Step through MPPTs with <kbd>[</kbd> and
+<kbd>]</kbd>, pick one within the inverter with <kbd>1</kbd>–<kbd>9</kbd>, or click an MPPT in the topology tree.</p>
+<h3>Tools</h3>
+<table><tr><th>Key</th><th>Tool</th><th>What it does</th></tr>
+<tr><td><kbd>V</kbd></td><td>Select</td><td>Select modules; <kbd>Shift</kbd>-click adds.</td></tr>
+<tr><td><kbd>S</kbd></td><td>String path</td><td>Click modules in wiring order; <kbd>Enter</kbd> creates the string on the
+target MPPT.</td></tr>
+<tr><td><kbd>A</kbd></td><td>Assign brush</td><td>Paint existing strings onto the target MPPT.</td></tr>
+<tr><td><kbd>L</kbd></td><td>Lasso</td><td>Select the modules inside a loop.</td></tr>
+<tr><td><kbd>X</kbd></td><td>Split</td><td>Split a string after the clicked module.</td></tr>
+<tr><td><kbd>J</kbd></td><td>Join</td><td>Append one string to another.</td></tr>
+<tr><td><kbd>R</kbd></td><td>Reverse</td><td>Reverse a string's wiring order and polarity.</td></tr>
+<tr><td><kbd>M</kbd></td><td>Move module</td><td>Move one module to another place or string.</td></tr>
+<tr><td><kbd>W</kbd></td><td>Swap modules</td><td>Exchange the places of two strung modules.</td></tr></table>
+<h3>Working with a selection</h3>
+<p>The <em>Selection</em> section summarises what you selected: modules, how many are not in a string, and whole
+strings. It offers <em>String the selection</em> (strings of a chosen length), <em>Assign strings to target</em>,
+<em>Unassign</em>, <em>Delete strings</em> and <em>Replicate pattern</em> (copies one table's wiring onto every identical,
+unwired table). Right-click unstrung modules for <em>Add n to S00x</em> or <em>New string of n on MPPT…</em>.</p>
+<h3>Uniform strings</h3>
+<p>Creates strings of a fixed number of modules for one PV field or for all unstrung modules, row by row or serpentine
+(every other row reversed, which shortens string cable), optionally allowing a shorter last string.</p>
+<h3>Topology tree and checks</h3>
+<p>The tree lists inverters, MPPTs and strings. Each string and MPPT has live checks: <em>Pass</em>,
+<em>Warning</em>, <em>Fails</em> or <em>Not available</em>, with the string's operating voltage range against the MPPT
+window.</p>
+<div class="note warn"><strong>Rules that block a run</strong>
+<ul>
+<li>The string's open-circuit voltage at the coldest design cell temperature exceeds the inverter's <strong>maximum DC
+voltage</strong>. This can damage the inverter on a cold morning before it starts tracking. Shorten the string.</li>
+<li>The string's operating voltage at the hottest or coldest design temperature leaves the <strong>MPPT window</strong>.
+Change the string length or the inverter.</li>
+<li>Too many strings in parallel for the MPPT's operating or short-circuit current.</li>
+</ul></div>
+<h3>Orientation rule</h3>
+<p>The orientation tolerance (0–1°) is the largest angle between module normals that still counts as one orientation on
+an MPPT. You may accept a mixed MPPT with an override and a written reason; it is then simulated with its mixed
+orientations.</p>
+<h3>Single-line diagram</h3>
+<p>Switch the stage to SLD to see inverters, MPPTs and strings as a diagram.</p>
+
+<h2 id="meteo">10. Step 7 · Weather <span class="muted">(<kbd>Alt</kbd>+<kbd>7</kbd>)</span></h2>
+<h3>Weather</h3>
+<p><strong>Acquire</strong>: choose the source (ERA5 via the Open-Meteo Historical Weather API), a start and end date,
+and press <em>Acquire</em>. A full calendar year gives annual results.</p>
+<p><strong>Import a file</strong>:</p>
+<table><tr><th>Format</th><th>Notes</th></tr>
+<tr><td>TMY3 (<code>.csv</code>)</td><td>Typical-year files, for example a Meteonorm TMY3 export.</td></tr>
+<tr><td>EPW</td><td>EnergyPlus weather. A typical-year EPW built from months of different years is not supported
+yet.</td></tr>
+<tr><td>PVsyst Standard CSV</td><td>Exported from PVsyst in the "PVsyst Standard" format.</td></tr>
+<tr><td>Meteonorm <code>.dat</code> with headers</td><td>Only files with the standard −30-minute time reference.</td></tr>
+<tr><td>RawiBumi CSV</td><td>RawiBumi's own format.</td></tr>
+<tr><td>Not read</td><td>PVsyst <code>.MET</code>, and Meteonorm <code>.dat</code> without headers or in its "PVsyst"
+layout. Export TMY3 or "PVsyst Standard" CSV instead.</td></tr>
+</table>
+<p>Before you keep a file, the preview shows its format, location and distance from the site, period, time step and
+rows, time zones, variables, monthly GHI and the quality checks. A file more than 50 km from the site needs your
+explicit acceptance. Warnings flag a missing location, a different elevation or a different UTC offset.</p>
+<p>The simulation is <strong>hourly</strong>: each hour's weather applies over that 60-minute interval.</p>
+<p>ERA5 can read high in the cloudy tropics; compare with a local dataset.</p>
+
+<h2 id="losses-grid">11. Step 8 · Losses &amp; grid <span class="muted">(<kbd>Alt</kbd>+<kbd>8</kbd>)</span></h2>
+<h3>Losses and settings</h3>
+<p>Every value starts from RawiBumi's recommended defaults; edit them to match your project. Changes apply to future runs
+only, and each run records the settings it used.</p>
+<p>New projects use recommended_defaults.v2: an explicit LID override applies to every circuit; otherwise each circuit uses its module file's finite LID fraction in [0, 1). Missing or invalid values fall back to generic starting values: 0.5 % for TOPCon, HJT, heterojunction or IBC technology; 1.5 % for other crystalline silicon and unknown technology; 0 % for thin film. These are starting values, not measurements: check the datasheet. Clear the input to restore automatic LID. Each run records the per-circuit value and source. Earlier v1 projects retain LID 0 % unless overridden; “Use the current defaults” switches to v2 in one undoable save, preserving overrides. Saved results stay unchanged.</p>
+<table><tr><th>Setting</th><th>Default</th><th>Meaning</th></tr>
+<tr><td>Soiling, per month</td><td>3 %</td><td>Dirt on the modules, applied to the irradiance after the incidence-angle
+effect.</td></tr>
+<tr><td>First-exposure LID</td><td>Module file or technology</td><td>Light-induced degradation: a permanent reduction applied once.</td></tr>
+<tr><td>Module mismatch</td><td>Automatic</td><td>Manufacturing spread between modules in series: 0 % for 1 module,
+0.5 % for 2, 1 % for 3, 2 % for 4 or more; halved for thin-film. Enter a value to override.</td></tr>
+<tr><td>String mismatch</td><td>Automatic</td><td>Spread between parallel strings on one MPPT: 0 % for 1 string, 0.05 %
+for 2, 0.1 % up to 10, 0.15 % beyond.</td></tr>
+<tr><td>DC wiring at STC</td><td>1.5 %</td><td>Resistive loss of each MPPT's DC wiring at standard test conditions. It
+changes with the square of the current.</td></tr>
+<tr><td>AC wiring at nominal power</td><td>Not set (0 %)</td><td>Resistive loss per inverter at its nominal AC power,
+quadratic with the load.</td></tr>
+<tr><td>Annual degradation</td><td>0.4 % per year</td><td>Ageing, applied as rate × (operating year − 0.5).</td></tr>
+<tr><td>Simulated operating year</td><td>1</td><td>Which year of operation to simulate, 1–100. Year 1 includes half a year
+of ageing (0.2 %).</td></tr>
+<tr><td>Unavailability</td><td>Not set (0 %)</td><td>A fixed reduction of exported energy; no random outages.</td></tr>
+<tr><td>Transformer</td><td>Off</td><td>When enabled: an iron loss (constant, also at night) and a copper loss
+(quadratic) at a reference power.</td></tr>
+</table>
+<p><strong>Per-inverter and circuit losses</strong> override the project values for one inverter or MPPT: DC wiring,
+module quality, and the AC cable, either as a percentage at a named power or as a cable (material, one-way length,
+cross-section from the standard sizes, line voltage and conductor temperature; 50 °C is suggested).</p>
+<h3>Optics and thermal</h3>
+<table><tr><th>Setting</th><th>Default</th><th>Meaning</th></tr>
+<tr><td>Transposition model</td><td>Perez, hourly</td><td>How sky irradiance is converted to the tilted plane.
+Alternatives: Perez 1990, Perez–Driesse, Hay–Davies, isotropic.</td></tr>
+<tr><td>Incidence-angle model (IAM)</td><td>Module table, with fallback</td><td>Reflection losses at oblique sun. Uses the
+module's table, or Fresnel glass without anti-reflective coating when it has none.</td></tr>
+<tr><td>Module mounting</td><td>Semi-integrated</td><td>Sets the heat-loss coefficients: Uc 20 W/(m²·K) and Uv 0. Open
+rack cools better; a fully insulated back runs hotter; or enter custom values.</td></tr>
+<tr><td>Thermal irradiance basis</td><td>Effective</td><td>The irradiance after IAM and soiling heats the cells. The
+incident basis is only for comparison with older runs.</td></tr>
+<tr><td>Albedo</td><td>0.2 every month</td><td>Ground reflectance (0–1), for light reflected onto the modules.</td></tr>
+</table>
+<h3>Load profile and zero export</h3>
+<p>These sections are shown for planning but are <strong>not active yet</strong>: loads and export limits are not
+simulated in this version.</p>
+
+<h3>Shading accuracy</h3>
+<p><em>Standard</em> (recommended) samples the sky in 48 × 12 sectors, with matching horizon and ground sampling.
+<em>High</em> samples more finely and takes longer, especially with detailed electrical shading.</p>
+<h2 id="simulate">12. Step 9 · Simulate <span class="muted">(<kbd>Alt</kbd>+<kbd>9</kbd>)</span></h2>
+<h3>Preflight</h3>
+<p>Preflight lists what <strong>blocks</strong> a run (for example no weather, required modules not strung, or a voltage
+rule failure) and what only <strong>warns</strong> (<em>Before you run</em>). Only saved engine data is simulated;
+unapplied drafts never enter the physics.</p>
+<h3>Execution</h3>
+<table><tr><th>Option</th><th>Meaning</th></tr>
+<tr><td>Existing geometry execution</td><td>The standard path: geometric near shading of beam, sky and ground light on
+each group of modules.</td></tr>
+<tr><td>Detailed electrical shading</td><td>Also models the electrical effect of partial shading through module
+substrings and bypass diodes (slower). The fallback policy decides whether a lower fidelity may be used when that detail
+is unavailable; <em>fail closed</em> refuses instead.</td></tr>
+</table>
+<p>Press <strong>Validate and run</strong>. A run takes from under a minute to many minutes, depending on the number of
+modules and obstacles and the accuracy level. Wait for it to finish before editing; on a slow connection the page keeps
+checking until the run is done.</p>
+<h3>Run history</h3>
+<p>Lists the project's runs. A run from an earlier design is marked <em>earlier design</em>: run again to update it.</p>
+
+<h2 id="results">13. Step 10 · Results <span class="muted">(<kbd>Alt</kbd>+<kbd>0</kbd>)</span></h2>
+<h3>Key figures</h3>
+<dl>
+<dt>AC energy (Reference Production)</dt><dd>The PV-attributable AC energy at the point of common coupling (PCC) over the
+simulated period, after every modelled loss.</dd>
+<dt>Specific yield</dt><dd>Energy ÷ installed DC capacity, in kWh/kWp, which makes plants of different sizes comparable.</dd>
+<dt>Performance ratio (PR)</dt><dd>Energy ÷ (simulated kWp × unshaded plane-of-array irradiation): how much of the
+sunlight's potential reached the grid. Well-designed rooftops are often around 0.75–0.85.</dd>
+<dt>Peak AC</dt><dd>The highest AC power in the period.</dd>
+<dt>Clipping</dt><dd>Energy lost because the inverter limited its output to its rated power.</dd>
+</dl>
+<h3>Views</h3>
+<ul>
+<li><strong>Monthly</strong>: energy, performance (specific yield and PR per month), losses and meteorology per month.</li>
+<li><strong>Loss waterfall</strong>: from the reference energy to the AC energy, stage by stage; it always reconciles
+(chapter 15).</li>
+<li><strong>Heatmap</strong>: mean power, or cell temperature, by week and hour.</li>
+<li><strong>Daily profile</strong>: the average day of each month.</li>
+<li><strong>Assumptions</strong>: the settings this run used.</li>
+</ul>
+<p>Below them: the <strong>inverter results</strong> (energy, voltage-window and start-up losses per inverter), mixed-
+orientation results where they apply, the readiness warnings recorded when the run started, and the <strong>result
+checks</strong>, automatic rules run on the result. A failed blocking rule stops the report.</p>
+<h3>Annual P50–P95</h3>
+<p>The simulation itself has no uncertainty. Enter your <strong>uncertainty assumptions</strong>: for each term, its σ and
+unit, a source and a justification. Terms in one double-count group must be combined first. State whether the terms are
+independent or give a correlation matrix. RawiBumi then computes P50 to P95, the annual energy exceeded with that
+probability. P99 is not given by this method, and RawiBumi offers no default percentages.</p>
+
+<h2 id="export">14. Step 11 · Report &amp; export</h2>
+<p>Open this step from the rail or command palette; it has no number shortcut.</p>
+<table><tr><th>Export</th><th>What you get</th></tr>
+<tr><td>Report</td><td>Preview it, then download one self-contained HTML file, or print it to PDF from the browser (A4).
+Chapters: key figures, methodology, the plan (with your overlay image), the inverter, MPPT and string mapping, the
+single-line diagram, shading, monthly energy, the loss waterfall, the 52-week heatmap, result checks, assumptions, and
+scope and limits. The free report carries a "Made with RawiBumi" footer; a branded report is a paid feature.</td></tr>
+<tr><td>Verified numerical PDF</td><td>A searchable, protected PDF of the same verified report, in the interface
+language.</td></tr>
+<tr><td>Free CSV</td><td>An hourly CSV with ten columns: timestamp, GHI, DNI, DHI, plane-of-array irradiance, ambient and
+cell temperature, DC energy into the inverter, AC energy at the PCC (kWh), and PR.</td></tr>
+<tr><td>Numerical CSV export</td><td>A ZIP with the chosen hourly columns and a manifest. The full deliverable adds a
+monthly table, the run summary, the validation findings and the run record.</td></tr>
+<tr><td>Project file</td><td>The whole project as one <code>.rawibumi</code> file (chapter 1).</td></tr>
+</table>
+<p>A report is built only from a run of the current design; after design changes, run the simulation again first.</p>
+
+<h2 id="losses">15. The loss chain explained</h2>
+<p>The loss waterfall starts from the energy the modules would give at their rated efficiency with the sunlight reaching
+the array, and subtracts each effect in turn:</p>
+<table><tr><th>Stage</th><th>What it is</th></tr>
+<tr><td>Geometric shading</td><td>Light blocked by obstacles, roofs and other rows: beam, sky and ground light.</td></tr>
+<tr><td>Orientation mismatch</td><td>The extra loss when one MPPT combines modules facing different ways.</td></tr>
+<tr><td>Soiling</td><td>Dirt on the glass.</td></tr>
+<tr><td>Module operating effects</td><td>Temperature and low-irradiance behaviour of the module model.</td></tr>
+<tr><td>LID</td><td>Light-induced degradation.</td></tr>
+<tr><td>Module quality</td><td>The module's tolerance from its datasheet; negative means a gain.</td></tr>
+<tr><td>Module and string mismatch</td><td>Electrical spread between modules and between strings.</td></tr>
+<tr><td>Degradation</td><td>Ageing in the simulated operating year.</td></tr>
+<tr><td>DC wiring</td><td>Resistive loss in the DC cables.</td></tr>
+<tr><td>Inverter</td><td>Conversion efficiency at each power and voltage, operation at the edge of the voltage window,
+the start-up threshold, and clipping at the power limit.</td></tr>
+<tr><td>AC wiring and plant AC wiring</td><td>Resistive loss in the AC cables.</td></tr>
+<tr><td>Transformer iron and copper</td><td>When a transformer is enabled.</td></tr>
+<tr><td>Unavailability</td><td>When set.</td></tr>
+</table>
+<p>In every hour, the reference energy less all losses equals the AC energy, or the run fails.</p>
+
+<h2 id="glossary">16. Glossary</h2>
+<dl>
+<dt>STC</dt><dd>Standard test conditions: 1,000 W/m² and 25 °C cell temperature. Module power (Wp) is rated at STC.</dd>
+<dt>kWp</dt><dd>DC capacity: the sum of the modules' STC power.</dd>
+<dt>GHI, DNI, DHI</dt><dd>Global horizontal, direct normal and diffuse horizontal irradiance.</dd>
+<dt>POA</dt><dd>Plane of array: the irradiance on the tilted module surface.</dd>
+<dt>IAM</dt><dd>Incidence-angle modifier: the reflection loss when light hits the glass at an angle.</dd>
+<dt>String</dt><dd>Modules wired in series; their voltages add up.</dd>
+<dt>MPPT</dt><dd>Maximum power point tracker: an inverter input that runs its strings at their best voltage. Strings in
+parallel on one MPPT should match in length and orientation.</dd>
+<dt>Voc, Vmp, Isc, Imp</dt><dd>Open-circuit voltage, voltage at maximum power, short-circuit current and current at
+maximum power. Voc rises in the cold, which is why the coldest temperature sets the longest safe string.</dd>
+<dt>DC/AC ratio</dt><dd>DC capacity ÷ inverter AC rating. Above 1, the inverter clips some peak power.</dd>
+<dt>Clipping</dt><dd>Energy lost when the DC power exceeds what the inverter can convert.</dd>
+<dt>PCC</dt><dd>Point of common coupling: where the plant connects to the grid.</dd>
+<dt>GCR</dt><dd>Ground-coverage ratio: the tables' slant depth ÷ the row pitch.</dd>
+<dt>Pitch</dt><dd>The distance from the front of one table to the front of the next.</dd>
+<dt>Albedo</dt><dd>The fraction of light the ground reflects.</dd>
+<dt>Uc, Uv</dt><dd>The module's heat-loss coefficients: constant and wind-dependent.</dd>
+<dt>TMY</dt><dd>Typical meteorological year: a year assembled from typical months.</dd>
+<dt>P50, P90</dt><dd>The annual energy exceeded with 50 % and 90 % probability.</dd>
+</dl>
+
+<h2 id="keys">17. Keyboard reference</h2>
+<table><tr><th>Keys</th><th>Action</th></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>1</kbd></td><td>Project &amp; site</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>2</kbd></td><td>Components</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>3</kbd></td><td>Scene</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>4</kbd></td><td>PV layout</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>5</kbd></td><td>Systems</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>6</kbd></td><td>Electrical</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>7</kbd></td><td>Weather</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>8</kbd></td><td>Losses &amp; grid</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>9</kbd></td><td>Simulate</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>0</kbd></td><td>Results</td></tr>
+<tr><td>Rail / command palette</td><td>Report &amp; export</td></tr>
+<tr><td><kbd>Ctrl</kbd>+<kbd>Z</kbd> · <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Z</kbd> or <kbd>Ctrl</kbd>+<kbd>Y</kbd></td><td>Undo · redo</td></tr>
+<tr><td><kbd>Enter</kbd> · <kbd>Esc</kbd> · <kbd>Backspace</kbd></td><td>Finish · cancel · remove the last point</td></tr>
+<tr><td><kbd>Delete</kbd> · <kbd>Shift</kbd>+<kbd>Delete</kbd></td><td>Delete the selection · delete the selected modules' tables</td></tr>
+<tr><td>Arrows · <kbd>Shift</kbd>+arrows</td><td>Nudge 0.10 m · 1.00 m</td></tr>
+<tr><td><kbd>Shift</kbd> while drawing · <kbd>Alt</kbd></td><td>15° steps · place without snapping</td></tr>
+<tr><td><kbd>Shift</kbd>+<kbd>F10</kbd></td><td>Context menu</td></tr>
+<tr><td><kbd>Alt</kbd>+<kbd>\</kbd></td><td>Focus the stage (hide the panels)</td></tr>
+<tr><td><kbd>Z</kbd></td><td>Zoom to all</td></tr>
+<tr><td>Scene: <kbd>V</kbd> <kbd>M</kbd> <kbd>R</kbd> <kbd>B</kbd> <kbd>P</kbd> <kbd>H</kbd> <kbd>O</kbd> <kbd>E</kbd> <kbd>K</kbd> <kbd>D</kbd></td><td>See chapter 6</td></tr>
+<tr><td>Electrical: <kbd>V</kbd> <kbd>S</kbd> <kbd>A</kbd> <kbd>L</kbd> <kbd>X</kbd> <kbd>J</kbd> <kbd>R</kbd> <kbd>M</kbd> <kbd>W</kbd>, <kbd>[</kbd> <kbd>]</kbd> <kbd>1</kbd>–<kbd>9</kbd></td><td>See chapter 9</td></tr>
+</table>
+
+<h2 id="trouble">18. Messages and troubleshooting</h2>
+<dl>
+<dt>A step shows <em>Blocked</em></dt><dd>Open it: the blocking finding is listed at the top, or in Simulate →
+Preflight. Fix that first.</dd>
+<dt>"Unable to detect weather format"</dt><dd>The file is not a supported format (chapter 10). From Meteonorm or PVsyst,
+export TMY3 or "PVsyst Standard" CSV.</dd>
+<dt>"Not enough unstrung modules for an n-module string"</dt><dd>The layout asks for more modules than are free in the
+inverter's area. Lower the string length or count, or widen the roofs the inverter serves.</dd>
+<dt>A string voltage check fails</dt><dd>Shorten the string if its cold Voc is above the inverter maximum; change the
+length or the inverter if it leaves the MPPT window.</dd>
+<dt>"These results are from an earlier design"</dt><dd>The design changed after the run. Run again for current results
+and a report.</dd>
+<dt>A number does not save</dt><dd>Press <kbd>Enter</kbd> or leave the field; in forms, press the form's <em>Apply</em>
+or <em>Save</em>.</dd>
+<dt>Undo does nothing</dt><dd>There is no earlier step for this project (the engine keeps 10), or the server was
+restarted.</dd>
+<dt>"The project changed elsewhere"</dt><dd>Someone else in your group edited the same project; the latest version has
+loaded. Repeat your edit.</dd>
+</dl>
+
+<h2 id="limits">19. Known limits</h2>
+<ul>
+<li>RawiBumi has not yet been compared with measured plant data. It agrees with PVsyst within a fraction of a percent on
+two real shaded projects; PVsyst is a benchmark, not the truth.</li>
+<li>Not modelled: batteries, loads and export limits, far-horizon shading (there is no horizon profile yet), time steps
+shorter than an hour, reactive power, inverter temperature behaviour, and daylight-saving time zones.</li>
+<li>The default losses are starting values; review them for each site.</li>
+<li>Undo keeps the last 10 engine steps per project and is cleared if the server restarts.</li>
+<li>Rotated rectangles: set lengths before rotating (chapter 6).</li>
+</ul>
+
+<h2 id="beta">20. Your data, the beta and feedback</h2>
+<p><strong>On your own computer</strong>, everything stays in the app's data folder (<code>var/</code>): projects,
+weather, runs, imagery and the component library. Nothing is sent anywhere except the online services you use from the
+app: Open-Meteo when you acquire a weather year, Nominatim when you search an address, and OpenFreeMap while the map is
+shown. Back up the data folder to back up your work.</p>
+<p><strong>On a test service you were invited to</strong>, you sign in with an access code and your email. The code
+binds to the first email used with it, so use the same email each time; it stops working when the test window closes.
+The organiser keeps your group's projects and uploaded files and an access log (email, time, pages and actions), as
+the sign-in page states. Everyone in your group sees the group's projects, so do not upload confidential client data.
+You can ask the organiser to delete your data at any time.</p>
+<p>RawiBumi is a beta: there is no warranty, and results must be reviewed by an engineer before they are relied on.</p>
+<p><strong>Feedback:</strong> say which step, what you did, what happened and what you expected, with a screenshot if
+you can. Send it as an issue on the project's GitHub page, or to the organiser of your test.</p>
+</main>
+</body>
+</html>

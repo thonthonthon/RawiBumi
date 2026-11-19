@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/shading-accuracy-settings.schema.json",
+  "title": "ShadingAccuracySettings",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "defaults_id",
+    "overrides"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "defaults_id": {
+      "const": "shading_accuracy.v1"
+    },
+    "overrides": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "enum": [
+            "standard",
+            "high"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "resolved": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "defaults_id",
+        "level",
+        "source",
+        "sky_dome_resolution",
+        "ground_dome_resolution",
+        "ground_source"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1"
+        },
+        "defaults_id": {
+          "const": "shading_accuracy.v1"
+        },
+        "level": {
+          "enum": [
+            "standard",
+            "high"
+          ]
+        },
+        "source": {
+          "enum": [
+            "recommended_defaults",
+            "project_override"
+          ]
+        },
+        "sky_dome_resolution": {
+          "type": "object",
+          "required": [
+            "azimuth_sectors",
+            "elevation_bands",
+            "horizon_azimuth_sectors",
+            "horizon_elevation_bands",
+            "horizon_band_elevation_deg"
+          ],
+          "properties": {
+            "azimuth_sectors": {
+              "enum": [
+                48,
+                72
+              ]
+            },
+            "elevation_bands": {
+              "enum": [
+                12,
+                18
+              ]
+            },
+            "horizon_azimuth_sectors": {
+              "enum": [
+                48,
+                72
+              ]
+            },
+            "horizon_elevation_bands": {
+              "const": 1
+            },
+            "horizon_band_elevation_deg": {
+              "const": 10.0
+            }
+          },
+          "additionalProperties": false
+        },
+        "ground_dome_resolution": {
+          "type": "object",
+          "required": [
+            "azimuth_sectors",
+            "depression_bands"
+          ],
+          "properties": {
+            "azimuth_sectors": {
+              "enum": [
+                48,
+                72
+              ]
+            },
+            "depression_bands": {
+              "enum": [
+                12,
+                18
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "ground_source": {
+          "const": "preset_mapping"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,311 @@
+# ADR 0025 — Phase 3.8D solar-aware weather quality control
+
+Status: accepted  
+Date: 2026-09-23
+
+## Context
+
+Phase-2 weather QC intentionally avoided checks that depend on solar geometry.
+That was correct while weather import, time semantics, and the numerical solar
+position pipeline were still separate.
+
+Phase 3 now has:
+
+- canonical interval-start weather;
+- explicit representative/evaluation times;
+- a versioned NREL-SPA solar-position adapter;
+- explicit native/input/simulation resolution metadata;
+- deterministic irradiance completion and POA execution.
+
+The deferred QC boundary can therefore be closed without introducing an
+independent time or solar-geometry interpretation.
+
+The primary goals are:
+
+1. detect physically impossible irradiance;
+2. detect inconsistent GHI/DNI/DHI component sets;
+3. expose likely timestamp/timezone/reference problems around day/night;
+4. provide an optional clear-sky gross screen without treating a clear-sky
+   model as truth;
+5. never mutate or clip source weather in QC.
+
+## Decision
+
+### 1. Phase-2 QC remains unchanged
+
+`run_weather_qc()` remains the Phase-2, non-solar QC API.
+
+Phase 3 adds:
+
+```text
+run_solar_aware_weather_qc(weather, solar, ...)
+```
+
+The Phase-3 function first runs Phase-2 QC and then appends deterministic
+solar-aware findings.
+
+This preserves backward compatibility and keeps the earlier validation layer
+usable without the simulation engine.
+
+### 2. Solar-aware QC uses the simulation solar result
+
+The solar-aware layer accepts a `SolarPositionResult` already evaluated for
+the canonical weather intervals.
+
+It does not calculate a second independent solar position internally.
+
+Required alignment:
+
+```text
+weather interval index == solar interval index
+```
+
+The finding context records:
+
+- solar model ID;
+- solar implementation;
+- representative-time policy;
+- solar evaluation offset;
+- series resolution;
+- source timestamp convention;
+- source time-reference metadata.
+
+### 3. Physical irradiance limits use BSRN V2
+
+OpenSIMPV adopts the BSRN Global Network recommended QC tests V2.0 physically
+possible upper limits.
+
+Define:
+
+```text
+mu0 = max(cos(true solar zenith), 0)
+Sa  = extraterrestrial direct-normal irradiance adjusted for Earth-Sun distance
+```
+
+OpenSIMPV obtains `Sa` from:
+
+```text
+pvlib.irradiance.get_extra_radiation(evaluation_time)
+```
+
+Implemented upper limits:
+
+```text
+GHI <= Sa * 1.5  * mu0^1.2 + 100 W/m²
+DHI <= Sa * 0.95 * mu0^1.2 +  50 W/m²
+DNI <= Sa
+```
+
+Violations are `error` findings.
+
+QC does not clip the violating value.
+
+The existing Phase-2 rule remains stricter for negative irradiance:
+canonical irradiance below zero is already an error even though the BSRN
+measurement-oriented physically possible limits allow small negative
+instrument offsets.
+
+### 4. Three-component consistency uses BSRN V2 comparison bands
+
+Define:
+
+```text
+SumSW = DHI + DNI * mu0
+ratio = GHI / SumSW
+```
+
+For `SumSW > 50 W/m²`:
+
+```text
+SZA < 75°:
+    ratio must be within 1.0 ± 8%
+
+75° <= SZA < 93°:
+    ratio must be within 1.0 ± 15%
+```
+
+Failures are warnings because the source may be measured/modelled data with
+component uncertainty, but the values remain suspicious and should be
+inspected before a validation campaign.
+
+This test is skipped when all three components are not available.
+
+### 5. Diffuse/global comparison uses BSRN V2 bands
+
+For `GHI > 50 W/m²`:
+
+```text
+SZA < 75°:
+    DHI / GHI <= 1.05
+
+75° <= SZA < 93°:
+    DHI / GHI <= 1.10
+```
+
+Failures are warnings.
+
+### 6. Day/night time-reference screening is an OpenSIMPV policy
+
+BSRN physical/component tests are complemented by a conservative
+OpenSIMPV-specific diagnostic intended to reveal gross timestamp, timezone,
+or source-reference errors.
+
+Versioned policy:
+
+```text
+weather_qc.solar_aware.bsrn_v2_opensimpv.v0.1
+```
+
+Night screen:
+
+```text
+true solar elevation <= -3°
+and max(GHI, DNI, DHI) > 20 W/m²
+→ warning
+```
+
+Daylight screen:
+
+```text
+true solar elevation >= +5°
+and GHI <= 5 W/m²
+→ warning
+```
+
+These are intentionally warnings, not correction rules.
+
+They are not claimed as BSRN thresholds.
+
+The thresholds avoid treating every interval that merely straddles geometric
+sunrise/sunset as invalid, which is important for hourly interval-average
+weather.
+
+### 7. Clear-sky screening is explicit and opt-in
+
+Solar-aware QC does not silently choose:
+
+- a clear-sky model;
+- Linke turbidity;
+- aerosol climatology;
+- atmospheric water-vapor assumptions.
+
+A caller may provide an explicitly generated, interval-aligned clear-sky
+reference DataFrame.
+
+The current gross warning screen is:
+
+```text
+reference >= 50 W/m²
+observed > 1.50 * reference + 50 W/m²
+→ warning
+```
+
+This threshold is an OpenSIMPV gross screen, not a physical upper limit.
+
+Finding metadata explicitly says that the clear-sky reference was not
+generated by QC.
+
+### 8. Source weather is immutable
+
+No Phase-3 QC rule may:
+
+- clip DNI to extraterrestrial DNI;
+- force night irradiance to zero;
+- replace GHI with component sum;
+- change timestamps;
+- shift timezone;
+- synthesize missing DNI/DHI;
+- overwrite values using clear-sky estimates.
+
+Those are separate transformation/model decisions and require explicit
+provenance.
+
+### 9. Report compatibility
+
+Solar-aware QC returns the existing:
+
+```text
+WeatherQCReport v0.1
+```
+
+shape.
+
+Solar-specific provenance is stored in each finding's `context`, so no
+schema-breaking top-level extension is required.
+
+`attach_solar_aware_weather_qc()` operates on a deep copy and records a
+summary indicating that the solar-aware layer was used.
+
+## Rule IDs
+
+Phase 3.8D introduces:
+
+```text
+WX_SOLAR_GHI_ABOVE_PHYSICAL_LIMIT
+WX_SOLAR_DHI_ABOVE_PHYSICAL_LIMIT
+WX_SOLAR_DNI_ABOVE_PHYSICAL_LIMIT
+WX_SOLAR_COMPONENT_SUM_INCONSISTENT
+WX_SOLAR_DIFFUSE_RATIO_INCONSISTENT
+WX_SOLAR_IRRADIANCE_WHEN_SUN_BELOW_HORIZON
+WX_SOLAR_DAYLIGHT_WITH_NEAR_ZERO_GHI
+WX_SOLAR_CLEAR_SKY_GROSS_EXCEEDANCE
+```
+
+## Evidence
+
+Primary QC reference:
+
+- C. N. Long and E. G. Dutton, *BSRN Global Network recommended QC tests,
+  V2.0*:
+  https://bsrn.awi.de/fileadmin/user_upload/bsrn.awi.de/Publications/BSRN_recommended_QC_tests_V2.pdf
+
+Supporting definitions:
+
+- NREL, *Best Practices Handbook for the Collection and Use of Solar Resource
+  Data for Solar Energy Applications, Third Edition*.
+- pvlib `get_extra_radiation` documentation for extraterrestrial
+  direct-normal irradiance.
+- pvlib Ineichen/Perez documentation for the optional clear-sky model family;
+  OpenSIMPV does not select that family automatically in QC.
+
+## Consequences
+
+Positive:
+
+- the deliberate Phase-2 solar-QC deferral is closed;
+- physically impossible irradiance can be blocked before attribution;
+- component inconsistencies are visible without source mutation;
+- time-reference problems become easier to diagnose;
+- the same solar/time semantics used by simulation are reused by QC;
+- missing DNI/DHI remains a decomposition/completion concern rather than a
+  false three-component consistency failure;
+- clear-sky screening remains explicit rather than becoming a hidden model.
+
+Limitations:
+
+- the OpenSIMPV day/night thresholds are conservative diagnostic heuristics,
+  not measurement-station certification criteria;
+- clear-sky screening quality depends on the externally supplied reference;
+- QC identifies suspect intervals but does not determine which source
+  component is wrong.
+
+## Regression requirements
+
+Phase 3.8D is accepted only when tests prove:
+
+1. a physically consistent three-component series passes;
+2. BSRN low-zenith and high-zenith ratio bands are distinct;
+3. physical upper-limit violations are errors;
+4. source weather remains unchanged after a failure;
+5. material night irradiance is reported as a warning;
+6. daylight with near-zero GHI is reported as a warning;
+7. the BSRN diffuse/global comparison is implemented;
+8. clear-sky screening does nothing unless an explicit reference is supplied;
+9. clear-sky findings are warning-only and identify reference provenance;
+10. missing DNI/DHI preserves the Phase-2 completion warning and skips
+    three-component tests;
+11. weather/solar interval misalignment fails explicitly;
+12. attached QC modifies a copy, not the source object;
+13. the real solar-position adapter integrates with the QC API;
+14. the resulting report validates against WeatherQCReport v0.1;
+15. full repository CI passes.

@@ -1,0 +1,304 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/beam-shadow-diagnostic-artifact.schema.json",
+  "title": "OpenSIMPV BeamShadowDiagnosticArtifact v0.1",
+  "description": "Optional non-authoritative projected beam-shadow geometry for engineering diagnostics and future preview.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "authority",
+    "editable",
+    "orchestrator_id",
+    "orchestrator_version",
+    "diagnostic_artifact_id",
+    "diagnostic_payload_sha256",
+    "shading_result_id",
+    "compiled_geometry_hash",
+    "shading_configuration_hash",
+    "receiver_set_sha256",
+    "sun_state_sha256",
+    "source_execution_plan_id",
+    "solver_id",
+    "solver_version",
+    "sun_vector_xyz",
+    "timestamp",
+    "self_shading_enabled",
+    "receiver_count",
+    "entries"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "BeamShadowDiagnosticArtifact"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "authority": {
+      "const": "derived_diagnostic_only"
+    },
+    "editable": {
+      "const": false
+    },
+    "diagnostic_artifact_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "diagnostic_payload_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "shading_result_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "compiled_geometry_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "shading_configuration_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "receiver_set_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "sun_state_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "source_execution_plan_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "solver_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "solver_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sun_vector_xyz": {
+      "$ref": "#/$defs/point3"
+    },
+    "timestamp": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "self_shading_enabled": {
+      "type": "boolean"
+    },
+    "receiver_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    },
+    "orchestrator_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "orchestrator_version": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "point2": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "point3": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "number"
+        }
+      ],
+      "items": false,
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "polygon_uv": {
+      "type": "object",
+      "required": [
+        "exterior_uv",
+        "holes_uv"
+      ],
+      "properties": {
+        "exterior_uv": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "$ref": "#/$defs/point2"
+          }
+        },
+        "holes_uv": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "minItems": 3,
+            "items": {
+              "$ref": "#/$defs/point2"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "basis": {
+      "type": "object",
+      "required": [
+        "origin_xyz",
+        "normal_xyz",
+        "u_axis_xyz",
+        "v_axis_xyz"
+      ],
+      "properties": {
+        "origin_xyz": {
+          "$ref": "#/$defs/point3"
+        },
+        "normal_xyz": {
+          "$ref": "#/$defs/point3"
+        },
+        "u_axis_xyz": {
+          "$ref": "#/$defs/point3"
+        },
+        "v_axis_xyz": {
+          "$ref": "#/$defs/point3"
+        }
+      },
+      "additionalProperties": false
+    },
+    "projected_face": {
+      "type": "object",
+      "required": [
+        "occluder_id",
+        "face_id",
+        "projected_polygon_uv",
+        "receiver_clipped_shadow_polygons_uv",
+        "receiver_clipped_shadow_area_m2"
+      ],
+      "properties": {
+        "occluder_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "face_id": {
+          "type": "string"
+        },
+        "projected_polygon_uv": {
+          "$ref": "#/$defs/polygon_uv"
+        },
+        "receiver_clipped_shadow_polygons_uv": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/polygon_uv"
+          }
+        },
+        "receiver_clipped_shadow_area_m2": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "entry": {
+      "type": "object",
+      "required": [
+        "receiver_id",
+        "status",
+        "beam_visibility_factor",
+        "beam_shaded_fraction",
+        "shaded_area_m2",
+        "contributing_occluder_ids",
+        "receiver_plane_basis",
+        "receiver_polygon_uv",
+        "projected_faces",
+        "shadow_union_polygons_uv"
+      ],
+      "properties": {
+        "receiver_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "evaluated",
+            "no_direct_beam_sun_below_horizon",
+            "no_direct_beam_receiver_backside"
+          ]
+        },
+        "beam_visibility_factor": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "beam_shaded_fraction": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "shaded_area_m2": {
+          "type": "number",
+          "minimum": 0
+        },
+        "contributing_occluder_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "receiver_plane_basis": {
+          "$ref": "#/$defs/basis"
+        },
+        "receiver_polygon_uv": {
+          "$ref": "#/$defs/polygon_uv"
+        },
+        "projected_faces": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/projected_face"
+          }
+        },
+        "shadow_union_polygons_uv": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/polygon_uv"
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

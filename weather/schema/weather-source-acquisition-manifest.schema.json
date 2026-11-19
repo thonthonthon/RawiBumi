@@ -1,0 +1,355 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/weather-source-acquisition-manifest.schema.json",
+  "title": "OpenSIMPV WeatherSourceAcquisitionManifest v0.1",
+  "description": "Provenance contract for one explicit meteorological source-product acquisition. Provider transport, source-product identity, source-owned resource projection semantics, OpenSIMPV canonical mapping, and resulting WeatherDataset identity remain separate.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "acquisition_id",
+    "provider_id",
+    "source_id",
+    "source_product_name",
+    "adapter_id",
+    "adapter_version",
+    "requested_site",
+    "request",
+    "source_method",
+    "raw_response",
+    "canonical_mapping",
+    "status"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "required": ["acquisition"],
+        "properties": {
+          "acquisition": {
+            "properties": {"network_retrieval": {"const": false}}
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "raw_response": {
+            "properties": {
+              "retrieved_at": {"const": null},
+              "source_url": {"const": null}
+            }
+          },
+          "status": {"not": {"const": "retrieved"}}
+        }
+      }
+    }
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "WeatherSourceAcquisitionManifest"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "acquisition_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provider_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_product_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_product_version": {
+      "type": ["string", "null"]
+    },
+    "adapter_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adapter_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "acquisition": {
+      "description": "Transport evidence and actual payload origin, separate from the source product being selected or emulated. Optional for legacy manifests.",
+      "type": "object",
+      "required": ["method", "network_retrieval", "data_origin", "evidence", "evidence_detail"],
+      "properties": {
+        "method": {
+          "enum": ["provider_transport", "supplied_payload"]
+        },
+        "network_retrieval": {
+          "type": "boolean"
+        },
+        "data_origin": {
+          "enum": ["provider_generated", "synthetic_test_fixture", "unknown"]
+        },
+        "evidence": {
+          "enum": ["provider_transport", "user_declared", "unknown"]
+        },
+        "evidence_detail": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "method": {"const": "provider_transport"},
+            "network_retrieval": {"const": true},
+            "data_origin": {"const": "provider_generated"},
+            "evidence": {"const": "provider_transport"}
+          }
+        },
+        {
+          "properties": {
+            "method": {"const": "supplied_payload"},
+            "network_retrieval": {"const": false},
+            "data_origin": {"const": "synthetic_test_fixture"},
+            "evidence": {"const": "user_declared"}
+          }
+        },
+        {
+          "properties": {
+            "method": {"const": "supplied_payload"},
+            "network_retrieval": {"const": false},
+            "data_origin": {"const": "unknown"},
+            "evidence": {"const": "unknown"}
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "requested_site": {
+      "type": "object",
+      "required": ["latitude_deg", "longitude_deg"],
+      "properties": {
+        "latitude_deg": {
+          "type": "number",
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude_deg": {
+          "type": "number",
+          "minimum": -180,
+          "maximum": 180
+        },
+        "elevation_m": {
+          "type": ["number", "null"]
+        },
+        "timezone": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "request": {
+      "type": "object",
+      "required": ["requested_at", "parameters"],
+      "properties": {
+        "requested_at": {
+          "description": "Transport request time, or a caller-declared replay request time; null when unavailable.",
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "start_time": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "end_time": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "endpoint_family": {
+          "type": ["string", "null"]
+        },
+        "parameters": {
+          "type": "object"
+        },
+        "unverified_retrieval_declaration": {
+          "description": "Caller-supplied historical URL/time from parser replay; not verified retrieval evidence.",
+          "type": "object",
+          "properties": {
+            "source_url": {"type": ["string", "null"]},
+            "retrieved_at": {"type": ["string", "null"], "format": "date-time"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "provider_location": {
+      "type": ["object", "null"],
+      "properties": {
+        "latitude_deg": {
+          "type": ["number", "null"],
+          "minimum": -90,
+          "maximum": 90
+        },
+        "longitude_deg": {
+          "type": ["number", "null"],
+          "minimum": -180,
+          "maximum": 180
+        },
+        "elevation_m": {
+          "type": ["number", "null"]
+        },
+        "grid_identifier": {
+          "type": ["string", "null"]
+        },
+        "notes": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "source_method": {
+      "type": "object",
+      "required": [
+        "projection_authority",
+        "opensimpv_resource_projection_applied",
+        "method_id",
+        "method_version",
+        "evidence"
+      ],
+      "properties": {
+        "projection_authority": {
+          "const": "source_product"
+        },
+        "opensimpv_resource_projection_applied": {
+          "const": false
+        },
+        "method_id": {
+          "type": ["string", "null"]
+        },
+        "method_version": {
+          "type": ["string", "null"]
+        },
+        "evidence": {
+          "enum": [
+            "provider_metadata",
+            "provider_documentation",
+            "source_file_metadata",
+            "user_declared",
+            "unknown"
+          ]
+        },
+        "description": {
+          "type": ["string", "null"]
+        },
+        "spatial_basis": {
+          "type": ["string", "null"]
+        },
+        "temporal_basis": {
+          "type": ["string", "null"]
+        },
+        "notes": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "raw_response": {
+      "type": "object",
+      "required": ["sha256", "byte_size"],
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "byte_size": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "media_type": {
+          "type": ["string", "null"]
+        },
+        "storage_reference": {
+          "type": ["string", "null"]
+        },
+        "retrieved_at": {
+          "description": "Provider transport completion time; null for supplied payloads.",
+          "type": ["string", "null"],
+          "format": "date-time"
+        },
+        "source_url": {
+          "description": "URL used by provider transport to retrieve these bytes; null for supplied payloads.",
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "canonical_mapping": {
+      "type": "object",
+      "required": [
+        "mapping_id",
+        "mapping_version",
+        "source_projection_preserved"
+      ],
+      "properties": {
+        "mapping_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mapping_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_projection_preserved": {
+          "const": true
+        },
+        "unit_conversion_applied": {
+          "type": "boolean"
+        },
+        "timestamp_normalization_applied": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": ["string", "null"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "result": {
+      "type": ["object", "null"],
+      "properties": {
+        "weather_dataset_id": {
+          "type": ["string", "null"]
+        },
+        "weather_dataset_revision_id": {
+          "type": ["string", "null"]
+        },
+        "weather_dataset_sha256": {
+          "type": ["string", "null"],
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "status": {
+      "description": "Processing/QC stage; QC success alone does not assert provider transport. See acquisition.network_retrieval.",
+      "enum": [
+        "requested",
+        "retrieved",
+        "normalized",
+        "qc_passed",
+        "qc_warning",
+        "failed"
+      ]
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    }
+  },
+  "additionalProperties": false
+}

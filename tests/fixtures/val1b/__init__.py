@@ -1,0 +1,1 @@
+"""Fictional benchmark assembly fixtures."""

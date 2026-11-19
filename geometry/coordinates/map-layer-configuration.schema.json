@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/map-layer-configuration.schema.json",
+  "title": "OpenSIMPV MapLayerConfiguration v0.1",
+  "description": "Provider-agnostic map and orthophoto reference configuration. It never stores authoritative engineering dimensions.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "map_configuration_id",
+    "engineering_geometry_authority",
+    "map_measurement_role",
+    "providers",
+    "layers"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "MapLayerConfiguration"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "map_configuration_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "engineering_geometry_authority": {
+      "const": "local_metric"
+    },
+    "map_measurement_role": {
+      "const": "context_only"
+    },
+    "providers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/provider"
+      }
+    },
+    "layers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/layer"
+      }
+    },
+    "notes": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "$defs": {
+    "provider": {
+      "type": "object",
+      "required": [
+        "provider_id",
+        "provider_kind",
+        "name",
+        "attribution_required"
+      ],
+      "properties": {
+        "provider_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provider_kind": {
+          "enum": [
+            "xyz_raster",
+            "maplibre_style",
+            "uploaded_asset",
+            "none"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tile_url_template": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "style_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "credential_reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "attribution_required": {
+          "type": "boolean"
+        },
+        "attribution": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "license_note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "control_point": {
+      "type": "object",
+      "required": [
+        "pixel_x",
+        "pixel_y",
+        "local_x_m",
+        "local_y_m"
+      ],
+      "properties": {
+        "pixel_x": {
+          "type": "number"
+        },
+        "pixel_y": {
+          "type": "number"
+        },
+        "local_x_m": {
+          "type": "number"
+        },
+        "local_y_m": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "orthophoto_georeference": {
+      "type": "object",
+      "required": [
+        "method",
+        "image_width_px",
+        "image_height_px",
+        "control_points"
+      ],
+      "properties": {
+        "method": {
+          "const": "affine_control_points"
+        },
+        "image_width_px": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "image_height_px": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "control_points": {
+          "type": "array",
+          "minItems": 3,
+          "items": {
+            "$ref": "#/$defs/control_point"
+          }
+        },
+        "rms_error_m": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "layer": {
+      "type": "object",
+      "required": [
+        "layer_id",
+        "layer_type",
+        "provider_id"
+      ],
+      "properties": {
+        "layer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "layer_type": {
+          "enum": [
+            "base_map",
+            "aerial_imagery",
+            "orthophoto",
+            "engineering_grid"
+          ]
+        },
+        "provider_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_record_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "imported_asset_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "orthophoto_georeference": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/orthophoto_georeference"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "opacity": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 1,
+          "description": "Display opacity (UX1); presentation only."
+        },
+        "locked": {
+          "type": "boolean",
+          "description": "A locked overlay ignores pointer input (UX1); presentation only."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,405 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/optics-thermal-settings.schema.json",
+  "title": "OpticsThermalSettings",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "defaults_id": {
+      "const": "recommended_optics_thermal.v1"
+    },
+    "overrides": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "transposition": {
+          "enum": [
+            "isotropic",
+            "hay_davies",
+            "perez_1990",
+            "perez_driesse",
+            "perez_hourly"
+          ]
+        },
+        "thermal": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "model": {
+              "const": "steady_state"
+            },
+            "mounting_preset": {
+              "enum": [
+                "semi_integrated",
+                "open_rack",
+                "insulated_back",
+                "dome",
+                "custom"
+              ]
+            },
+            "u_c_w_m2k": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "u_v_w_m2k_per_ms": {
+              "type": "number",
+              "minimum": 0
+            },
+            "irradiance_basis": {
+              "enum": [
+                "effective",
+                "incident_pre_iam"
+              ]
+            }
+          }
+        },
+        "iam": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "selection": {
+              "enum": [
+                "module_auto",
+                "module_table",
+                "physical_glass",
+                "none"
+              ]
+            },
+            "fallback": {
+              "const": "physical_glass"
+            }
+          }
+        },
+        "albedo": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "monthly_values": {
+              "type": "array",
+              "minItems": 12,
+              "maxItems": 12,
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            },
+            "annual_value": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "not": {
+            "required": [
+              "monthly_values",
+              "annual_value"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "defaults_id",
+    "overrides"
+  ],
+  "$defs": {
+    "resolved": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "const": "0.1"
+        },
+        "defaults_id": {
+          "const": "recommended_optics_thermal.v1"
+        },
+        "overrides": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "transposition": {
+              "enum": [
+                "isotropic",
+                "hay_davies",
+                "perez_1990",
+                "perez_driesse",
+                "perez_hourly"
+              ]
+            },
+            "thermal": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "model": {
+                  "const": "steady_state"
+                },
+                "mounting_preset": {
+                  "enum": [
+                    "semi_integrated",
+                    "open_rack",
+                    "insulated_back",
+                    "dome",
+                    "custom"
+                  ]
+                },
+                "u_c_w_m2k": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "u_v_w_m2k_per_ms": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "irradiance_basis": {
+                  "enum": [
+                    "effective",
+                    "incident_pre_iam"
+                  ]
+                }
+              }
+            },
+            "iam": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "selection": {
+                  "enum": [
+                    "module_auto",
+                    "module_table",
+                    "physical_glass",
+                    "none"
+                  ]
+                },
+                "fallback": {
+                  "const": "physical_glass"
+                }
+              }
+            },
+            "albedo": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "monthly_values": {
+                  "type": "array",
+                  "minItems": 12,
+                  "maxItems": 12,
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "annual_value": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "not": {
+                "required": [
+                  "monthly_values",
+                  "annual_value"
+                ]
+              }
+            }
+          }
+        },
+        "values": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "transposition": {
+              "enum": [
+                "isotropic",
+                "hay_davies",
+                "perez_1990",
+                "perez_driesse",
+                "perez_hourly"
+              ]
+            },
+            "thermal": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "model": {
+                  "const": "steady_state"
+                },
+                "mounting_preset": {
+                  "enum": [
+                    "semi_integrated",
+                    "open_rack",
+                    "insulated_back",
+                    "dome",
+                    "custom"
+                  ]
+                },
+                "u_c_w_m2k": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "u_v_w_m2k_per_ms": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "irradiance_basis": {
+                  "enum": [
+                    "effective",
+                    "incident_pre_iam"
+                  ]
+                }
+              },
+              "required": [
+                "model",
+                "mounting_preset",
+                "u_c_w_m2k",
+                "u_v_w_m2k_per_ms",
+                "irradiance_basis"
+              ]
+            },
+            "iam": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "selection": {
+                  "enum": [
+                    "module_auto",
+                    "module_table",
+                    "physical_glass",
+                    "none"
+                  ]
+                },
+                "fallback": {
+                  "const": "physical_glass"
+                }
+              },
+              "required": [
+                "selection",
+                "fallback"
+              ]
+            },
+            "albedo": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "monthly_values": {
+                  "type": "array",
+                  "minItems": 12,
+                  "maxItems": 12,
+                  "items": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                }
+              },
+              "required": [
+                "monthly_values"
+              ]
+            }
+          },
+          "required": [
+            "transposition",
+            "thermal",
+            "iam",
+            "albedo"
+          ]
+        },
+        "sources": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "settings_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "fallback_parameters": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "n": {
+              "type": "number"
+            },
+            "K": {
+              "type": "number",
+              "minimum": 0
+            },
+            "L": {
+              "type": "number",
+              "minimum": 0
+            },
+            "n_ar": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "n",
+            "K",
+            "L",
+            "n_ar"
+          ]
+        },
+        "status": {
+          "enum": [
+            "recommended_defaults",
+            "edited"
+          ]
+        },
+        "modules": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "module_revision_id": {
+                "type": "string"
+              },
+              "iam_source": {
+                "enum": [
+                  "module_table",
+                  "fallback_physical_glass",
+                  "physical_glass",
+                  "explicit_none"
+                ]
+              },
+              "alpha_absorption": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "iam_profile_sha256": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "module_revision_id",
+              "iam_source",
+              "alpha_absorption",
+              "iam_profile_sha256"
+            ]
+          }
+        }
+      },
+      "required": [
+        "schema_version",
+        "defaults_id",
+        "overrides",
+        "values",
+        "sources",
+        "settings_sha256",
+        "fallback_parameters",
+        "status"
+      ]
+    }
+  }
+}

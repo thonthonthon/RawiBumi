@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/mppt-tracker-operating-state.schema.json",
+  "title": "OpenSIMPV MPPTTrackerOperatingState v0.1",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "contract_version",
+    "state_id",
+    "source_electrical_revision_id",
+    "source_mppt_instance_id",
+    "source_combined_curve_id",
+    "source_combined_curve_physical_result_sha256",
+    "mppt_operating_point_model_id",
+    "control_assumption",
+    "ideal_global_mpp",
+    "selected_operating_point",
+    "constraints",
+    "constraint_evaluation",
+    "attribution",
+    "scientific_input_sha256",
+    "state_payload_sha256"
+  ],
+  "properties": {
+    "schema_name": {
+      "const": "MPPTTrackerOperatingState"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "contract_version": {
+      "const": "0.1"
+    },
+    "state_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_electrical_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_mppt_instance_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_combined_curve_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_combined_curve_physical_result_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "mppt_operating_point_model_id": {
+      "const": "rawibumi.mppt.ideal_global_mpp.v0.1"
+    },
+    "control_assumption": {
+      "const": "ideal_global_mpp"
+    },
+    "ideal_global_mpp": {
+      "$ref": "#/$defs/operating_point"
+    },
+    "selected_operating_point": {
+      "$ref": "#/$defs/operating_point"
+    },
+    "constraints": {
+      "$ref": "#/$defs/constraints"
+    },
+    "constraint_evaluation": {
+      "$ref": "#/$defs/constraint_evaluation"
+    },
+    "attribution": {
+      "$ref": "#/$defs/attribution"
+    },
+    "scientific_input_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "state_payload_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "operating_point": {
+      "type": "object",
+      "required": [
+        "voltage_v",
+        "current_a",
+        "power_w"
+      ],
+      "properties": {
+        "voltage_v": {
+          "type": "number",
+          "minimum": 0
+        },
+        "current_a": {
+          "type": "number",
+          "minimum": 0
+        },
+        "power_w": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "constraints": {
+      "type": "object",
+      "required": [
+        "min_operating_voltage_v",
+        "max_operating_voltage_v",
+        "max_operating_current_a",
+        "power_limit_contract_status"
+      ],
+      "properties": {
+        "min_operating_voltage_v": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_operating_voltage_v": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "max_operating_current_a": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "exclusiveMinimum": 0
+        },
+        "power_limit_contract_status": {
+          "const": "not_available_in_current_mppt_template_contract"
+        }
+      },
+      "additionalProperties": false
+    },
+    "constraint_evaluation": {
+      "type": "object",
+      "required": [
+        "voltage_below_min",
+        "voltage_above_max",
+        "voltage_within_window",
+        "operating_current_limit_known",
+        "operating_current_above_limit",
+        "power_limit_evaluated",
+        "power_limit_status",
+        "selected_point_violates_known_constraints",
+        "enforcement_policy"
+      ],
+      "properties": {
+        "voltage_below_min": {
+          "type": "boolean"
+        },
+        "voltage_above_max": {
+          "type": "boolean"
+        },
+        "voltage_within_window": {
+          "type": "boolean"
+        },
+        "operating_current_limit_known": {
+          "type": "boolean"
+        },
+        "operating_current_above_limit": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "power_limit_evaluated": {
+          "const": false
+        },
+        "power_limit_status": {
+          "const": "not_available_in_current_mppt_template_contract"
+        },
+        "selected_point_violates_known_constraints": {
+          "type": "boolean"
+        },
+        "enforcement_policy": {
+          "const": "flag_only_no_clipping_phase68"
+        }
+      },
+      "additionalProperties": false
+    },
+    "attribution": {
+      "type": "object",
+      "required": [
+        "status",
+        "counterfactual_basis",
+        "delta_power_w"
+      ],
+      "properties": {
+        "status": {
+          "const": "modeled"
+        },
+        "counterfactual_basis": {
+          "const": "ideal_global_mpp_to_selected_tracker_operating_point"
+        },
+        "delta_power_w": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,416 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opensimpv.org/schema/simulation-execution-group-plan.schema.json",
+  "title": "OpenSIMPV SimulationExecutionGroupPlan v0.1",
+  "description": "Deterministic derived runtime grouping between canonical Scene/Electrical topology and numerical workers.",
+  "type": "object",
+  "required": [
+    "schema_name",
+    "schema_version",
+    "plan_version",
+    "builder_id",
+    "builder_version",
+    "authority",
+    "source_scene_revision_id",
+    "source_electrical_revision_id",
+    "compiled_geometry_hash",
+    "execution_plan_id",
+    "execution_plan_payload_sha256",
+    "execution_class",
+    "group_count",
+    "groups",
+    "heterogeneous_mppt_instance_ids",
+    "legacy_homogeneous_backend_compatible",
+    "finding_count",
+    "findings"
+  ],
+  "properties": {
+    "schema_name": {"const": "SimulationExecutionGroupPlan"},
+    "schema_version": {"const": "0.1"},
+    "plan_version": {"const": "0.1"},
+    "builder_id": {"type": "string", "minLength": 1},
+    "builder_version": {"type": "string", "minLength": 1},
+    "authority": {"const": "derived_execution_only"},
+    "source_scene_revision_id": {"type": "string", "minLength": 1},
+    "source_electrical_revision_id": {"type": "string", "minLength": 1},
+    "compiled_geometry_hash": {
+      "type": ["string", "null"],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "execution_plan_id": {"type": "string", "minLength": 1},
+    "execution_plan_payload_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "execution_class": {
+      "enum": [
+        "homogeneous_single_group",
+        "separable_multi_group",
+        "mixed_orientation_coupled",
+        "electrically_coupled_heterogeneous",
+        "invalid"
+      ]
+    },
+    "group_count": {"type": "integer", "minimum": 0},
+    "groups": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/execution_group"}
+    },
+    "mixed_orientation": {
+      "type": "object",
+      "required": [
+        "model_id",
+        "classes",
+        "mppts"
+      ],
+      "properties": {
+        "model_id": {
+          "const": "rawibumi.mixed_orientation.v0.1"
+        },
+        "classes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/orientation_class"
+          }
+        },
+        "mppts": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/mixed_mppt"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "heterogeneous_mppt_instance_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "legacy_homogeneous_backend_compatible": {"type": "boolean"},
+    "finding_count": {"type": "integer", "minimum": 0},
+    "findings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/finding"}
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "orientation_class": {
+      "type": "object",
+      "required": [
+        "inverter_instance_id",
+        "inverter_definition_revision_id",
+        "module_revision_id",
+        "surface_tilt_deg",
+        "surface_azimuth_deg",
+        "albedo",
+        "albedo_sources",
+        "module_instance_ids",
+        "receiver_ids",
+        "missing_receiver_module_ids",
+        "pv_field_ids",
+        "support_surface_ids",
+        "execution_group_id",
+        "execution_group_payload_sha256"
+      ],
+      "properties": {
+        "inverter_instance_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "inverter_definition_revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "module_revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "surface_tilt_deg": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 90
+        },
+        "surface_azimuth_deg": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 360
+        },
+        "albedo": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "albedo_sources": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "module_instance_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "receiver_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "missing_receiver_module_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "pv_field_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "support_surface_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "execution_group_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "execution_group_payload_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "mixed_mppt": {
+      "type": "object",
+      "required": [
+        "mppt_instance_id",
+        "inverter_instance_id",
+        "mppt_index",
+        "modules_in_series",
+        "strings"
+      ],
+      "properties": {
+        "mppt_instance_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "inverter_instance_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mppt_index": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "modules_in_series": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "strings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "string_id",
+              "module_instance_ids",
+              "composition"
+            ],
+            "properties": {
+              "string_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "module_instance_ids": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "composition": {
+                "type": "object",
+                "minProperties": 1,
+                "additionalProperties": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "execution_group": {
+      "type": "object",
+      "required": [
+        "inverter_instance_id",
+        "inverter_definition_revision_id",
+        "module_revision_id",
+        "modules_in_series",
+        "surface_tilt_deg",
+        "surface_azimuth_deg",
+        "albedo",
+        "albedo_sources",
+        "string_ids",
+        "module_instance_ids",
+        "receiver_ids",
+        "missing_receiver_module_ids",
+        "pv_field_ids",
+        "support_surface_ids",
+        "mppt_instance_ids",
+        "mppt_indices",
+        "execution_group_id",
+        "execution_group_payload_sha256"
+      ],
+      "properties": {
+        "orientation_merge": {
+          "type": "object",
+          "required": [
+            "tolerance_deg",
+            "max_normal_angle_deg",
+            "source_orientations",
+            "representative"
+          ],
+          "properties": {
+            "tolerance_deg": {
+              "type": "number",
+              "minimum": 0
+            },
+            "max_normal_angle_deg": {
+              "type": "number",
+              "minimum": 0
+            },
+            "source_orientations": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "number"
+                }
+              }
+            },
+            "representative": {
+              "const": "module_weighted_mean_normal"
+            }
+          },
+          "additionalProperties": false
+        },
+        "inverter_instance_id": {"type": "string", "minLength": 1},
+        "inverter_definition_revision_id": {"type": "string", "minLength": 1},
+        "module_revision_id": {"type": "string", "minLength": 1},
+        "modules_in_series": {"type": "integer", "minimum": 1},
+        "surface_tilt_deg": {"type": "number", "minimum": 0, "maximum": 90},
+        "surface_azimuth_deg": {
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 360
+        },
+        "albedo": {"type": "number", "minimum": 0, "maximum": 1},
+        "albedo_sources": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "string_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "module_instance_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "receiver_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "missing_receiver_module_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "pv_field_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "support_surface_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "mppt_instance_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "mppt_indices": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "integer", "minimum": 1}
+        },
+        "execution_group_id": {"type": "string", "minLength": 1},
+        "execution_group_payload_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "finding": {
+      "type": "object",
+      "required": ["severity", "code", "entity_id", "message", "context"],
+      "properties": {
+        "severity": {"enum": ["info", "warning", "error"]},
+        "code": {"type": "string", "minLength": 1},
+        "entity_id": {"type": ["string", "null"]},
+        "message": {"type": "string", "minLength": 1},
+        "context": {"type": "object"}
+      },
+      "additionalProperties": false
+    }
+  }
+}
